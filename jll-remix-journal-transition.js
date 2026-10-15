@@ -79,12 +79,22 @@
       doc.documentElement.setAttribute('data-iv2-route-flight',direction);
       try{update();}catch(error){cancel();throw error;}
       state.scrollY=win.scrollY;
-      state.timeout=win.setTimeout(()=>{if(active===state)cancel();},1800);
+      state.timeout=win.setTimeout(()=>{if(active===state)cancel();},2600);
       const painted=()=>new Promise(resolve=>win.requestAnimationFrame(()=>win.requestAnimationFrame(resolve)));
       async function travel(){
         if(image.decode)await Promise.race([image.decode().catch(()=>{}),new Promise(resolve=>win.setTimeout(resolve,180))]);
         await painted();
         if(active!==state)return;
+        // Landing in the article: wait until the hero has its opening (portrait) clip, otherwise the
+        // destination would be the full-width frame and the photo would visibly shrink afterwards.
+        if(direction==='in'){
+          for(let i=0;i<24;i++){
+            const frame=doc.querySelector('#journal-article .iv2-hero-frame');
+            if(!frame||frame.style.clipPath)break;
+            await painted();
+            if(active!==state)return;
+          }
+        }
         const destination=getDestination(state,shot);
         if(!usable(destination)){cancel();return;}
         state.scrollY=win.scrollY;

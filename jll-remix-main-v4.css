@@ -29,6 +29,8 @@
 .hw-motion .hw-main-v4 .hw-future-picture::after { content:''; position:absolute; inset:0; background:linear-gradient(#0009,#0005 50%,#000a); pointer-events:none; }
 .hw-main-v4 .hw-hero-image { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 55%; filter:saturate(.9); }
 .hw-main-v4 .hw-hero-video { position:absolute; inset:0; }
+/* Films stay laid out (not display:none) while hidden so the decoder is warm and the cut is instant. */
+.hw-main-v4 .hw-hero-video[hidden] { display:block!important; visibility:hidden; }
 .hw-main-v4 .hw-hero-shade { background:linear-gradient(90deg,color-mix(in srgb,var(--ink) 65%,transparent),color-mix(in srgb,var(--ink) 32%,transparent) 52%,color-mix(in srgb,var(--ink) 8%,transparent)); }
 .hw-main-v4 .hw-hero { min-height:max(520px,calc(var(--main-stories-height,138px) + var(--main-story-copy-height,230px) + 96px)); }
 .hw-main-v4 .hw-hero-copy { bottom:clamp(calc(var(--main-stories-height,138px) + 12px),calc(var(--main-stories-height,138px) + 32px + var(--main-title-offset,0px)),calc(100% - var(--main-story-copy-height,230px) - 24px)); }
@@ -138,4 +140,50 @@
 }
 @media(max-width:360px) {
   :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-hero-copy h1 { font-size:min(var(--main-title-size,var(--display-title-size,72px)),var(--section-title-mobile,35px)); }
+}
+
+/* 함께 보기: 고객지원 아래의 두 열 안내 (서비스 사례 · SPS 소개). 인사이트 그리드와 같은 라운드·호버·등장 규칙을 재사용한다. */
+.hw-main-v4 .hw-with { padding-block: clamp(100px,12vw,200px) clamp(80px,9vw,150px); }
+.hw-main-v4 .hw-with-heading { margin-bottom: 50px; }
+.hw-main-v4 .hw-with-heading .hw-kicker { margin: 0; }
+.hw-main-v4 .hw-with-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 36px; }
+.hw-main-v4 .hw-with-item { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
+.hw-main-v4 .hw-with-item h3 { font-size: clamp(28px,2.71vw,52px); font-weight: 600; line-height: 1.3; letter-spacing: -.02em; } /* 영문 제목은 원본(KT&G headline)처럼 600 */
+.hw-main-v4 .hw-with-item > p { margin-top: 16px; font-size: var(--body-size,18px); line-height: 1.65; color: var(--muted); }
+.hw-main-v4 .hw-with-link { display: inline-flex; gap: 12px; align-items: center; margin-top: 24px; font-size: 14px; line-height: 1.5; color: var(--ink); }
+.hw-main-v4 .hw-with-link sps-arrow-up-right { color: var(--red); transition: transform .2s var(--hw-ease); }
+.hw-main-v4 .hw-with-link:is(:hover,:focus-visible) sps-arrow-up-right { transform: translate(2px,-2px); }
+.hw-main-v4 .hw-with-picture { display: block; width: 100%; min-height: 0; margin-top: 40px; aspect-ratio: 868/400; overflow: clip; border-radius: var(--radius-panel,4px); background: var(--surface-cool); }
+.hw-main-v4 .hw-with-picture img { display: block; width: 100%; height: 100%; aspect-ratio: 868/400; object-fit: cover; transition: transform .8s var(--hw-ease); }
+.hw-main-v4 .hw-with-item:is(:hover,:focus-within) .hw-with-picture img { transform: scale(1.06); }
+.hw-motion .hw-with-grid [data-reveal] { transform: translateY(50px); opacity: 0; transition: transform 1.3s var(--hw-ease) calc(var(--order,0) * .12s),opacity .8s calc(var(--order,0) * .12s); }
+.hw-motion .hw-with-grid [data-reveal].is-revealed { transform: none; opacity: 1; }
+@media(max-width:850px) {
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-with-grid { grid-template-columns: 1fr; gap: 56px; }
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-with-heading { margin-bottom: 36px; }
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-with-picture, :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-with-picture img { aspect-ratio: 350/161; }
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-with-picture { margin-top: 28px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .hw-main-v4 .hw-with-link sps-arrow-up-right, .hw-main-v4 .hw-with-picture img { transition: none; }
+}
+
+/* SPS의 방식: 다섯 점 심볼이 모여 창이 되고 사진을 드러내는 장면. 스크롤 3화면 분량, 가운데 고정. */
+.hw-main-v4 .hw-symbol { position:relative; height:calc(var(--hw-height) * 3); background:var(--surface); }
+.hw-main-v4 .hw-symbol-stage { position:sticky; top:var(--sps-header-height,140px); height:var(--hw-height); overflow:clip; isolation:isolate; background:var(--surface); }
+.hw-main-v4 .hw-symbol-svg { position:absolute; inset:0; width:100%; height:100%; display:block; }
+.hw-main-v4 .hw-symbol-kicker { position:absolute; left:max(var(--layout-gutter,72px),calc((100% - var(--content-max,1320px)) / 2)); top:clamp(32px,6vh,64px); margin:0; z-index:2; transition:opacity .2s; }
+.hw-main-v4 .hw-symbol-copy { position:absolute; left:max(var(--layout-gutter,72px),calc((100% - var(--content-max,1320px)) / 2)); right:var(--layout-gutter,72px); bottom:clamp(40px,9vh,96px); z-index:2; color:var(--surface); will-change:transform,opacity; }
+.hw-main-v4 .hw-symbol-copy h2 { font-size:clamp(32px,2.71vw,52px); font-weight:600; line-height:1.3; letter-spacing:-.03em; }
+.hw-main-v4 .hw-symbol-copy h2 span { display:block; }
+.hw-main-v4 .hw-symbol-copy p { margin-top:20px; max-width:520px; font-size:var(--body-size,18px); line-height:1.65; color:color-mix(in srgb,var(--surface) 86%,transparent); }
+.hw-main-v4 .hw-symbol[data-phase="full"] .hw-symbol-stage::after { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg,transparent 45%,color-mix(in srgb,var(--ink) 55%,transparent)); }
+@media(prefers-reduced-motion:reduce) {
+  .hw-main-v4 .hw-symbol { height:auto; }
+  .hw-main-v4 .hw-symbol-stage { position:relative; top:auto; }
+  .hw-main-v4 .hw-symbol-copy { opacity:1!important; transform:none!important; }
+}
+@media(max-width:850px) {
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-symbol-copy h2 { font-size:28px; }
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-symbol-copy p { font-size:16px; }
 }

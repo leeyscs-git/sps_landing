@@ -1,0 +1,75 @@
+/* V4 타입 스케일 시안 — ?typescale=1 로 열 때만 적용 (html[data-typescale="1"]).
+   본문 16px 기준, 약 1.2배 단계: 12 라벨 · 14 보조 · 16 본문 · 19 리드 · 23 소제목 · 28 중간 제목 · 36 섹션 제목 · 56/64 히어로.
+   28px 이상은 600, 그 아래는 500. 자간은 -.02~-.03em. 기존 V4 파일은 건드리지 않고 덮어쓰기만 한다. */
+html[data-typescale="1"] {
+  --ts-label: 12px; --ts-meta: 14px; --ts-body: 16px; --ts-lead: 19px;
+  --ts-h4: 23px; --ts-h3: 28px; --ts-h2: 36px; --ts-display: 56px; --ts-hero: 64px;
+  --body-size: var(--ts-body) !important;
+  --field-font-size: var(--ts-meta) !important;
+  --card-title-size: var(--ts-h4) !important;
+  --hero-title-size: var(--ts-display) !important;
+  --hero-title-mobile: 40px !important;
+  --section-title-size: var(--ts-h2) !important;
+  --section-title-mobile: 28px !important;
+  --main-title-size: var(--ts-hero) !important;
+  --main-story-size: 15px !important;
+  --main-number-size: var(--ts-label) !important;
+}
+html[data-typescale="1"] body { font-size: var(--ts-body); line-height: 1.65; }
+
+/* 히어로 */
+html[data-typescale="1"] .hw-main-v4 .hw-hero-copy h1 { font-size: var(--ts-hero); font-weight: 500; line-height: 1.2; letter-spacing: -.03em; }
+html[data-typescale="1"] .hw-main-v4 .main-v4-stories .story-heading { font-size: var(--ts-label); letter-spacing: .08em; }
+
+/* 비전 슬로건 */
+html[data-typescale="1"] :is(.hw-main-v2,.hw-main-v4) :is(.hw-slogan,.hw-keywords) { font-size: var(--ts-display); font-weight: 500; letter-spacing: -.03em; line-height: 1.3; }
+html[data-typescale="1"] .hw-scene-descriptions p { font-size: var(--ts-lead); line-height: 1.6; }
+
+/* 섹션 공통 */
+html[data-typescale="1"] .hw-kicker { font-size: var(--ts-meta); font-weight: 500; letter-spacing: .02em; }
+html[data-typescale="1"] .hw-section-intro h2,
+html[data-typescale="1"] .hw-future-heading h2,
+html[data-typescale="1"] .hw-news-heading h2 { font-size: var(--ts-h2); font-weight: 600; line-height: 1.3; letter-spacing: -.03em; }
+
+/* 서비스 */
+html[data-typescale="1"] .hw-business-copy h3 { font-size: var(--ts-h3); font-weight: 600; line-height: 1.35; letter-spacing: -.025em; }
+html[data-typescale="1"] .hw-business-copy h3 small { font-size: var(--ts-meta); font-weight: 500; }
+html[data-typescale="1"] .hw-business-copy button span { font-size: var(--ts-h4); }
+html[data-typescale="1"] .hw-business-detail p { font-size: var(--ts-body); line-height: 1.65; }
+html[data-typescale="1"] .hw-business-detail a { font-size: var(--ts-meta); }
+
+/* 인사이트 */
+html[data-typescale="1"] .hw-news-heading a { font-size: var(--ts-meta); }
+html[data-typescale="1"] .hw-news-grid small { font-size: var(--ts-label); letter-spacing: .06em; }
+html[data-typescale="1"] .hw-news-grid h3 { font-size: var(--ts-h4); font-weight: 500; line-height: 1.4; letter-spacing: -.02em; }
+html[data-typescale="1"] .hw-news-grid a > span { font-size: var(--ts-meta); }
+
+/* 고객지원 */
+html[data-typescale="1"] .hw-future-top h3,
+html[data-typescale="1"] .hw-future-bottom h3 { font-size: var(--ts-h3); font-weight: 600; line-height: 1.35; letter-spacing: -.025em; }
+html[data-typescale="1"] .hw-future-bottom p { font-size: var(--ts-lead); line-height: 1.6; }
+html[data-typescale="1"] .hw-future-bottom a { font-size: var(--ts-meta); }
+
+/* 더 알아보기 */
+html[data-typescale="1"] .hw-main-v4 .hw-with-item h3 { font-size: var(--ts-h2); font-weight: 600; letter-spacing: -.025em; }
+html[data-typescale="1"] .hw-main-v4 .hw-with-item > p { font-size: var(--ts-body); }
+html[data-typescale="1"] .hw-main-v4 .hw-with-link { font-size: var(--ts-meta); }
+
+/* 페이지 메뉴 */
+html[data-typescale="1"] .hw-main-v4 .main-v4-page-nav .main-v4-nav-label { font-size: var(--ts-label); }
+
+@media(max-width:1100px) {
+  html[data-typescale="1"]:not([data-sps-desktop]) { --ts-hero: 52px; --ts-display: 46px; --ts-h2: 32px; }
+}
+@media(max-width:600px) {
+  html[data-typescale="1"]:not([data-sps-desktop]) { --ts-hero: 40px; --ts-display: 34px; --ts-h2: 28px; --ts-h3: 23px; --ts-h4: 19px; --ts-lead: 17px; }
+  html[data-typescale="1"]:not([data-sps-desktop]) .hw-main-v4 .hw-hero-copy h1 { font-size: var(--ts-hero); }
+  html[data-typescale="1"]:not([data-sps-desktop]) .hw-section-intro h2,
+  html[data-typescale="1"]:not([data-sps-desktop]) .hw-future-heading h2,
+  html[data-typescale="1"]:not([data-sps-desktop]) .hw-news-heading h2 { font-size: var(--ts-h2); }
+  html[data-typescale="1"]:not([data-sps-desktop]) .hw-business-copy h3,
+  html[data-typescale="1"]:not([data-sps-desktop]) .hw-future-top h3,
+  html[data-typescale="1"]:not([data-sps-desktop]) .hw-future-bottom h3 { font-size: var(--ts-h3); }
+  html[data-typescale="1"]:not([data-sps-desktop]) .hw-news-grid h3 { font-size: var(--ts-h4); }
+  html[data-typescale="1"]:not([data-sps-desktop]) .hw-kicker { font-size: var(--ts-meta); }
+}

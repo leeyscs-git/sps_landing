@@ -186,6 +186,10 @@
       if(nav)nav.inert=false;
       resetNav();
       makeNavPhoto();
+      // Paint the opening portrait state right away so the photo flight measures the real landing
+      // frame instead of the un-clipped full-width hero (which made the photo grow, then shrink).
+      layoutPending = true;
+      paint();
       schedule(true);
     }
     win.addEventListener('scroll', () => schedule(), {passive:true});

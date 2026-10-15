@@ -20,12 +20,15 @@
 <script src="jll-remix-components.js?v=mobile-20261009" defer blocking="render"></script>
 <script src="jll-remix-footer.js?v=business-info1" defer blocking="render"></script>
 <script src="jll-remix-contact.js?v=support-scenarios1" defer></script>
-<link rel="stylesheet" href="jll-remix-main-v4.css?v=customer-support1">
+<link rel="stylesheet" href="jll-remix-main-v4.css?v=symbol-scene2">
+<link rel="stylesheet" href="jll-remix-main-v4-typescale.css?v=1">
+<script>if(new URLSearchParams(location.search).get("typescale")==="1")document.documentElement.dataset.typescale="1";</script>
 <script src="jll-remix.js?v=shared-insights" defer></script>
 <script src="jll-remix-main-v2.js?v=nav-film5" defer></script>
 <script src="assets/vendor/lenis/lenis.min.js" defer></script>
-<script src="jll-remix-hanwha.js?v=overlay-resume2" defer></script>
-<script src="jll-remix-main-v4.js?v=mobile-story-controls1" defer></script>
+<script src="jll-remix-hanwha.js?v=story-films1" defer></script>
+<script src="jll-remix-main-v4.js?v=story-films4" defer></script>
+<script src="jll-remix-main-v4-symbol.js?v=5" defer></script>
 <script src="jll-remix-main-navigation.js?v=responsive-nav4" defer></script>
 <script src="jll-remix-main-v4-tweaks.js?v=stories-20261009" defer></script>
 <link rel="stylesheet" href="jll-remix-footer.css?v=business-info1">
@@ -37,7 +40,10 @@
 <section class="hw-hero" id="hw-intro" aria-labelledby="hw-title">
   <div class="hw-hero-media">
     <img class="hw-hero-image" src="assets/jll/seoul.webp" alt="노을이 내려앉은 서울의 도심과 남산 전경" fetchpriority="high" decoding="async">
-    <video class="hw-hero-video" poster="assets/hanwha-reference/energy.jpg" muted playsinline loop preload="none" data-video src="assets/hanwha-reference/hero.mp4" aria-label="한화 공식 홈페이지의 그룹 홍보 영상" hidden></video>
+    <video class="hw-hero-video" data-story="0" poster="assets/vid/namsan-poster.jpg" muted playsinline preload="auto" data-video src="assets/vid/Namsan.mp4" aria-label="남산과 서울 도심 영상" hidden></video>
+    <video class="hw-hero-video" data-story="1" poster="assets/vid/wind-poster.jpg" muted playsinline preload="metadata" data-video src="assets/vid/wind.mp4" aria-label="풍력 발전기 영상" hidden></video>
+    <video class="hw-hero-video" data-story="2" poster="assets/vid/grass-poster.jpg" muted playsinline preload="metadata" data-video src="assets/vid/grass.mp4" aria-label="잔디 영상" hidden></video>
+    <video class="hw-hero-video" data-story="3" poster="assets/hanwha-reference/energy.jpg" muted playsinline preload="metadata" data-video src="assets/hanwha-reference/hero.mp4" aria-label="한화 공식 홈페이지의 그룹 홍보 영상" hidden></video>
     <div class="hw-hero-shade"></div>
     <div class="hw-hero-copy wrap">
       <div class="hw-story-copy" id="hw-story-copy" aria-live="off" aria-atomic="true">
@@ -47,7 +53,7 @@
   </div>
   <div class="main-v4-stories">
     <div class="hero-bottom wrap">
-      <div class="story-heading"><span lang="en">PERSPECTIVES</span><button class="main-v4-playback" type="button" aria-label="스토리 자동 전환 일시정지" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="main-v4-pause-icon" d="M5 3v10M11 3v10"/><path class="main-v4-play-icon" d="m5 3 8 5-8 5Z"/></svg></button></div>
+      <div class="story-heading"><span lang="en">PERSPECTIVES</span></div>
       <div class="hero-stories" role="group" aria-label="SPS의 관점 선택">
         <button type="button" class="story-tab active" data-slide="0" aria-pressed="true" aria-controls="hw-story-copy"><span class="story-number">01</span><span>더 나은 내일을 위한<br>부동산의 가능성</span></button>
         <button type="button" class="story-tab" data-slide="1" aria-pressed="false" aria-controls="hw-story-copy"><span class="story-number">02</span><span>기술과 경험으로 만드는<br>스마트한 자산관리</span></button>
@@ -129,6 +135,38 @@
   </div>
 </section>
 
+<section class="hw-symbol" id="hw-symbol" aria-labelledby="hw-symbol-title">
+  <div class="hw-symbol-stage">
+    <svg class="hw-symbol-svg" viewBox="0 0 1440 800" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <defs>
+        <mask id="hw-symbol-mask" maskUnits="userSpaceOnUse">
+          <rect x="0" y="0" width="0" height="0" rx="0" fill="#fff"></rect>
+          <rect x="0" y="0" width="0" height="0" rx="0" fill="#fff"></rect>
+          <rect x="0" y="0" width="0" height="0" rx="0" fill="#fff"></rect>
+          <rect x="0" y="0" width="0" height="0" rx="0" fill="#fff"></rect>
+          <rect x="0" y="0" width="0" height="0" rx="0" fill="#fff"></rect>
+        </mask>
+      </defs>
+      <g class="hw-symbol-trails" fill="none" stroke="#e72a0f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline class="hw-symbol-trail" points="" style="opacity:0"></polyline>
+        <polyline class="hw-symbol-trail" points="" style="opacity:0"></polyline>
+        <polyline class="hw-symbol-trail" points="" style="opacity:0"></polyline>
+        <polyline class="hw-symbol-trail" points="" style="opacity:0"></polyline>
+        <polyline class="hw-symbol-trail" points="" style="opacity:0"></polyline>
+      </g>
+      <g mask="url(#hw-symbol-mask)">
+        <rect class="hw-symbol-red" x="0" y="0" width="1440" height="800" fill="#e72a0f"></rect>
+        <image href="assets/jll/seoul.webp" x="0" y="0" width="1440" height="800" preserveAspectRatio="xMidYMid slice" style="opacity:0"></image>
+      </g>
+    </svg>
+    <p class="hw-kicker hw-symbol-kicker">SPS의 방식 <sps-arrow-up-right></sps-arrow-up-right></p>
+    <div class="hw-symbol-copy" style="opacity:0">
+      <h2 id="hw-symbol-title"><span>공간을 이해합니다.</span><span>가능성을 연결합니다.</span></h2>
+      <p>흩어진 일을 하나의 운영으로 모읍니다.<br>건물의 매일을 지켜보고, 다음 가능성을 열어 갑니다.</p>
+    </div>
+  </div>
+</section>
+
 <section class="hw-news wrap" id="hw-news" aria-labelledby="hw-news-title">
   <div class="hw-news-heading" data-reveal><h2 id="hw-news-title">인사이트</h2><a href="jll-remix-journal-v2.html">인사이트 전체 보기 <sps-arrow-up-right></sps-arrow-up-right></a></div>
   <div class="hw-news-grid">
@@ -150,6 +188,24 @@
   </div>
 </section>
 
+<section class="hw-with wrap" id="hw-with" aria-labelledby="hw-with-title">
+  <div class="hw-with-heading" data-reveal><p class="hw-kicker" id="hw-with-title">더 알아보기 <sps-arrow-up-right></sps-arrow-up-right></p></div>
+  <div class="hw-with-grid">
+    <article class="hw-with-item" data-reveal style="--order:0">
+      <h3 lang="en">Our Work</h3>
+      <p>현장에서 함께한 건물의 운영과 변화를 소개합니다.</p>
+      <a class="hw-with-link" href="jll-remix-cases.html">서비스 사례 보기 <sps-arrow-up-right></sps-arrow-up-right></a>
+      <a class="hw-with-picture" href="jll-remix-cases.html" aria-label="서비스 사례 보기" tabindex="-1"><img src="assets/landing/architecture.jpg" alt="도시의 하늘을 향해 서 있는 여러 건물의 외관" loading="lazy"></a>
+    </article>
+    <article class="hw-with-item" data-reveal style="--order:1">
+      <h3 lang="en">About</h3>
+      <p>공간을 이해하고 가능성을 연결하는 SPS의 방식을 소개합니다.</p>
+      <a class="hw-with-link" href="jll-remix-about.html">SPS 소개 보기 <sps-arrow-up-right></sps-arrow-up-right></a>
+      <a class="hw-with-picture" href="jll-remix-about.html" aria-label="SPS 소개 보기" tabindex="-1"><img src="assets/landing/interior.jpg" alt="자연광이 가득하고 사람들의 동선이 이어지는 개방적인 실내" loading="lazy"></a>
+    </article>
+  </div>
+</section>
+
 
 </main>
 <footer class="sps-footer" data-sps-footer data-sps-layout id="hw-footer"><a class="sps-footer-fallback" href="jll-remix-support.html">SPS · 고객지원</a></footer>
@@ -157,8 +213,10 @@
   <a href="#hw-intro" aria-current="location"><span class="main-v4-nav-label">소개</span></a>
   <a href="#hw-vision"><span class="main-v4-nav-label">비전</span></a>
   <a href="#hw-business"><span class="main-v4-nav-label">서비스</span></a>
+  <a href="#hw-symbol"><span class="main-v4-nav-label">SPS의 방식</span></a>
   <a href="#hw-news"><span class="main-v4-nav-label">인사이트</span></a>
   <a href="#hw-future"><span class="main-v4-nav-label">고객지원</span></a>
+  <a href="#hw-with"><span class="main-v4-nav-label">더 알아보기</span></a>
 </nav>
 <details class="main-v4-tweaks" hidden>
   <summary aria-label="화면 조정" title="화면 조정"><span aria-hidden="true">＋</span></summary>

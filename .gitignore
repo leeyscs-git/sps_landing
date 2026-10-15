@@ -30,3 +30,12 @@ _workspace/
 /briefing/journal-research.json
 /design/jll-remix/theme.before-locale-merge.json
 /.codex-remote-attachments/
+
+# Main video sources: only the films the site uses are committed (wind/grass/Namsan + posters)
+/assets/vid/video1.mp4
+/assets/vid/물.mp4
+/assets/vid/잔디.mp4
+/assets/vid/풍력.mp4
+
+# Local-only reference material (third-party site clone and critique notes)
+/reference/

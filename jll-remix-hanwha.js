@@ -88,7 +88,7 @@
   const sections = navLinks.map(a => doc.querySelector(a.getAttribute('href')));
   const footer = doc.querySelector('[data-sps-footer]') || doc.querySelector('.hw-footer');
   const videos = [...doc.querySelectorAll('[data-video]')];
-  const heroVideo = doc.querySelector('.hw-hero-video');
+  const heroVideos = [...doc.querySelectorAll('.hw-hero-video')]; // V4 keeps one film per story; only the un-hidden one plays
   const videoButton = doc.querySelector('.hw-video-toggle');
   let metrics, layoutPending = true, paintPending = true, rafID = 0;
   let userPaused = reduced.matches, lenis = null, mode = false, time = 0;
@@ -146,7 +146,7 @@
   videos.forEach(video => {
     video.addEventListener('error', () => {
       video.dataset.unavailable = 'true';
-      if (video === heroVideo) {
+      if (heroVideos.includes(video)) {
         userPaused = true;
         setPauseLabel();
       }
@@ -188,7 +188,7 @@
     const ft = (y - metrics.futureTop) / scrollHeight;
     const inHero = scrollY < metrics.visionTop;
     const keyword = keywordState(t);
-    setVideo(heroVideo, inHero);
+    heroVideos.forEach(video => setVideo(video, inHero));
     if (mode) {
       // Fixed-reference hero rises at half the native scroll speed.
       heroMedia.style.transform = 'translateY(' + heroOffset(scrollY, metrics.heroTop, headerH, page.hasAttribute('data-overlay-header')) + 'px)';
