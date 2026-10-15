@@ -33,7 +33,7 @@
 .hw-main-v4 .hw-hero { min-height:max(520px,calc(var(--main-stories-height,138px) + var(--main-story-copy-height,230px) + 96px)); }
 .hw-main-v4 .hw-hero-copy { bottom:clamp(calc(var(--main-stories-height,138px) + 12px),calc(var(--main-stories-height,138px) + 32px + var(--main-title-offset,0px)),calc(100% - var(--main-story-copy-height,230px) - 24px)); }
 .hw-main-v4 .hw-story-copy { min-width:0; max-width:960px; }
-.hw-main-v4 .hw-hero-copy h1 { font-size:var(--main-title-size,var(--display-title-size,72px)); font-weight:400; line-height:1.22; letter-spacing:-.045em; }
+.hw-main-v4 .hw-hero-copy h1 { font-size:var(--main-title-size,var(--display-title-size,72px)); font-weight:var(--heading-weight); line-height:1.22; letter-spacing:-.045em; }
 .hw-main-v4 .hw-hero-shade { z-index:2; }
 .hw-main-v4 .hw-hero-copy { z-index:3; }
 .hw-main-v4 .hw-hero-copy .hw-line { flex-basis:100%; }
@@ -138,4 +138,49 @@
 }
 @media(max-width:360px) {
   :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-hero-copy h1 { font-size:min(var(--main-title-size,var(--display-title-size,72px)),var(--section-title-mobile,35px)); }
+}
+
+/* Type scale tokens live in jll-remix-tokens.css. V4 pins body and display sizes to the scale,
+   so on this page the editor's "글자 단계 기준" value moves them all and the separate body/title values are ignored. */
+.hw-main-v4 {
+  --body-size:var(--type-16);
+  --display-title-size:var(--type-64);
+  --hero-title-size:var(--type-56);
+}
+/* Headings 28px and up use --heading-weight (600); smaller headings use --subheading-weight (500). */
+.hw-main-v4 .hw-hero-copy h1,
+.hw-main-v4 :is(.hw-slogan,.hw-keywords) strong,
+.hw-main-v4 .hw-slogan,
+.hw-main-v4 .hw-section-intro h2,
+.hw-main-v4 .hw-business-copy h3,
+.hw-main-v4 .hw-future-heading h2,
+.hw-main-v4 :is(.hw-future-top,.hw-future-bottom) h3,
+.hw-main-v4 .sps-footer .sps-footer-statement,
+.hw-main-v4 .inquiry-aside h2,
+.hw-main-v4 .inquiry-review h3 { font-weight:var(--heading-weight); letter-spacing:-.03em; }
+.hw-main-v4 :is(.hw-news-heading h2,.hw-news-grid h3) { font-weight:var(--subheading-weight); letter-spacing:-.02em; }
+.hw-main-v4 .hw-business-copy h3 small { font-weight:450; }
+@media(min-width:1026px) {
+  .hw-main-v4 :is(.hw-section-intro h2,.hw-future-heading h2) { font-size:var(--type-36); }
+  .hw-main-v4 :is(.hw-business-copy h3,.hw-future-top h3,.hw-future-bottom h3) { font-size:var(--type-28); }
+  .hw-main-v4 .sps-footer .sps-footer-statement { font-size:var(--type-36); }
+  .hw-main-v4 .inquiry-aside h2,.hw-main-v4 .inquiry-review h3 { font-size:var(--type-28); }
+  .hw-main-v4 :is(.hw-news-heading h2,.hw-news-grid h3,.hw-scene-descriptions p) { font-size:var(--type-23); }
+  .hw-main-v4 .main-v4-stories .story-heading > span { font-size:var(--type-19); }
+  .hw-main-v4 :is(.hw-future-top p,.hw-future-bottom p) { font-size:var(--type-19); }
+  .hw-main-v4 :is(.hw-business-copy h3 small,.hw-business-detail p) { font-size:var(--type-16); }
+  .hw-main-v4 :is(.hw-business-detail a,.hw-news-grid a > span) { font-size:var(--type-14); }
+  .hw-main-v4 .hw-news-grid small { font-size:var(--type-12); }
+  .hw-main-v4 .main-v4-page-nav .main-v4-nav-label { font-size:var(--type-14); }
+  .hw-main-v4 .sps-footer .sps-footer-phone { font-size:var(--type-23); }
+}
+/* Phone steps: hero 40 · section 28 · mid 23. Under 28px the mid headings drop to the sub-heading weight. */
+@media(min-width:361px) and (max-width:600px) {
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-hero-copy h1 { font-size:min(var(--main-title-size,var(--display-title-size,72px)),40px); }
+}
+@media(max-width:600px) {
+  :where(html:not([data-sps-desktop])) .hw-main-v4 :is(.hw-slogan,.hw-keywords,.hw-section-intro h2,.hw-future-heading h2) { font-size:var(--type-28); }
+  :where(html:not([data-sps-desktop])) .hw-main-v4 :is(.hw-business-copy h3,.hw-future-top h3,.hw-future-bottom h3,.hw-news-heading h2,.hw-news-grid h3,.inquiry-review h3) { font-size:var(--type-23); }
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .sps-footer .sps-footer-statement { font-size:var(--type-23); }
+  :where(html:not([data-sps-desktop])) .hw-main-v4 :is(.hw-business-copy h3,.hw-future-top h3,.hw-future-bottom h3,.inquiry-review h3,.sps-footer .sps-footer-statement) { font-weight:var(--subheading-weight); letter-spacing:-.02em; }
 }

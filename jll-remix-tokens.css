@@ -38,6 +38,22 @@ html[data-sps-desktop] [data-sps-header] { top: var(--sps-visible-top, 0px); }
   --chevron-color: #5c686c;
   --header-top-space: 16px;
   --locale-font-size: 12px;
+  /* Type scale (~1.2x). Every step is a multiple of --type-base, so one value moves the whole scale.
+     Like ktng.com's fluid root, the base holds 16px up to 1680px and grows to 17px at 1920px.
+     Headings 28px and up use --heading-weight, smaller ones --subheading-weight.
+     Pretendard Variable renders any weight on its axis, so these are exact values, not snapped to 400/700. */
+  --type-base: clamp(16px, calc(16px + (100vw - 1680px) / 240), 17px);
+  --type-12: calc(var(--type-base) * .75);
+  --type-14: calc(var(--type-base) * .875);
+  --type-16: var(--type-base);
+  --type-19: calc(var(--type-base) * 1.1875);
+  --type-23: calc(var(--type-base) * 1.4375);
+  --type-28: calc(var(--type-base) * 1.75);
+  --type-36: calc(var(--type-base) * 2.25);
+  --type-56: calc(var(--type-base) * 3.5);
+  --type-64: calc(var(--type-base) * 4);
+  --heading-weight: 600;
+  --subheading-weight: 500;
 }
 
 /* Shared content inset. Recompute on the header because About scopes its
