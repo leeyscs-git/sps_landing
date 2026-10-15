@@ -198,7 +198,7 @@ test('the retired comparison/palette switcher skips V4; other drafts retain thei
 });
 
 test('retired V3 redirects to V4 while retaining section and layout state',()=>{
-  const html=fs.readFileSync(require.resolve('../jll-remix-main-v3.html'),'utf8');
+  const html=fs.readFileSync(require.resolve('../_archive/drafts/jll-remix-main-v3.html'),'utf8');
   const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
   for(const hash of ['','#hw-future']){
     let destination;

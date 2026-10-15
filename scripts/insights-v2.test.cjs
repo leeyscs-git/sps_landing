@@ -77,7 +77,7 @@ function harness(v2=true,search='') {
     pushState(state,unused,url){this.state=state;navigate(url);},
     replaceState(state,unused,url){this.state=state;if(url)navigate(url);}
   };
-  const sourceRoot=v2?root:path.join(root,'briefing/insights-v1-reference');
+  const sourceRoot=v2?root:path.join(root,'_archive/briefing/insights-v1-reference');
   vm.createContext(sandbox);
   vm.runInContext(fs.readFileSync(path.join(sourceRoot,'jll-remix-journal-data.js'),'utf8'),sandbox);
   vm.runInContext(fs.readFileSync(path.join(sourceRoot,'jll-remix-insights.js'),'utf8'),sandbox);
