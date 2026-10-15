@@ -140,15 +140,14 @@
   :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-hero-copy h1 { font-size:min(var(--main-title-size,var(--display-title-size,72px)),var(--section-title-mobile,35px)); }
 }
 
-/* Type scale (~1.2x): 12 · 14 · 16 · 19 · 23 · 28 · 36 · 56 · 64. Headings 28px and up use --heading-weight.
-   Scoped to V4 so shared pages keep their current sizes; theme tokens below are pinned to the scale on this page. */
+/* Type scale tokens live in jll-remix-tokens.css. V4 pins its display tokens to the scale,
+   so the local theme editor no longer changes these two sizes on this page. */
 .hw-main-v4 {
-  --type-12:12px; --type-14:14px; --type-16:16px; --type-19:19px; --type-23:23px;
-  --type-28:28px; --type-36:36px; --type-56:56px; --type-64:64px;
-  --heading-weight:600;
   --display-title-size:var(--type-64);
   --hero-title-size:var(--type-56);
 }
+/* Headings 28px and up use --heading-weight (600); smaller headings use --subheading-weight (500). */
+.hw-main-v4 .hw-hero-copy h1,
 .hw-main-v4 :is(.hw-slogan,.hw-keywords) strong,
 .hw-main-v4 .hw-slogan,
 .hw-main-v4 .hw-section-intro h2,
@@ -157,7 +156,8 @@
 .hw-main-v4 :is(.hw-future-top,.hw-future-bottom) h3,
 .hw-main-v4 .sps-footer .sps-footer-statement,
 .hw-main-v4 .inquiry-aside h2,
-.hw-main-v4 .inquiry-review h3 { font-weight:var(--heading-weight); letter-spacing:-.035em; }
+.hw-main-v4 .inquiry-review h3 { font-weight:var(--heading-weight); letter-spacing:-.03em; }
+.hw-main-v4 :is(.hw-news-heading h2,.hw-news-grid h3) { font-weight:var(--subheading-weight); letter-spacing:-.02em; }
 .hw-main-v4 .hw-business-copy h3 small { font-weight:450; }
 @media(min-width:1026px) {
   .hw-main-v4 :is(.hw-section-intro h2,.hw-future-heading h2) { font-size:var(--type-36); }
@@ -170,4 +170,14 @@
   .hw-main-v4 :is(.hw-business-copy h3 small,.hw-business-detail p) { font-size:var(--type-16); }
   .hw-main-v4 :is(.hw-business-detail a,.hw-news-grid a > span) { font-size:var(--type-14); }
   .hw-main-v4 .hw-news-grid small { font-size:var(--type-12); }
+}
+/* Phone steps: hero 40 · section 28 · mid 23. Under 28px the mid headings drop to the sub-heading weight. */
+@media(min-width:361px) and (max-width:600px) {
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-hero-copy h1 { font-size:min(var(--main-title-size,var(--display-title-size,72px)),40px); }
+}
+@media(max-width:600px) {
+  :where(html:not([data-sps-desktop])) .hw-main-v4 :is(.hw-slogan,.hw-keywords,.hw-section-intro h2,.hw-future-heading h2) { font-size:var(--type-28); }
+  :where(html:not([data-sps-desktop])) .hw-main-v4 :is(.hw-business-copy h3,.hw-future-top h3,.hw-future-bottom h3,.hw-news-heading h2,.hw-news-grid h3,.inquiry-review h3) { font-size:var(--type-23); }
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .sps-footer .sps-footer-statement { font-size:var(--type-23); }
+  :where(html:not([data-sps-desktop])) .hw-main-v4 :is(.hw-business-copy h3,.hw-future-top h3,.hw-future-bottom h3,.inquiry-review h3,.sps-footer .sps-footer-statement) { font-weight:var(--subheading-weight); letter-spacing:-.02em; }
 }

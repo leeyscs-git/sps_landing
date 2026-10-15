@@ -38,6 +38,19 @@ html[data-sps-desktop] [data-sps-header] { top: var(--sps-visible-top, 0px); }
   --chevron-color: #5c686c;
   --header-top-space: 16px;
   --locale-font-size: 12px;
+  /* Type scale (~1.2x from 16px body). Headings 28px and up use --heading-weight, smaller ones --subheading-weight.
+     Pretendard Variable renders any weight on its axis, so these are exact values, not snapped to 400/700. */
+  --type-12: 12px;
+  --type-14: 14px;
+  --type-16: 16px;
+  --type-19: 19px;
+  --type-23: 23px;
+  --type-28: 28px;
+  --type-36: 36px;
+  --type-56: 56px;
+  --type-64: 64px;
+  --heading-weight: 600;
+  --subheading-weight: 500;
 }
 
 /* Shared content inset. Recompute on the header because About scopes its
