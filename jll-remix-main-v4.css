@@ -33,7 +33,7 @@
 .hw-main-v4 .hw-hero { min-height:max(520px,calc(var(--main-stories-height,138px) + var(--main-story-copy-height,230px) + 96px)); }
 .hw-main-v4 .hw-hero-copy { bottom:clamp(calc(var(--main-stories-height,138px) + 12px),calc(var(--main-stories-height,138px) + 32px + var(--main-title-offset,0px)),calc(100% - var(--main-story-copy-height,230px) - 24px)); }
 .hw-main-v4 .hw-story-copy { min-width:0; max-width:960px; }
-.hw-main-v4 .hw-hero-copy h1 { font-size:var(--main-title-size,var(--display-title-size,72px)); font-weight:400; line-height:1.22; letter-spacing:-.045em; }
+.hw-main-v4 .hw-hero-copy h1 { font-size:var(--main-title-size,var(--display-title-size,72px)); font-weight:var(--heading-weight); line-height:1.22; letter-spacing:-.045em; }
 .hw-main-v4 .hw-hero-shade { z-index:2; }
 .hw-main-v4 .hw-hero-copy { z-index:3; }
 .hw-main-v4 .hw-hero-copy .hw-line { flex-basis:100%; }
@@ -138,4 +138,36 @@
 }
 @media(max-width:360px) {
   :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-hero-copy h1 { font-size:min(var(--main-title-size,var(--display-title-size,72px)),var(--section-title-mobile,35px)); }
+}
+
+/* Type scale (~1.2x): 12 · 14 · 16 · 19 · 23 · 28 · 36 · 56 · 64. Headings 28px and up use --heading-weight.
+   Scoped to V4 so shared pages keep their current sizes; theme tokens below are pinned to the scale on this page. */
+.hw-main-v4 {
+  --type-12:12px; --type-14:14px; --type-16:16px; --type-19:19px; --type-23:23px;
+  --type-28:28px; --type-36:36px; --type-56:56px; --type-64:64px;
+  --heading-weight:600;
+  --display-title-size:var(--type-64);
+  --hero-title-size:var(--type-56);
+}
+.hw-main-v4 :is(.hw-slogan,.hw-keywords) strong,
+.hw-main-v4 .hw-slogan,
+.hw-main-v4 .hw-section-intro h2,
+.hw-main-v4 .hw-business-copy h3,
+.hw-main-v4 .hw-future-heading h2,
+.hw-main-v4 :is(.hw-future-top,.hw-future-bottom) h3,
+.hw-main-v4 .sps-footer .sps-footer-statement,
+.hw-main-v4 .inquiry-aside h2,
+.hw-main-v4 .inquiry-review h3 { font-weight:var(--heading-weight); letter-spacing:-.035em; }
+.hw-main-v4 .hw-business-copy h3 small { font-weight:450; }
+@media(min-width:1026px) {
+  .hw-main-v4 :is(.hw-section-intro h2,.hw-future-heading h2) { font-size:var(--type-36); }
+  .hw-main-v4 :is(.hw-business-copy h3,.hw-future-top h3,.hw-future-bottom h3) { font-size:var(--type-28); }
+  .hw-main-v4 .sps-footer .sps-footer-statement { font-size:var(--type-36); }
+  .hw-main-v4 .inquiry-aside h2,.hw-main-v4 .inquiry-review h3 { font-size:var(--type-28); }
+  .hw-main-v4 :is(.hw-news-heading h2,.hw-news-grid h3,.hw-scene-descriptions p) { font-size:var(--type-23); }
+  .hw-main-v4 .main-v4-stories .story-heading > span { font-size:var(--type-19); }
+  .hw-main-v4 :is(.hw-future-top p,.hw-future-bottom p) { font-size:var(--type-19); }
+  .hw-main-v4 :is(.hw-business-copy h3 small,.hw-business-detail p) { font-size:var(--type-16); }
+  .hw-main-v4 :is(.hw-business-detail a,.hw-news-grid a > span) { font-size:var(--type-14); }
+  .hw-main-v4 .hw-news-grid small { font-size:var(--type-12); }
 }
