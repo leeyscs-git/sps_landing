@@ -39,3 +39,12 @@ _workspace/
 
 # Local-only reference material (third-party site clone and critique notes)
 /reference/
+
+# Never committed: secrets, personal notes, contracts, customer data.
+# Put anything that must stay on this computer only in _private/.
+/_private/*
+!/_private/README.md
+*.pem
+*.key
+.npmrc
+

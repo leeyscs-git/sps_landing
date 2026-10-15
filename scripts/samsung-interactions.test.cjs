@@ -1,6 +1,6 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
-const {nextHeaderState,activeTabOffset}=require('../jll-remix-samsung.js');
+const {nextHeaderState,activeTabOffset}=require('../_archive/drafts/jll-remix-samsung.js');
 const initial={anchor:0,direction:1,hidden:false};
 
 test('header stays visible near the top, hides on downward travel, and returns on upward travel',()=>{

@@ -1,3 +1,6 @@
+# Vercel uploads only the public site. Everything below stays out of the deploy.
+
+# Tooling, secrets and local work
 .git
 .vercel
 .agents
@@ -8,15 +11,32 @@ node_modules
 output
 tmp
 _workspace
-blackstone
-briefing/evidence
-briefing/journal-v1-source
+.codex-remote-attachments/
 scripts
+package.json
+pnpm-lock.yaml
+README.md
 CONCEPT.md
 DESIGN-ADAPTATIONS.md
-README.md
-briefing/*.md
-briefing/journal-research.json
-design/jll-remix/theme.before-locale-merge.json
-.codex-remote-attachments/
+
+# Kept in git but never published
+_private
+_archive
+_reference
 reference
+blackstone
+briefing
+
+# Internal design tools: the foundation editor and its guide page
+jll-remix-design-system.html
+jll-remix-design-system.css
+jll-remix-design-system.js
+jll-remix-theme-editor.css
+jll-remix-theme-editor.js
+
+# Design notes and review captures; the live pages only read theme.json
+/design/jll-remix/*
+!/design/jll-remix/theme.json
+
+# Vendor docs (the minified script itself is deployed)
+assets/vendor/lenis/README.md

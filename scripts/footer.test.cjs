@@ -7,7 +7,7 @@ const root=path.resolve(__dirname,'..');
 const pages=fs.readdirSync(root).filter(file=>/^jll-remix.*\.html$/.test(file)&&fs.readFileSync(path.join(root,file),'utf8').includes('data-sps-header'));
 
 test('every current SPS page has one shared footer outside main, with its required scripts and style',()=>{
-  assert.equal(pages.length,17);
+  assert.equal(pages.length,6);
   for(const file of pages){
     const html=fs.readFileSync(path.join(root,file),'utf8');
     const footer=html.indexOf('<footer class="sps-footer"');

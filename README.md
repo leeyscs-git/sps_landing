@@ -2,6 +2,15 @@
 
 변경 전 원본은 `original.html`에 보존됩니다. A·B·C·D·E·F는 각각의 경로로 보존되며, G안은 C의 메인 인상과 문제별 서비스 설득·상담 신청 화면을 연결합니다. 기본 주소는 현재 H V1(JLL 리믹스)로 연결합니다. G 서비스 상세는 `/g-service.html?service=management`, G 메인은 `/g-home.html`에서 열 수 있습니다.
 
+## 폴더 구성 (2026-10-15 정리)
+
+- 루트: 실제 공개 사이트(메인 V4, 소개, 서비스 사례, 인사이트, 고객지원)와 그 CSS·JS·에셋, 디자인 시스템 편집 도구.
+- `_archive/`: 이전 시안(A–G, H V1–V3), 비교 화면, 브리핑 작업본. Git에는 남지만 Vercel에는 배포하지 않습니다. `npm run dev`에서 `/_archive/drafts/compare.html`로 엽니다.
+- `_reference/`: 다른 회사 사이트에서 가져온 자료(Blackstone 복제본, 한화·효성·SM PMC 원본 에셋, 레퍼런스 분석 JSON). 배포하지 않습니다.
+- `_private/`: Git과 배포 모두에서 제외되는 로컬 전용 폴더. 계약서, 고객 정보, 키는 여기에 둡니다.
+
+아래 표의 시안 주소는 이제 `/_archive/drafts/` 아래에 있습니다.
+
 ## Vercel 배포 경로
 
 기존 `building-note-landing` 프로젝트와 `https://sps.shineui.kr` 도메인을 사용합니다. 정적 HTML/CSS/JS 사이트이며 기존 `cleanUrls` 설정을 유지합니다.

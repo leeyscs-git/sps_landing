@@ -131,11 +131,11 @@ test('both pages load the same archive component before their own controller',()
 });
 
 test('the runnable old cases page retains its own controller, styles and independent URL categories',()=>{
-  const directory='../briefing/service-cases-v1-reference/';
+  const directory='../_archive/briefing/service-cases-v1-reference/';
   const html=fs.readFileSync(require.resolve(directory+'jll-remix-cases.html'),'utf8');
-  assert.match(html,/<base href="\.\.\/\.\.\//);
-  assert.match(html,/briefing\/service-cases-v1-reference\/jll-remix-cases.css/);
-  assert.match(html,/briefing\/service-cases-v1-reference\/jll-remix-cases.js/);
+  assert.match(html,/<base href="\.\.\/\.\.\/\.\.\/">/);
+  assert.match(html,/_archive\/briefing\/service-cases-v1-reference\/jll-remix-cases.css/);
+  assert.match(html,/_archive\/briefing\/service-cases-v1-reference\/jll-remix-cases.js/);
   assert.doesNotMatch(html,/jll-remix-content-archive/);
   const h=fixture({search:'?category=interior'});
   h.win.document.querySelector=()=>h.inquiry;
@@ -143,7 +143,7 @@ test('the runnable old cases page retains its own controller, styles and indepen
     document:h.win.document,window:h.win,location:h.win.location,history:h.win.history,URL
   });
   assert.equal(h.status.textContent,'실내건축');assert.equal(h.inquiry.dataset.inquiryService,'interior');
-  const comparison=fs.readFileSync(require.resolve('../jll-remix-cases-compare.html'),'utf8');
+  const comparison=fs.readFileSync(require.resolve('../_archive/drafts/jll-remix-cases-compare.html'),'utf8');
   assert.match(comparison,/service-cases-v1-reference\/jll-remix-cases.html\?embed=1/);
   assert.match(comparison,/jll-remix-cases.html\?embed=1/);
 });
