@@ -28,6 +28,7 @@
     font('--section-title-mobile','서비스 제목 · 모바일',35,24,44,'content'),
     font('--card-title-size','카드 제목',24,18,30,'content'),
     font('--body-size','기본 본문',16,14,20,'content'),
+    font('--type-base','글자 단계 기준 · V4',16,14,20,'content'),
     font('--story-font-size','스토리 항목',12,11,16,'components'),
     font('--field-font-size','선택 입력',14,13,18,'components'),
     font('--faq-font-size','FAQ 질문',14,13,18,'components'),

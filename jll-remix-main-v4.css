@@ -140,9 +140,10 @@
   :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-hero-copy h1 { font-size:min(var(--main-title-size,var(--display-title-size,72px)),var(--section-title-mobile,35px)); }
 }
 
-/* Type scale tokens live in jll-remix-tokens.css. V4 pins its display tokens to the scale,
-   so the local theme editor no longer changes these two sizes on this page. */
+/* Type scale tokens live in jll-remix-tokens.css. V4 pins body and display sizes to the scale,
+   so on this page the editor's "글자 단계 기준" value moves them all and the separate body/title values are ignored. */
 .hw-main-v4 {
+  --body-size:var(--type-16);
   --display-title-size:var(--type-64);
   --hero-title-size:var(--type-56);
 }
@@ -170,6 +171,8 @@
   .hw-main-v4 :is(.hw-business-copy h3 small,.hw-business-detail p) { font-size:var(--type-16); }
   .hw-main-v4 :is(.hw-business-detail a,.hw-news-grid a > span) { font-size:var(--type-14); }
   .hw-main-v4 .hw-news-grid small { font-size:var(--type-12); }
+  .hw-main-v4 .main-v4-page-nav .main-v4-nav-label { font-size:var(--type-14); }
+  .hw-main-v4 .sps-footer .sps-footer-phone { font-size:var(--type-23); }
 }
 /* Phone steps: hero 40 · section 28 · mid 23. Under 28px the mid headings drop to the sub-heading weight. */
 @media(min-width:361px) and (max-width:600px) {
