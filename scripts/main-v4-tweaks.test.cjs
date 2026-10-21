@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const {start,DEFAULT_VISION,DEFAULT_HEADER,DEFAULT_SERVICES,DEFAULT_BAR,DEFAULT_HEADER_STYLE,DEFAULT_FOOTER,DEFAULT_CAPTION,DEFAULT_CONSULT,DEFAULT_CARDS,DEFAULT_PAGE_NAV,STORAGE_VERSION}=require('../jll-remix-main-v4-tweaks.js');
 // 2026-10-21: 사용자가 고른 판이 V4 기본(비전 V4 · 헤더 메뉴 줄만 · hero · 서비스 V3 · 푸터 V3 · 상담 버튼 없음 · 흰 카드 · h1 · 페이지 메뉴 숨김), 버전 20 이전 저장값은 버린다
-const DEFAULTS={version:STORAGE_VERSION,offset:'auto',vision:DEFAULT_VISION,header:DEFAULT_HEADER,services:DEFAULT_SERVICES,barHeight:DEFAULT_BAR,pageNav:DEFAULT_PAGE_NAV,withSection:true,headerStyle:DEFAULT_HEADER_STYLE,footer:DEFAULT_FOOTER,footerConsult:DEFAULT_CONSULT,footerCards:DEFAULT_CARDS,caption:DEFAULT_CAPTION,visionLight:true,visionGround:'video-namsan'};
+const DEFAULTS={version:STORAGE_VERSION,offset:'auto',vision:DEFAULT_VISION,header:DEFAULT_HEADER,services:DEFAULT_SERVICES,barHeight:DEFAULT_BAR,pageNav:DEFAULT_PAGE_NAV,withSection:true,linkRule:false,headerStyle:DEFAULT_HEADER_STYLE,footer:DEFAULT_FOOTER,footerConsult:DEFAULT_CONSULT,footerCards:DEFAULT_CARDS,caption:DEFAULT_CAPTION,visionLight:true,visionGround:'video-namsan'};
 
 test('the V4 defaults are the chosen layout and the storage version moves to 20',()=>{
   assert.deepEqual([DEFAULT_VISION,DEFAULT_HEADER,DEFAULT_HEADER_STYLE,DEFAULT_SERVICES,DEFAULT_FOOTER,DEFAULT_CONSULT,DEFAULT_CARDS,DEFAULT_CAPTION,DEFAULT_PAGE_NAV,STORAGE_VERSION],
@@ -25,7 +25,7 @@ test('corner tweaks paint above the shared opaque header while leaving skip navi
 function fixture({saved=null,storageBlocked=false,search=''}={}){
   const events={},docEvents={},observers=[],styles={};
   const control=()=>({events:{},addEventListener(name,fn){this.events[name]=fn;},setAttribute(name,value){this[name]=value;}});
-  const slider=control(),reset=control(),output={},barSlider=control(),barOutput={},navToggle={...control(),checked:true},withToggle={...control(),checked:true},lightToggle={...control(),checked:true},groundToggle={...control(),checked:true};let refreshes=0;const rootStyle={},rootData={};
+  const slider=control(),reset=control(),output={},barSlider=control(),barOutput={},navToggle={...control(),checked:true},withToggle={...control(),checked:true},linkRuleToggle={...control(),checked:false},lightToggle={...control(),checked:true},groundToggle={...control(),checked:true};let refreshes=0;const rootStyle={},rootData={};
   const radios=['fusion','rise','logo','symbol','symbol-rise','film'].map(value=>({...control(),value,checked:false}));
   const headerRadios=['row','bar'].map(value=>({...control(),value,checked:false}));
   const servicesRadios=['1','2','3'].map(value=>({...control(),value,checked:false}));
@@ -38,7 +38,7 @@ function fixture({saved=null,storageBlocked=false,search=''}={}){
   const headerCalls=[];let historyUrl=null;
   const summary={focus(){this.focused=true;}};
   const panel={...control(),hidden:true,open:false,contains(target){return target===slider;},
-    querySelector:selector=>({'#main-v4-title-position':slider,'#main-v4-title-value':output,'#main-v4-tweaks-reset':reset,'#main-v4-bar-height':barSlider,'#main-v4-bar-value':barOutput,'#main-v4-nav-toggle':navToggle,'#main-v4-with-toggle':withToggle,'#main-v4-vision-light':lightToggle,'#main-v4-vision-ground':groundToggle,summary})[selector],
+    querySelector:selector=>({'#main-v4-title-position':slider,'#main-v4-title-value':output,'#main-v4-tweaks-reset':reset,'#main-v4-bar-height':barSlider,'#main-v4-bar-value':barOutput,'#main-v4-nav-toggle':navToggle,'#main-v4-with-toggle':withToggle,'#main-v4-link-rule':linkRuleToggle,'#main-v4-vision-light':lightToggle,'#main-v4-vision-ground':groundToggle,summary})[selector],
     querySelectorAll:selector=>selector==='input[name="main-v4-vision"]'?radios:selector==='input[name="main-v4-header"]'?headerRadios:selector==='input[name="main-v4-services"]'?servicesRadios:selector==='input[name="main-v4-header-bg"]'?headerBgRadios:selector==='input[name="main-v4-footer"]'?footerRadios:selector==='input[name="main-v4-vision-ground"]'?groundRadios:selector==='input[name="main-v4-caption"]'?captionRadios:selector==='input[name="main-v4-footer-consult"]'?consultRadios:selector==='input[name="main-v4-footer-cards"]'?cardsRadios:[]};
   const copy={offsetHeight:230},bar={offsetHeight:138,bottom:null};
   const hero={offsetHeight:700,style:{setProperty(name,value){styles[name]=value;}},
@@ -60,7 +60,7 @@ function fixture({saved=null,storageBlocked=false,search=''}={}){
     moveBar(v){barSlider.value=String(v);barSlider.events.input();},consultRadios,cardsRadios,
     pickConsult(value){consultRadios.forEach(r=>{r.checked=r.value===value;});consultRadios.find(r=>r.value===value).events.change();},
     pickCards(value){cardsRadios.forEach(r=>{r.checked=r.value===value;});cardsRadios.find(r=>r.value===value).events.change();},navToggle,lightToggle,groundRadios,pickGround(value){groundRadios.forEach(r=>{r.checked=r.value===value;});groundRadios.find(r=>r.value===value).events.change();},rootData,
-    toggleNav(on){navToggle.checked=on;navToggle.events.change();},withToggle,toggleWith(on){withToggle.checked=on;withToggle.events.change();},headerBgRadios,
+    toggleNav(on){navToggle.checked=on;navToggle.events.change();},withToggle,toggleWith(on){withToggle.checked=on;withToggle.events.change();},linkRuleToggle,toggleLinkRule(on){linkRuleToggle.checked=on;linkRuleToggle.events.change();},headerBgRadios,
     pickHeaderBg(value){headerBgRadios.forEach(r=>{r.checked=r.value===value;});headerBgRadios.find(r=>r.value===value).events.change();},
     pickServices(value){servicesRadios.forEach(r=>{r.checked=r.value===value;});servicesRadios.find(r=>r.value===value).events.change();},
     footerRadios,pickFooter(value){footerRadios.forEach(r=>{r.checked=r.value===value;});footerRadios.find(r=>r.value===value).events.change();},
@@ -282,7 +282,7 @@ test('footer consult button: 기본 자리 · 문장 아래 · 없음 is saved a
   const fsx=require('node:fs'),html=fsx.readFileSync(require.resolve('../jll-remix-main-v4.html'),'utf8');
   assert.match(html,/var fc=\(s&&s\.footerConsult\)\|\|"none",/,'the inline chooser defaults to no button');
   assert.match(html,/name="main-v4-footer-consult" value="none" checked/);
-  assert.match(html,/if\(footerHost&&\(fc==="statement"\|\|fc==="none"\)\)footerHost\.dataset\.footerConsult=fc;/,'the chooser hands the choice to the shared footer');
+  assert.match(html,/if\(footerHost&&\(fc==="contact"\|\|fc==="statement"\|\|fc==="none"\)\)footerHost\.dataset\.footerConsult=fc;/,'the chooser always hands the choice to the shared footer (whose own default is 없음)');
   assert.equal((html.match(/name="main-v4-footer-consult"/g)||[]).length,3);
 });
 
@@ -361,7 +361,7 @@ test('the footer choice (원래 · V2) persists and reloads; a ?footer= preview 
   const html=require('node:fs').readFileSync(require.resolve('../jll-remix-main-v4.html'),'utf8');
   assert.match(html,/name="main-v4-footer" value="3" checked/);
   assert.match(html,/var fv=\(s&&s\.footer\)\|\|null,qf=new URLSearchParams\(location\.search\)\.get\("footer"\);if\(qf==="1"\|\|qf==="2"\|\|qf==="3"\)fv=qf;if\(fv!=="1"&&fv!=="2"\)fv="3";/,'the inline chooser reads the saved choice or ?footer=, falling back to V3');
-  assert.match(html,/if\(footerHost&&fv!=="1"\)footerHost\.dataset\.footerVariant=fv;/,'and marks the shared footer host before the footer script mounts');
+  assert.match(html,/if\(footerHost\)footerHost\.dataset\.footerVariant=fv;/,'and always marks the shared footer host (V1 too, since the shared default is V3) before the footer script mounts');
   { const v1=fixture({search:'?footer=1'});assert.deepEqual(v1.footerRadios.map(r=>r.checked),[true,false,false],'V1 previews too');assert.match(html,/name="main-v4-footer" value="1"/); }
   assert.ok(html.indexOf('data-sps-footer')<html.indexOf('footerHost.dataset.footerVariant'),'the host is parsed before the chooser runs');
 });
@@ -435,4 +435,21 @@ test('the vision ground choice (검정 · 우주 · 히어로 첫 영상 · 영�
   assert.match(html,/name="main-v4-vision-ground" value="video-namsan" checked/);
   for(const v of ['black','image','video-namsan','video-seoul','video-water'])assert.match(html,new RegExp('name="main-v4-vision-ground" value="'+v+'"'));
   assert.match(html,/<video class="hw-hero-video" data-story="0"[^>]*src="assets\/vid\/Namsan\.mp4"/,'the default ground is the hero\'s first film');
+});
+
+test('the 링크 밑줄 표시 toggle (off by default) shows the text-link underline via html[data-link-rule="on"], live and persisted, and resets to hidden',()=>{
+  const h=fixture();
+  assert.equal(h.linkRuleToggle.checked,false);assert.equal(h.rootData.linkRule,undefined,'hidden by default');assert.equal(h.stored().linkRule,false);
+  h.toggleLinkRule(true);
+  assert.equal(h.rootData.linkRule,'on');assert.equal(h.stored().linkRule,true);assert.equal(h.reloads(),0,'applies without a reload');
+  const restored=fixture({saved:JSON.stringify(h.stored())});
+  assert.equal(restored.rootData.linkRule,'on');assert.equal(restored.linkRuleToggle.checked,true);
+  restored.reset.events.click();
+  assert.equal(restored.rootData.linkRule,undefined);assert.equal(restored.stored().linkRule,false);
+  const fsx=require('node:fs');
+  const css=fsx.readFileSync(require.resolve('../jll-remix-main-v4.css'),'utf8');
+  assert.match(css,/html:not\(\[data-link-rule="on"\]\) \.hw-main-v4 :is\(\.hw-with-link, \.hw-services3-link\) \{ border-bottom-color: transparent; \}/);
+  const html=fsx.readFileSync(require.resolve('../jll-remix-main-v4.html'),'utf8');
+  assert.match(html,/<input id="main-v4-link-rule" type="checkbox">/);
+  assert.match(html,/if\(s&&s\.linkRule===true\)document\.documentElement\.dataset\.linkRule="on";/,'shown from the first paint when saved on');
 });

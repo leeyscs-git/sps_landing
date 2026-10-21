@@ -1,6 +1,8 @@
 /* Service-specific content; layout and motion live in the shared archive component. */
 /* 사업실적 · 관리 실적 카드: 사례 카드(iv2-post)와 같은 틀(사진 · 작은 글 · 제목)에, 링크 대신 용도 · 규모 · 연면적 표 */
 .cases-building-card { display:flex; flex-direction:column; height:100%; }
+.cases-building-nophoto { display:grid; place-items:center; } /* 사진을 받기 전: 같은 비율의 회색 자리(--surface-cool) */
+.cases-building-nophoto span { font-size:13px; line-height:1.5; color:var(--muted); }
 .cases-building-facts { margin:20px 0 0; border-top:1px solid var(--line); }
 .cases-building-facts div { display:grid; grid-template-columns:72px minmax(0,1fr); gap:16px; padding-block:10px; border-bottom:1px solid var(--line); font-size:14px; line-height:1.6; }
 .cases-building-facts dt { color:var(--muted); }

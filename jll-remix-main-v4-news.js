@@ -8,7 +8,7 @@
   const CATEGORIES = { management: '부동산 자산관리', interior: '실내건축', other: '기타' };   // 사업실적 탭과 같다(임대 마케팅은 2026-10-21 뺐다)
   const escape = value => String(value ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   const card = ({ href, image, label, title, action }) =>
-    '<a href="' + escape(href) + '" data-reveal><div><img src="' + escape(image) + '" alt="" loading="lazy"></div><small>' + escape(label) + '</small><h3>' + escape(title) + '</h3><span>' + escape(action) + ' ↗</span></a>';
+    '<a href="' + escape(href) + '" data-reveal>' + (image ? '<div><img src="' + escape(image) + '" alt="" loading="lazy"></div>' : '<div class="hw-news-nophoto"><span>사진 준비 중</span></div>') + '<small>' + escape(label) + '</small><h3>' + escape(title) + '</h3><span>' + escape(action) + ' ↗</span></a>';
   // 사업실적 '전체' 탭과 같은 순서: 관리 중인 건물(부동산 자산관리) 먼저, 그다음 탭이 있는 분류의 사례. 앞의 세 개만
   function caseCards(cases, buildings) {
     const fromBuildings = (buildings || []).map(b => card({ href: 'jll-remix-cases.html?category=management', image: b.image, label: CATEGORIES.management + (b.sample ? ' · 샘플' : ''), title: b.name, action: '사업실적 보기' }));

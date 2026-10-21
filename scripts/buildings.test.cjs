@@ -5,21 +5,19 @@ const path=require('node:path');
 const root=path.join(__dirname,'..');
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 
-test('사업실적 · 관리 실적 lists five sample managed buildings with photo, area, use and scale in the shared card frame',()=>{
+test('부동산 자산관리 lists the four real managed buildings (name · use); empty fields stay off the card and a missing photo shows a 사진 준비 중 slot',()=>{
   const B=require('../jll-remix-buildings.js');
-  assert.equal(B.buildings.length,5,'five dummy buildings for now');
-  for(const b of B.buildings){
-    for(const key of ['name','area','use','floors','gfa','image','alt'])assert.ok(b[key],b.name+' has '+key);
-    assert.equal(b.since,undefined,'no 관리 시작');assert.equal(b.scope,undefined,'no 맡은 일');
-    assert.equal(b.sample,true,'marked as a sample until real buildings replace it');
-    assert.ok(fs.existsSync(path.join(root,b.image)),'photo exists: '+b.image);
-    assert.doesNotMatch(b.image,/assets\/(jll|hanwha-reference)\//,'no reference-site photos');
-  }
+  assert.deepEqual(B.buildings.map(b=>[b.name,b.use]),[['승리빌딩','근린생활시설'],['호성빌딩','근린생활시설'],['유니트125','청년안심주택 · 아파트'],['신의S컬렉션','업무시설 · 오피스텔']]);
+  assert.ok(B.buildings.every(b=>!b.sample),'real buildings, not samples');
+  for(const b of B.buildings)if(b.image){assert.ok(fs.existsSync(path.join(root,b.image)),'photo exists: '+b.image);assert.doesNotMatch(b.image,/assets\/(jll|hanwha-reference)\//);}
   const html=B.cards(B.buildings.slice(0,1));
-  assert.match(html,/<article class="iv2-post cases-building" data-iv2-reveal>\s*<div class="cases-building-card">\s*<span class="iv2-photo"><img src="assets\/landing\/architecture\.jpg" alt="[^"]+" width="800" height="600" loading="eager" decoding="async"><\/span>\s*<div class="iv2-copy">\s*<p class="iv2-meta">부동산 자산관리 · 서울 동대문구 · 샘플<\/p>\s*<h2>오피스 A<\/h2>/,'same frame as the case cards: photo, small label, title');
-  assert.deepEqual([...html.matchAll(/<dt>([^<]+)<\/dt><dd>([^<]+)<\/dd>/g)].map(m=>[m[1],m[2]]),[['용도','업무시설'],['규모','지하 3층 · 지상 15층'],['연면적','18,400㎡']],'facts: 용도 · 규모 · 연면적');
-  assert.doesNotMatch(html,/<a\b|관리 시작|맡은 일/,'no link, no 관리 시작 / 맡은 일');
-  assert.match(B.cards([{...B.buildings[0],name:'<b>'}]),/<h2>&lt;b&gt;<\/h2>/,'text is escaped');
+  assert.match(html,/<article class="iv2-post cases-building" data-iv2-reveal>\s*<div class="cases-building-card">\s*<span class="iv2-photo cases-building-nophoto"><span>사진 준비 중<\/span><\/span>\s*<div class="iv2-copy">\s*<p class="iv2-meta">부동산 자산관리<\/p>\s*<h2>승리빌딩<\/h2>/,'same frame as the case cards; no stock photo under a real building name');
+  assert.deepEqual([...html.matchAll(/<dt>([^<]+)<\/dt><dd>([^<]+)<\/dd>/g)].map(m=>[m[1],m[2]]),[['용도','근린생활시설']],'only the facts we have');
+  assert.doesNotMatch(html,/<a\b|샘플|undefined/);
+  const full=B.cards([{name:'A',use:'업무시설',area:'서울 동대문구',floors:'지하 1층 · 지상 5층',gfa:'1,000㎡',image:'assets/landing/city.jpg',alt:'A 외관'}]);
+  assert.match(full,/<img src="assets\/landing\/city\.jpg" alt="A 외관"/);assert.match(full,/<p class="iv2-meta">부동산 자산관리 · 서울 동대문구<\/p>/);
+  assert.deepEqual([...full.matchAll(/<dt>([^<]+)<\/dt>/g)].map(m=>m[1]),['용도','규모','연면적'],'filled fields appear when they are added');
+  assert.match(B.cards([{name:'<b>',use:'x'}]),/<h2>&lt;b&gt;<\/h2>/,'text is escaped');
 });
 
 test('the cases page is 사업실적 with one tab row: 전체 · 부동산 자산관리 · 실내건축 · 기타 (no 임대 마케팅, no 관리 실적 tab, no stacked sections)',()=>{

@@ -249,8 +249,9 @@
     hosts.forEach(host=>{
       const notes=[...host.querySelectorAll('[data-footer-note]')];
       // 페이지에 떠 있는 '맨 위로' 버튼이 따로 있으면(V4: data-footer-no-top) 푸터의 '맨 위로'는 넣지 않는다
-      const asked=host.getAttribute?.('data-footer-variant'),variant=asked==='2'||asked==='3'?asked:'1';
-      const place=host.getAttribute?.('data-footer-consult'),consult=place==='statement'||place==='none'?place:'contact';
+      // 기본은 메인 V4 의 기본과 같은 판: 푸터 V3 · 상담 버튼 없음(2026-10-21 전역 적용). 호스트가 1 · 2 / contact · statement 를 적으면 그 판을 그린다
+      const asked=host.getAttribute?.('data-footer-variant'),variant=asked==='1'||asked==='2'?asked:'3';
+      const place=host.getAttribute?.('data-footer-consult'),consult=place==='contact'||place==='statement'?place:'none';
       host.setAttribute('data-variant',variant);
       host.innerHTML=markup(paths,new Date().getFullYear(),{top:!host.hasAttribute('data-footer-no-top'),variant,consult});
       const inner=host.querySelector('.sps-footer-inner');

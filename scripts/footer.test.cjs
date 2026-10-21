@@ -169,7 +169,11 @@ test('footer V2 (먹색 띠 · 자료 카드): same destinations and company fac
   assert.match(css,/\.sps-footer:is\(\[data-variant="2"\], \[data-variant="3"\]\) \{[\s\S]*?background: ?var\(--ink\)/,'the dark band is --ink (V3 overrides it with the V1 ground)');
   assert.doesNotMatch(css.slice(css.indexOf('푸터 V2')),/#[0-9a-fA-F]{3,6}\b/,'no new colours in the V2 block');
   const ds=fs.readFileSync(path.join(root,'jll-remix-design-system.html'),'utf8');
-  assert.match(ds,/<div class="sps-footer" data-sps-footer data-footer-preview data-footer-variant="2">/,'the design system previews V2 too');
+  assert.match(ds,/<div class="sps-footer" data-sps-footer data-footer-preview data-footer-variant="2" data-footer-consult="contact">/,'the design system previews V2 too, with its consult button');
+  assert.match(ds,/<div class="sps-footer" data-sps-footer data-footer-preview data-footer-variant="1" data-footer-consult="contact">/,'V1 stays V1 in the preview although the shared default is now V3');
+  const src=fs.readFileSync(path.join(root,'jll-remix-footer.js'),'utf8');
+  assert.match(src,/variant=asked==='1'\|\|asked==='2'\?asked:'3';/,'every page defaults to footer V3 (the V4 default)');
+  assert.match(src,/consult=place==='contact'\|\|place==='statement'\?place:'none';/,'and to no consult button');
   const scale=fs.readFileSync(path.join(root,'jll-remix-main-v4-typescale.css'),'utf8');
   assert.match(scale,/\.sps-footer:is\(\[data-variant="2"\], \[data-variant="3"\]\) \.sps-footer-v2-statement \{ font-size: var\(--ts-h2\);/);
 });

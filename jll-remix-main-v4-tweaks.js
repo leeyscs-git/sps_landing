@@ -44,6 +44,7 @@
     const barSlider=panel.querySelector('#main-v4-bar-height'),barOutput=panel.querySelector('#main-v4-bar-value');
     const navToggle=panel.querySelector('#main-v4-nav-toggle');
     const withToggle=panel.querySelector('#main-v4-with-toggle');
+    const linkRuleToggle=panel.querySelector('#main-v4-link-rule');
     const lightToggle=panel.querySelector('#main-v4-vision-light');
     const groundInputs=[...(panel.querySelectorAll?.('input[name="main-v4-vision-ground"]')||[])];
     const GROUNDS=['black','image','video-namsan','video-seoul','video-water'];   // 비전 바탕: 검정 · 우주 별밭 · 영상(히어로 첫 영상 남산, 기본) · 영상(서울 노을) · 영상(바다 물결)
@@ -67,7 +68,7 @@
     const shownConsult=()=>CONSULTS.includes(queryConsult)?queryConsult:footerConsult;
     let queryCards=new URLSearchParams(win.location.search).get('cards');
     const shownCards=()=>CARDS.includes(queryCards)?queryCards:footerCards;
-    let requestedOffset='auto',vision=DEFAULT_VISION,headerMode=DEFAULT_HEADER,services=DEFAULT_SERVICES,barHeight=DEFAULT_BAR,pageNav=DEFAULT_PAGE_NAV,withSection=true,headerStyle=DEFAULT_HEADER_STYLE,footer=DEFAULT_FOOTER,footerConsult=DEFAULT_CONSULT,footerCards=DEFAULT_CARDS,caption=DEFAULT_CAPTION,visionLight=true,visionGround='video-namsan';
+    let requestedOffset='auto',vision=DEFAULT_VISION,headerMode=DEFAULT_HEADER,services=DEFAULT_SERVICES,barHeight=DEFAULT_BAR,pageNav=DEFAULT_PAGE_NAV,withSection=true,linkRule=false,headerStyle=DEFAULT_HEADER_STYLE,footer=DEFAULT_FOOTER,footerConsult=DEFAULT_CONSULT,footerCards=DEFAULT_CARDS,caption=DEFAULT_CAPTION,visionLight=true,visionGround='video-namsan';
     // ?caption=h2|h1 : 영상 글 크기 미리보기(저장하지 않음). 머리의 선택 스크립트가 같은 값을 html 에 미리 적는다.
     let queryCaption=new URLSearchParams(win.location.search).get('caption');
     const shownCaption=()=>CAPTIONS.includes(queryCaption)?queryCaption:caption;
@@ -91,10 +92,11 @@
       if(Number.isFinite(saved?.barHeight))barHeight=clampBar(saved.barHeight);
       if(typeof saved?.pageNav==='boolean')pageNav=saved.pageNav;
       if(typeof saved?.withSection==='boolean')withSection=saved.withSection;
+      if(typeof saved?.linkRule==='boolean')linkRule=saved.linkRule;
       if(HEADER_STYLES.includes(saved?.headerStyle))headerStyle=saved.headerStyle;
     }catch{}
     function save(){
-      try{win.localStorage.setItem(storageKey,JSON.stringify({version:STORAGE_VERSION,offset:requestedOffset,vision,header:headerMode,services,barHeight,pageNav,withSection,headerStyle,footer,footerConsult,footerCards,caption,visionLight,visionGround}));}catch{}
+      try{win.localStorage.setItem(storageKey,JSON.stringify({version:STORAGE_VERSION,offset:requestedOffset,vision,header:headerMode,services,barHeight,pageNav,withSection,linkRule,headerStyle,footer,footerConsult,footerCards,caption,visionLight,visionGround}));}catch{}
     }
     function measure(){
       // offsetHeight uses the page's logical pixels, including desktop-canvas zoom.
@@ -191,6 +193,13 @@
       if(withToggle)withToggle.checked=withSection;
     }
     withToggle?.addEventListener('change',()=>{withSection=Boolean(withToggle.checked);applyWith();save();});
+    // 링크 밑줄: html[data-link-rule="on"] 이면 CSS 가 글 링크 밑줄을 보인다(기본 감춤). 바로 적용된다
+    function applyLinkRule(){
+      const root=doc.documentElement;
+      if(root?.dataset){if(linkRule)root.dataset.linkRule='on';else delete root.dataset.linkRule;}
+      if(linkRuleToggle)linkRuleToggle.checked=linkRule;
+    }
+    linkRuleToggle?.addEventListener('change',()=>{linkRule=Boolean(linkRuleToggle.checked);applyLinkRule();save();});
     // 비전을 흰 바탕으로 시작(원이 움직이면 검정으로): 결합 장면에 data-light="white" 를 붙였다 뗀다. 장면 스크립트가 매 프레임 읽으므로 다시 읽지 않고 바로 적용된다
     let queryLight=new URLSearchParams(win.location.search).get('light');
     const shownLight=()=>queryLight==='0'?false:queryLight==='1'?true:visionLight;
@@ -243,6 +252,7 @@
       barHeight=DEFAULT_BAR;applyBar();
       pageNav=DEFAULT_PAGE_NAV;applyNav();
       withSection=true;applyWith();
+      linkRule=false;applyLinkRule();
       if(queryCaption!==null){queryCaption=null;try{const url=new URL(win.location.href);url.searchParams.delete('caption');win.history?.replaceState?.(null,'',url.href);}catch{}}
       caption=DEFAULT_CAPTION;applyCaption();
       if(queryLight!==null){queryLight=null;try{const url=new URL(win.location.href);url.searchParams.delete('light');win.history?.replaceState?.(null,'',url.href);}catch{}}
@@ -273,7 +283,7 @@
       [hero,copy,bar].forEach(element=>observer.observe(element,{box:'border-box'}));
     }
     doc.fonts?.ready.then(measure);
-    syncVision();syncHeader();syncServices();syncHeaderStyle();syncFooter();syncConsult();applyCards();applyBar();applyNav();applyWith();applyCaption();applyLight();applyGround();applyHeader(shownHeader());measure();save();panel.open=false;panel.hidden=false;
+    syncVision();syncHeader();syncServices();syncHeaderStyle();syncFooter();syncConsult();applyCards();applyBar();applyNav();applyWith();applyLinkRule();applyCaption();applyLight();applyGround();applyHeader(shownHeader());measure();save();panel.open=false;panel.hidden=false;
   }
   return {start,storageKey,VISIONS,DEFAULT_VISION,HEADERS,DEFAULT_HEADER,SERVICES,DEFAULT_SERVICES,DEFAULT_BAR,DEFAULT_HEADER_STYLE,FOOTERS,DEFAULT_FOOTER,CONSULTS,DEFAULT_CONSULT,CARDS,DEFAULT_CARDS,CAPTIONS,DEFAULT_CAPTION,DEFAULT_PAGE_NAV,STORAGE_VERSION};
 });

@@ -236,6 +236,9 @@
 @media (prefers-reduced-motion: reduce) { .main-v4-top { transition:none; } }
 /* 화면 조정 '페이지 메뉴 표시'를 끄면 오른쪽 페이지 메뉴를 감춘다 */
 html[data-page-nav="off"] .hw-main-v4 .main-v4-page-nav { display:none !important; }
+.hw-main-v4 .hw-news-grid .hw-news-nophoto { display:grid; place-items:center; background:var(--surface-cool); } /* 사업실적 줄: 사진을 받기 전의 건물 */
+.hw-main-v4 .hw-news-grid .hw-news-nophoto span { font-size:13px; color:var(--muted); }
+html:not([data-link-rule="on"]) .hw-main-v4 :is(.hw-with-link, .hw-services3-link) { border-bottom-color: transparent; } /* 트윅 '링크 밑줄 표시'(기본 끔): 선 자리는 남겨 켜고 꺼도 글이 움직이지 않는다 */
 html[data-with-section="off"] .hw-main-v4 :is(#hw-with, .main-v4-page-nav a[href="#hw-with"]) { display:none !important; } /* 트윅: 더 알아보기 감추기 */
 /* 화면 조정 '헤더 배경'. html[data-header-style] 이면 헤더가 히어로 위에 겹친다.
    hero: 히어로 위에서는 투명(흰 글자·흰 로고), 내려가면 흰 바탕이 위에서 내려오듯 다시 칠해진다. clear: 내려가도 바탕을 칠하지 않는다.

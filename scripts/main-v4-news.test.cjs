@@ -21,8 +21,8 @@ test('사업실적 and 인사이트 each render one row of three: 사업실적 f
   const h=fixture({cases,articles,buildings:managed});
   assert.deepEqual(h.counts,{cases:3,insights:3});
   assert.equal((h.rows[0].innerHTML.match(/<a /g)||[]).length,3);
-  assert.deepEqual([...h.rows[0].innerHTML.matchAll(/<h3>([^<]+)<\/h3>/g)].map(m=>m[1]),['오피스 A','근린상가 B','오피스텔 C'],'the first three managed buildings');
-  assert.match(h.rows[0].innerHTML,/href="jll-remix-cases\.html\?category=management"[\s\S]*부동산 자산관리 · 샘플[\s\S]*사업실적 보기 ↗/);
+  assert.deepEqual([...h.rows[0].innerHTML.matchAll(/<h3>([^<]+)<\/h3>/g)].map(m=>m[1]),['승리빌딩','호성빌딩','유니트125'],'the first three managed buildings');
+  assert.match(h.rows[0].innerHTML,/<a href="jll-remix-cases\.html\?category=management" data-reveal><div class="hw-news-nophoto"><span>사진 준비 중<\/span><\/div><small>부동산 자산관리<\/small><h3>승리빌딩<\/h3><span>사업실적 보기 ↗<\/span><\/a>/,'a building without a photo gets the 사진 준비 중 slot, not a stock image');
   const storiesOnly=fixture({cases,articles});
   assert.equal(storiesOnly.counts.cases,2,'without the building data: only cases whose category still has a tab');
   assert.doesNotMatch(storiesOnly.rows[0].innerHTML,/임대 마케팅/,'임대 마케팅 is gone from 사업실적');

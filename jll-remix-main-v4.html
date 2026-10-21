@@ -18,9 +18,9 @@
 <script src="jll-remix-theme-schema.js?v=display72" defer></script>
 <script src="jll-remix-theme.js?v=hero-content-rails1" defer blocking="render"></script>
 <script src="jll-remix-components.js?v=biz-names1" defer blocking="render"></script>
-<script src="jll-remix-footer.js?v=footer-soon8" defer blocking="render"></script>
+<script src="jll-remix-footer.js?v=footer-global1" defer blocking="render"></script>
 <script src="jll-remix-contact.js?v=support-scenarios1" defer></script>
-<link rel="stylesheet" href="jll-remix-main-v4.css?v=with-toggle1">
+<link rel="stylesheet" href="jll-remix-main-v4.css?v=link-rule1">
 <link rel="stylesheet" href="jll-remix-vision-fusion.css?v=43">
 <link rel="stylesheet" href="jll-remix-services2.css?v=8">
 <link rel="stylesheet" href="jll-remix-services3.css?v=intro-gap1">
@@ -29,9 +29,9 @@
 <script src="jll-remix.js?v=dialog-guard1" defer></script>
 <script src="jll-remix-main-v2.js?v=nav-film5" defer></script>
 <script src="jll-remix-cases-data.js?v=1" defer></script>
-<script src="jll-remix-buildings.js?v=tab2" defer></script>
+<script src="jll-remix-buildings.js?v=real1" defer></script>
 <script src="jll-remix-journal-data.js?v=1" defer></script>
-<script src="jll-remix-main-v4-news.js?v=defaults20" defer></script>
+<script src="jll-remix-main-v4-news.js?v=real1" defer></script>
 <script src="assets/vendor/lenis/lenis.min.js" defer></script>
 <script src="jll-remix-hanwha.js?v=heading-travel2" defer></script>
 <script src="jll-remix-main-v4.js?v=services-choice1" defer></script>
@@ -41,7 +41,7 @@
 <script src="jll-remix-services3.js?v=rail-drift1" defer></script>
 <script src="jll-remix-main-navigation.js?v=nav-fade1" defer></script>
 <script src="jll-remix-main-v4-top.js?v=footer-aware1" defer></script>
-<script src="jll-remix-main-v4-tweaks.js?v=defaults20b" defer></script>
+<script src="jll-remix-main-v4-tweaks.js?v=link-rule1" defer></script>
 <link rel="stylesheet" href="jll-remix-footer.css?v=footer-soon7">
 </head>
 <body class="hw-page hw-main-v4">
@@ -445,6 +445,7 @@
       <p>하나만 보입니다. 바꾸면 페이지를 다시 불러옵니다.</p>
     </fieldset>
     <label class="main-v4-tweaks-toggle"><span>더 알아보기 섹션 표시 <small>(Our Work · About)</small></span><input id="main-v4-with-toggle" type="checkbox" checked></label>
+    <label class="main-v4-tweaks-toggle"><span>링크 밑줄 표시 <small>(SPS 소개 보기 · ○○ 알아보기)</small></span><input id="main-v4-link-rule" type="checkbox"></label>
     <fieldset class="main-v4-tweaks-choice">
       <legend>푸터</legend>
       <label><input type="radio" name="main-v4-footer" value="1"><span>푸터 <small>밝은 바탕 · 대표전화 · 메뉴 묶음</small></span></label>
@@ -496,13 +497,15 @@ var keep={"1":"hw-business","2":"hw-services2","3":"hw-services3"}[sv];
 var keptLabel=document.querySelector('.main-v4-page-nav a[href="#'+keep+'"] .main-v4-nav-label');if(keptLabel)keptLabel.textContent="사업영역";
 /* 푸터: 저장값(footer) 또는 ?footer=1|2|3 (1 밝은 바탕 · 2 먹색 바탕, 회사소개서·브로슈어 카드 · 3 V1 바탕 + V2 배치, 기본 3). 공용 푸터 스크립트가 호스트의 data-footer-variant 를 읽어 그 판을 그린다. */
 var fv=(s&&s.footer)||null,qf=new URLSearchParams(location.search).get("footer");if(qf==="1"||qf==="2"||qf==="3")fv=qf;if(fv!=="1"&&fv!=="2")fv="3";document.documentElement.dataset.footer=fv;
-var footerHost=document.querySelector("[data-sps-footer]");if(footerHost&&fv!=="1")footerHost.dataset.footerVariant=fv;
+var footerHost=document.querySelector("[data-sps-footer]");if(footerHost)footerHost.dataset.footerVariant=fv;
 /* 상담 버튼 자리: 저장값(footerConsult: none 기본 · contact 기본 자리 · statement 문장 아래) 또는 ?consult=. 공용 푸터가 호스트의 data-footer-consult 를 읽는다. */
-var fc=(s&&s.footerConsult)||"none",qfc=new URLSearchParams(location.search).get("consult");if(qfc==="contact"||qfc==="statement"||qfc==="none")fc=qfc;if(footerHost&&(fc==="statement"||fc==="none"))footerHost.dataset.footerConsult=fc;
+var fc=(s&&s.footerConsult)||"none",qfc=new URLSearchParams(location.search).get("consult");if(qfc==="contact"||qfc==="statement"||qfc==="none")fc=qfc;if(footerHost&&(fc==="contact"||fc==="statement"||fc==="none"))footerHost.dataset.footerConsult=fc;
 /* 푸터 V3 자료 카드 색: 저장값(footerCards: white 기본 · grey · tint · blush · duo · ink · soft) 또는 ?cards=. 첫 그림부터 맞추려 html 에 미리 적는다. */
 var cardsList=["grey","tint","blush","duo","ink","soft","white"],fk=(s&&s.footerCards)||"white";var qfk=new URLSearchParams(location.search).get("cards");if(cardsList.indexOf(qfk)>=0)fk=qfk;if(cardsList.indexOf(fk)<0)fk="white";document.documentElement.dataset.footerCards=fk;
 /* 더 알아보기(#hw-with): 저장값 withSection 이 false 면 첫 그림부터 감춘다. 트윅 스크립트가 바로 켜고 끈다. */
 if(s&&s.withSection===false)document.documentElement.dataset.withSection="off";
+/* 링크 밑줄: 기본 감춤. 저장값 linkRule 이 true 일 때만 첫 그림부터 보인다. */
+if(s&&s.linkRule===true)document.documentElement.dataset.linkRule="on";
 /* 페이지 메뉴: 기본은 숨김(저장값 pageNav 가 true 일 때만 보인다). 트윅 스크립트보다 먼저 적어 깜빡이지 않는다. */
 if(!(s&&s.pageNav===true))document.documentElement.dataset.pageNav="off";
 /* 영상 글 크기: 저장값(caption) 또는 ?caption=h2|h1. 트윅 스크립트가 바로 적용하지만 첫 그림부터 맞추려 미리 적는다. */
