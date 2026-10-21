@@ -108,6 +108,14 @@ html:not([data-typescale="0"]) .hw-main-v4 .main-v4-page-nav .main-v4-nav-label 
 @media(max-width:1100px) {
   html:not([data-typescale="0"]):not([data-sps-desktop]) { --ts-hero: 52px; --ts-display: 46px; --ts-h2: 32px; --ts-h1: 38px; }
 }
+/* 비전 결합 장면(세로 열 판)의 영상 글: 세로 폰 · 태블릿은 원이 위쪽 가로 한 줄이라 글은 아래에, 눕힌 폰은 왼쪽 열 오른쪽에서 시작한다.
+   위의 h1 캡션 상자 규칙(html[data-caption-size="h1"] …)과 같은 무게라 뒤에 둔다 */
+@media (max-width: 850px) and (orientation: portrait) {
+  html:not([data-sps-desktop]) .hw-main-v4 .hw-fusion[data-variant="rise"] .hw-fusion-caption { top: auto; bottom: 128px; left: var(--layout-gutter); right: var(--layout-gutter); width: auto; } /* 위쪽 원 줄 아래 · 맨 위로 단추(bottom 72 + 44) 위 */
+}
+@media (max-width: 850px) and (orientation: landscape) {
+  html:not([data-sps-desktop]) .hw-main-v4 .hw-fusion[data-variant="rise"] .hw-fusion-caption { left: 128px; right: var(--layout-gutter); width: auto; } /* 눕힌 폰: 왼쪽 열 오른쪽에서 시작 */
+}
 @media(max-width:600px) {
   html:not([data-typescale="0"]):not([data-sps-desktop]) { --ts-hero: 40px; --ts-display: 34px; --ts-h2: 28px; --ts-h1: 30px; --ts-h3: 23px; --ts-h4: 19px; --ts-lead: 17px; }
   html:not([data-typescale="0"]):not([data-sps-desktop]) .hw-main-v4 .hw-hero-copy h1 { font-size: var(--ts-hero); }
@@ -122,6 +130,16 @@ html:not([data-typescale="0"]) .hw-main-v4 .main-v4-page-nav .main-v4-nav-label 
   html:not([data-typescale="0"]):not([data-sps-desktop]) .hw-news-grid h3 { font-size: var(--ts-h4); }
   html:not([data-typescale="0"]):not([data-sps-desktop]) .hw-kicker { font-size: var(--ts-meta); }
   html:not([data-typescale="0"]):not([data-sps-desktop]) .hw-scene-descriptions p { font-size: 18px; }
+  html:not([data-typescale="0"]):not([data-sps-desktop]) .hw-main-v4 .hw-fusion[data-variant="rise"] .hw-fusion-tag { font-size: var(--ts-meta); } /* 원 네 개가 한 줄일 때 이름표가 84px 칸에 들어가게 */
+  html:not([data-typescale="0"]):not([data-sps-desktop]) .hw-future-bottom p { font-size: var(--ts-lead); } /* 고객지원 본문: 제목(23)보다 한 단계 작게 */
+}
+/* 눕힌 폰: 히어로 제목을 한 단계 줄여 제목 · CTA · 하단 바가 한 화면에 들어오게 */
+@media (max-width: 850px) and (max-height: 500px) and (orientation: landscape), (max-width: 1000px) and (max-height: 500px) and (pointer: coarse) and (orientation: landscape) {
+  html:not([data-typescale="0"]):not([data-sps-desktop]) { --ts-hero: 40px; }
+}
+/* 360px 폰: 세 번째 제목이 네 줄로 꺾이지 않게 */
+@media (max-width: 360px) {
+  html:not([data-typescale="0"]):not([data-sps-desktop]) { --ts-hero: 36px; }
 }
 
 /* 푸터 V2(먹색 띠, data-variant="2"): 같은 단계. 문장 --ts-h2 > 대표전화 --ts-h3(흰색) > 카드 제목 --ts-h4(가로형 카드는 --ts-lead, 크기는 footer.css 가 정한다) > 메뉴 · 운영시간 15 > 줄 라벨 · 사업자 정보 --ts-meta > 카드 눈썹 --ts-label */

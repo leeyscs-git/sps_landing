@@ -127,3 +127,11 @@
   :where(html:not([data-sps-desktop])) .hw-fusion-caption p:last-child { font-size: 16px; }
   :where(html:not([data-sps-desktop])) .hw-fusion[data-variant="rise"] .hw-fusion-caption p:last-child { font-size: 28px; } /* 폰: 섹션 제목 단계(--ts-h2 28) */
 }
+/* 폰 · 태블릿(세로 열 판): 영상 글은 고르게 끊고, 아래쪽 글이 밝은 영상 위에서도 읽히게 바탕 어둡기를 아래로 갈수록 조금 더 짙게 둔다. 섬네일은 보이는 크기와 상관없이 누르는 자리 44px 이상 */
+@media (max-width: 850px), (max-width: 1000px) and (max-height: 500px) and (pointer: coarse) {
+  :where(html:not([data-sps-desktop])) .hw-fusion[data-variant="rise"] .hw-fusion-caption p:last-child span { text-wrap: balance; }
+  :where(html:not([data-sps-desktop])) .hw-fusion[data-variant="rise"] .hw-fusion-film::after { background: linear-gradient(180deg, color-mix(in srgb, var(--fusion-black) 38%, transparent) 40%, color-mix(in srgb, var(--fusion-black) 64%, transparent)); }
+  :where(html:not([data-sps-desktop])) .hw-fusion-thumb { overflow: visible; }
+  :where(html:not([data-sps-desktop])) .hw-fusion-thumb img { border-radius: 50%; }
+  :where(html:not([data-sps-desktop])) .hw-fusion-thumb::after { content: ''; position: absolute; inset: min(0px, calc(50% - 22px)); border-radius: 50%; }
+}

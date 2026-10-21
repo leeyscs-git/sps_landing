@@ -660,3 +660,32 @@ test('runtime: a film ground loads once the scene is entered, plays only while t
   assert.match(page('jll-remix-vision-fusion.css'),/\.hw-fusion\[data-ground="image"\] \.hw-fusion-ground \{ background: center \/ cover no-repeat url\("assets\/space-abyss\.svg\?v=\d+"\); transform: none; \}/,'the starfield fades without zooming, so its tiny stars do not shimmer');
   for(const src of Object.values(api.GROUND_VIDEOS))assert.ok(fs.existsSync(require('node:path').join(__dirname,'..',decodeURIComponent(src))),src+' exists');
 });
+
+test('portrait phones and tablets line the four column circles up in one top row with 44px circles and one label line',()=>{
+  for(const [w,h] of [[360,704],[375,736],[430,856],[768,948]]){
+    const geo={...geoFor(w,h),row:true},slots=api.columnSlots(geo);
+    assert.equal(new Set(slots.map(s=>s.y)).size,1,'one shared row at '+w);
+    assert.ok(slots.every((s,i)=>i===0||s.x>slots[i-1].x),'left to right at '+w);
+    assert.ok(slots.every(s=>s.r>=22&&s.x-s.r>=0&&s.x+s.r<=w),'44px circles inside the stage at '+w);
+    assert.ok(slots[0].y<h*.2,'near the top of the stage at '+w);
+    const f=frame(api.seqRange(1).mid,geo,'rise'),tags=[1,2,3,4].map(i=>f[i].tagY);
+    assert.ok(Math.max(...tags)-Math.min(...tags)<.5,'the labels share one line under the grown circle at '+w);
+  }
+  assert.equal(new Set(api.columnSlots(geoFor(1280,720)).map(s=>s.x)).size,1,'without the row flag (desktop, landscape) the left column stays');
+  const scale=page('jll-remix-main-v4-typescale.css');
+  assert.match(scale,/@media \(max-width: 850px\) and \(orientation: portrait\) \{\s*html:not\(\[data-sps-desktop\]\) \.hw-main-v4 \.hw-fusion\[data-variant="rise"\] \.hw-fusion-caption \{ top: auto; bottom: 128px;/,'the caption moves to the bottom, above the back-to-top button');
+  assert.match(page('jll-remix-vision-fusion.js'),/row: !doc\.documentElement\?\.hasAttribute\?\.\('data-sps-desktop'\) && Boolean\(win\.matchMedia\('\(max-width: 850px\) and \(orientation: portrait\)'\)\.matches\)/,'the script uses the same condition as the CSS');
+});
+
+// 폰(850 이하 · 눕힌 폰)은 풍력 · 잔디 영상을 720p 폰용으로 받는다. 데스크톱은 원래 파일 그대로(두 번째 source)
+test('phones fetch the 720p wind and grass films, desktops keep the full files as the fallback source',()=>{
+  const main=page('jll-remix-main-v4.html'),phone='(max-width: 850px), (max-width: 1000px) and (max-height: 500px) and (pointer: coarse)';
+  for(const name of ['wind','grass']){
+    const pair=`<source src="assets/vid/${name}-phone.mp4" type="video/mp4" media="${phone}"><source src="assets/vid/${name}.mp4" type="video/mp4"></video>`;
+    assert.ok(main.includes(pair),`${name}: phone source first, full file second`);
+    assert.doesNotMatch(main,new RegExp(`<video[^>]*src="assets/vid/${name}\.mp4"`),`${name}: no src attribute that would win over the sources`);
+    const full=fs.statSync(require.resolve(`../assets/vid/${name}.mp4`)).size,small=fs.statSync(require.resolve(`../assets/vid/${name}-phone.mp4`)).size;
+    assert.ok(small<full/3,`${name}: the phone file is a fraction of the full one`);
+  }
+  assert.equal(main.split('src="assets/vid/wind-phone.mp4"').length-1,2,'the hero story and the fusion window both offer it');
+});

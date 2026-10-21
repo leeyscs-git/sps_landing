@@ -229,7 +229,7 @@ test('footer V3 = V1 ground + V2 parts + the V1 bottom row: statement | resource
   assert.match(css,/\.sps-footer\[data-variant="3"\] \.sps-footer-v2-card \{ min-height: 88px; grid-template-areas: "icon title action" "icon desc action"; \}/,'the narrow row card has no eyebrow slot');
   assert.match(css,/\.sps-footer\[data-variant="3"\] \.sps-footer-v2-card \{ min-height: 0; border-radius: var\(--radius-control\); \}/,'card corners match the 문의하기 button');
   assert.match(css,/\.sps-footer\[data-variant="3"\] \.sps-footer-v2-call:is\(:hover, :focus-visible\) \.sps-footer-v2-call-number \{ text-decoration: none; \}/,'no underline on the phone number');
-  assert.match(css,/\.sps-footer\[data-variant="3"\] \.sps-footer-v2-hours :is\(dt, dd\), \.sps-footer\[data-variant="3"\] \.sps-footer-v2-hours \.sps-footer-v2-label \{ line-height: 36px; \}/,'hours lines sit on the 36px menu rows beside them');
+  assert.doesNotMatch(css,/line-height: 36px/,'hours keep their own V2 rhythm (aligning them to the menu rows looked off, reverted 2026-10-21)');
   assert.match(css,/\.sps-footer-soon \{ width: min\(520px, calc\(100% - 32px\)\); text-align: center; \}/,'centred 준비 중 window');
   assert.match(css,/\.sps-footer-soon \.sps-footer-soon-close \{ position: absolute; top: 12px; right: 12px;[^}]*border: 0;/,'borderless X, 12px from the corner');
   assert.match(css,/\.sps-footer-soon \.sps-footer-soon-cta \{ position: relative; display: flex; align-items: center; justify-content: center; width: max-content;[^}]*padding: 0 calc\(1em \+ 12px\);/,'the link matches the empty-state CTA');

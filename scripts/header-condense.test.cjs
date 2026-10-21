@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 // 접힘 헤더: 로고 줄(.header-main)만 남기고 메뉴 항목이 그 줄로 올라오는 치수와 스크롤 규칙을 확인한다.
-function fixture({ topSpace = 0, desktop = true, mode = null } = {}) {
+function fixture({ topSpace = 0, desktop = true, mode = null, landscapePhone = false, forced = false } = {}) {
   const headerVars = {}, rootVars = {}, events = new Map(), headerEvents = new Map(), dispatched = [];
   const stub = () => ({ addEventListener() {}, setAttribute() {}, focus() {}, classList: { toggle() {}, contains: () => false } });
   const mainRow = { offsetTop: topSpace, offsetHeight: 87 };
@@ -27,12 +27,13 @@ function fixture({ topSpace = 0, desktop = true, mode = null } = {}) {
     addEventListener(name, callback) { if (!headerEvents.has(name)) headerEvents.set(name, []); headerEvents.get(name).push(callback); },
   };
   const doc = {
-    documentElement: { dataset: mode ? { spsCondense: mode } : {}, style: { setProperty(name, value) { rootVars[name] = value; } } },
+    documentElement: { dataset: mode ? { spsCondense: mode } : {}, hasAttribute: name => name === 'data-sps-desktop' && forced, style: { setProperty(name, value) { rootVars[name] = value; } } },
     body: { classList: { contains: () => false, toggle() {} } },
     querySelector: selector => (selector === '[data-sps-header]' ? header : null), querySelectorAll: () => [], addEventListener() {},
     getElementById: () => null,
   };
-  const matchMedia = query => ({ matches: query.includes('min-width') ? desktop : false, addEventListener() {} });
+  // 폰 헤더 질의: 눕힌 폰(851~1000 × 500 이하 터치)은 접힘 질의(min-width: 851px)와 함께 맞는다
+  const matchMedia = query => ({ matches: query.includes('min-width') ? desktop : landscapePhone && query.includes('(pointer: coarse)'), addEventListener() {} });
   const win = {
     matchMedia,   // 접힘 질의는 window.matchMedia 로, 모바일 질의는 전역 matchMedia 로 묻는다
     addEventListener(name, callback) { if (!events.has(name)) events.set(name, []); events.get(name).push(callback); },
@@ -120,6 +121,15 @@ test('below the desktop breakpoint the header never condenses', () => {
   h.scrollTo(400); h.scrollTo(900);
   assert.equal(h.condensed(), false);
   assert.equal(h.rootVars['--sps-header-visible'], undefined, 'nothing written: stages keep using --sps-header-height');
+});
+
+test('a landscape phone wider than 850px keeps the phone header and never condenses; a phone showing the desktop site still does', () => {
+  const phone = fixture({ landscapePhone: true });
+  phone.scrollTo(400); phone.scrollTo(900);
+  assert.equal(phone.condensed(), false, 'the phone header has no menu row to condense into');
+  const forced = fixture({ landscapePhone: true, forced: true });
+  forced.scrollTo(400); forced.scrollTo(900);
+  assert.equal(forced.condensed(), true, 'data-sps-desktop keeps the desktop header behaviour');
 });
 
 test('the bar style (이전 방식) keeps a 58px bar with the menu row centred in it, slides the small logo and contact button in, and can be switched live', () => {

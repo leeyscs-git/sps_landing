@@ -63,3 +63,17 @@ test('theme changes and history restore update the sticky boundary immediately',
   h.emit('pageshow');
   assert.equal(h.values['--sps-header-height'], '77px');
 });
+
+// 눕힌 폰(iPhone 14 Pro~16 Pro 852·874, 안드로이드 915~998 × 500 이하)은 850보다 넓어도 폰 헤더를 쓴다. CSS와 스크립트가 같은 조건을 쓴다
+test('landscape phones wider than 850px get the phone header, with the same condition in the stylesheet and the script', () => {
+  const landscape = '(max-width: 850px), (max-width: 1000px) and (max-height: 500px) and (pointer: coarse)';
+  const css = fs.readFileSync(path.join(__dirname, '../jll-remix-header.css'), 'utf8');
+  const block = css.slice(css.indexOf(`@media ${landscape} {\n  :where(html:not([data-sps-desktop])) [data-sps-header]{ min-height: calc(var(--header-height-mobile`));
+  assert.ok(block.startsWith('@media'), 'the phone header block carries the landscape condition');
+  const body = block.slice(0, block.indexOf('\n}'));
+  assert.match(body, /\[data-sps-header\] \.menu-toggle\{ display: flex;/);
+  assert.match(body, /\[data-sps-header\] \.nav\{ display: none; \}/);
+  assert.ok(body.split('\n').slice(1).every(line => line.includes(':where(html:not([data-sps-desktop]))')), 'phones showing the desktop site keep the desktop header');
+  assert.ok(fs.readFileSync(path.join(__dirname, '../jll-remix-header.js'), 'utf8').includes(`matchMedia('${landscape}')`));
+  assert.ok(fs.readFileSync(path.join(__dirname, '../jll-remix-main-v2.js'), 'utf8').includes(`matchMedia?.('${landscape}')`));
+});

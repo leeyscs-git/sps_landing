@@ -26,6 +26,9 @@
     });
     const buttons=[...bar.querySelectorAll('[data-slide]')];
     const reduced=win.matchMedia('(prefers-reduced-motion: reduce)');
+    // 폰 · 데이터 절약 · 움직임 줄임은 다음 영상을 바로 받지 않는다: 폰은 컷 3초 전에 받고(늦으면 ready()의 1.5초 유예가 받친다), 움직임 줄임은 미리 받지 않는다
+    const lean=()=>reduced.matches||win.navigator?.connection?.saveData===true||(Boolean(win.matchMedia('(max-width: 850px), (max-width: 1000px) and (max-height: 500px) and (pointer: coarse)')?.matches)&&!doc.documentElement?.hasAttribute?.('data-sps-desktop'));
+    let warmTimer=0;
     let photo=hero.querySelector('.hw-hero-image');
     let ctaMotion=null;
     // 서비스 섹션은 화면 조정으로 V2·V3 중 하나만 남을 수 있다: #hw-business 링크는 남아 있는 섹션으로
@@ -110,7 +113,10 @@
       incoming.hidden=false;incoming.style.zIndex='1';incoming.removeAttribute('aria-hidden');
       videos.forEach(v=>{if(v!==film&&v!==outgoing){v.hidden=true;parkVideo(v);}});
       if(film&&!blocked())film.play().catch(()=>{});
-      warm(videoFor((index+1)%stories.length));
+      const next=videoFor((index+1)%stories.length);
+      clearTimeout(warmTimer);
+      if(!lean())warm(next);
+      else if(next&&!reduced.matches)warmTimer=setTimeout(()=>{if(current===index)warm(next);},Math.max(0,(film&&film.duration>0?film.duration*1000:7200)-3000));
       current=index;
       mediaChanged();
       title.innerHTML=story.title.split(/<br\s*\/?>/i).map(line=>'<span class="hw-line"><span>'+escape(line)+'</span></span>').join('');

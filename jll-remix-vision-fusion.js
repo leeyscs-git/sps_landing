@@ -127,6 +127,10 @@
   const TAG_HALF = 10.5;   // 이름표 높이의 절반(15px · 줄높이 1.4): 원 아래에 둘 때 윗변을 원에서 14px 띄운다
   function columnSlots(geo) {
     const S = Math.max(1, Math.min(geo.w, geo.h)), R = S * COLUMN.radius, gap = S * COLUMN.gap;
+    if (geo.row) {   // 세로 폰 · 태블릿(CSS 와 같은 조건): 왼쪽 열 대신 무대 위쪽 가로 한 줄, 글은 CSS 가 아래에 둔다. 원은 지름 44px 이상
+      const r = Math.max(22, R), inset = geo.w <= 600 ? 20 : 32, step = (geo.w - 2 * inset) / 4, y = Math.max(r * (1 + ACTIVE_GROW) + 32, geo.h * .12);
+      return COLUMN.order.map((win, k) => ({ win, x: inset + step * (k + .5), y, r }));
+    }
     const left = Math.min(40, Math.max(24, geo.w * .02)) + 16 + R;         // 오른쪽 페이지 메뉴(right: clamp(24px, 2vw, 40px) + 안쪽 16px)와 거울처럼 왼쪽 가장자리에 붙인다
     const block = 4 * 2 * R + 3 * gap + 4 * COLUMN.label;
     const top = (geo.h - block) / 2;
@@ -196,7 +200,7 @@
       const dim = p < firstTurn(film) ? 1 : .55 + .45 * Math.min(1, act);        // 차례인 원만 또렷하게
       const ex = c.cx + (slot.x - c.cx) * t, ey = c.cy + (slot.y - c.cy) * t;
       const r = (c.r + (slot.r - c.r) * t) * (1 + ACTIVE_GROW * act);     // 차례인 원은 1.45배로 커진다(스크롤을 따라 부드럽게)
-      const below = ey + r + 14 + TAG_HALF;                                      // 심볼에서는 원 가운데, 열에서는 원 아래
+      const below = ey + (geo.row ? slot.r * (1 + ACTIVE_GROW) : r) + 14 + TAG_HALF;   // 심볼에서는 원 가운데, 열에서는 원 아래(가로 한 줄은 커진 원 아래 한 선)
       const thumb = { x: slot.x, y: slot.y, r, opacity: open * dim * hand };     // 자리를 잡으면 정지 섬네일이 원을 이어받는다
       if (hand >= 1) return mk(slot.x, slot.y, r, 0, open * dim, below, { thumb });   // 열이 완성된 뒤: 창은 쉬고 섬네일과 바탕 video 가 맡는다
       // 이름표: 열이 생기기 시작하면 심볼 자리에서 사라졌다가, 원이 제 칸에 닿는 동안 아래에서 떠오르며 다시 나타난다
@@ -429,7 +433,8 @@
       const lead = entry === 'symbol' ? (win.innerHeight || h) : 0;
       const travel = Math.max(1, section.offsetHeight - stage.offsetHeight + lead);
       // travelScreens: 잰 스크롤 길이(무대 높이 배수). 움직임을 줄인 환경은 섹션이 접혀(height:auto) 뜻이 없으니 설계값을 쓰게 둔다.
-      geo = { w, h, spacing: Math.min(w, h) * .11, words: wordCenters, start: top - lead, end: top - lead + travel, travelScreens: reduce.matches ? 0 : travel / Math.max(1, h) };
+      geo = { w, h, spacing: Math.min(w, h) * .11, words: wordCenters, start: top - lead, end: top - lead + travel, travelScreens: reduce.matches ? 0 : travel / Math.max(1, h),
+        row: !doc.documentElement?.hasAttribute?.('data-sps-desktop') && Boolean(win.matchMedia('(max-width: 850px) and (orientation: portrait)').matches) };   // 세로 폰 · 태블릿: 원은 위쪽 가로 한 줄(데스크톱 보기 폰은 열 그대로)
       lastKey = null;
     }
     function paint() {

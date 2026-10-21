@@ -109,3 +109,22 @@ test('V4 keeps shared section routing without installing transparent-header beha
   start(win);
   assert.equal(changes[0][2],'/jll-remix-main-v4.html?layout=responsive#hw-business');
 });
+
+// 폰 헤더와 같은 조건: 850 이하, 또는 눕힌 폰(851~1000 × 500 이하 터치 화면)
+const PHONE_QUERY='(max-width: 850px), (max-width: 1000px) and (max-height: 500px) and (pointer: coarse)';
+test('on phones the film header paints its surface once the hero headline reaches it, not at the hero bottom',()=>{
+  const events={},queue=[];let film=null,copyTop=520,heroBottom=812,desktop=false,phone=true;
+  const header={querySelector:()=>null,getBoundingClientRect:()=>({bottom:76}),classList:{toggle(name,value){film=value;}}};
+  const copy={getBoundingClientRect:()=>({top:copyTop})};
+  const hero={querySelector:selector=>selector==='.hw-hero-copy'?copy:null,getBoundingClientRect:()=>({bottom:heroBottom})};
+  const win={matchMedia:query=>({get matches(){return query===PHONE_QUERY&&phone;}}),   // 살아 있는 MediaQueryList 처럼
+    document:{documentElement:{hasAttribute:name=>name==='data-sps-desktop'&&desktop},body:{hasAttribute:name=>name==='data-overlay-header',dataset:{overlayHeader:''}},querySelector:selector=>selector==='[data-sps-header]'?header:hero},
+    requestAnimationFrame:callback=>{queue.push(callback);return queue.length;},addEventListener:(name,callback)=>events[name]=callback};
+  overlayHeader(win);
+  const scroll=(top,bottom)=>{copyTop=top;heroBottom=bottom;events.scroll();while(queue.length)queue.shift()();};
+  assert.equal(film,true,'transparent at the top of the page');
+  scroll(80,372);assert.equal(film,true,'the headline is still below the header');
+  scroll(70,362);assert.equal(film,false,'solid as soon as the headline reaches the header, while the hero is still under it');
+  phone=false;scroll(70,362);assert.equal(film,true,'wider screens keep the hero-bottom rule');
+  phone=true;desktop=true;scroll(70,362);assert.equal(film,true,'and so do phones showing the desktop site');
+});

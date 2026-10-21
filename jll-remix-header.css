@@ -111,7 +111,8 @@ html[data-sps-condense="bar"] [data-sps-header].is-condensed .sps-service-panel 
 @media (max-width: 1100px) {
   :where(html:not([data-sps-desktop])) [data-sps-header] .wrap{ width: calc(100% - var(--layout-gutter) * 2); }
 }
-@media (max-width: 850px) {
+/* 폰 헤더(메뉴 단추 · 76px)는 850 이하와, 그보다 넓어도 낮은 터치 화면(눕힌 폰 851~1000 × 500 이하)에. 데스크톱 · 데스크톱 보기 폰은 그대로 */
+@media (max-width: 850px), (max-width: 1000px) and (max-height: 500px) and (pointer: coarse) {
   :where(html:not([data-sps-desktop])) [data-sps-header]{ min-height: calc(var(--header-height, 77px) + 50px + var(--header-top-space, 16px)); }
   :where(html:not([data-sps-desktop])) [data-sps-header] .wrap{ width: calc(100% - var(--layout-gutter) * 2); }
   :where(html:not([data-sps-desktop])) [data-sps-header] .header-main{ height: var(--header-height, 77px); }
@@ -119,7 +120,7 @@ html[data-sps-condense="bar"] [data-sps-header].is-condensed .sps-service-panel 
 @media (max-width: 700px) {
   :where(html:not([data-sps-desktop])) [data-sps-header] .brand-logo{ width: var(--logo-width-mobile, 105px); }
 }
-@media (max-width: 850px) {
+@media (max-width: 850px), (max-width: 1000px) and (max-height: 500px) and (pointer: coarse) {
   :where(html:not([data-sps-desktop])) [data-sps-header]{ min-height: calc(var(--header-height-mobile, 75px) + 1px + var(--header-top-space, 16px)); }
   :where(html:not([data-sps-desktop])) [data-sps-header] .wrap{ width: calc(100% - var(--layout-gutter) * 2); }
   :where(html:not([data-sps-desktop])) [data-sps-header] .header-main{ height: auto; min-height: var(--header-height-mobile, 75px); padding-block: 10px; gap: 15px; }
@@ -128,7 +129,7 @@ html[data-sps-condense="bar"] [data-sps-header].is-condensed .sps-service-panel 
   :where(html:not([data-sps-desktop])) [data-sps-header] .header-contact{ gap: min(var(--contact-gap, 12px),12px); padding-inline: min(var(--contact-padding, 12px),12px); white-space:nowrap; }
   :where(html:not([data-sps-desktop])) [data-sps-header] .menu-toggle{ display: flex; width: 44px; }
   :where(html:not([data-sps-desktop])) [data-sps-header] .nav{ display: none; }
-  :where(html:not([data-sps-desktop])) [data-sps-header] .sps-header-menu{ padding: 15px var(--layout-gutter) max(35px,env(safe-area-inset-bottom)); }
+  :where(html:not([data-sps-desktop])) [data-sps-header] .sps-header-menu{ min-height: calc(calc(100 * var(--sps-vh,1dvh)) - var(--sps-header-height, 76px)); padding: 15px var(--layout-gutter) max(35px,env(safe-area-inset-bottom)); } /* 폰 메뉴는 헤더 아래 화면 끝까지 덮는 한 장: 뒤 히어로 글이 잘려 보이지 않게 */
   :where(html:not([data-sps-desktop])) [data-sps-header] .sps-header-menu > a{ font-size: var(--nav-font-mobile, 23px); min-height: 68px; }
 }
 @media (max-width: 360px) {

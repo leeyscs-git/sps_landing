@@ -27,6 +27,7 @@
   function start(win){
     const doc=win.document,panel=doc.querySelector('.main-v4-tweaks');
     if(!panel||new URLSearchParams(win.location.search).has('embed'))return;
+    if(new URLSearchParams(win.location.search).has('tweaks'))doc.documentElement.dataset.tweaks='show';   // 폰에서는 '+'를 숨긴다(CSS). ?tweaks 로 열면 보인다
     const hero=doc.querySelector('#hw-intro');
     const copy=hero?.querySelector('.hw-hero-copy'),bar=hero?.querySelector('.main-v4-stories');
     if(!hero||!copy||!bar)return;

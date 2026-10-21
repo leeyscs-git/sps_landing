@@ -69,12 +69,15 @@
   :where(html:not([data-sps-desktop])) .hw-services3-row { min-height: clamp(300px, 40vh, 380px); }
 }
 @media (max-width: 850px) {
-  :where(html:not([data-sps-desktop])) .hw-services3-row { grid-template-columns: 1fr; min-height: 0; }
-  :where(html:not([data-sps-desktop])) .hw-services3-row:nth-of-type(even) .hw-services3-image { order: 0; }
-  :where(html:not([data-sps-desktop])) .hw-services3-image { min-height: 0; aspect-ratio: 3 / 2; } /* 쌓였을 때 사진도 조금 낮게 */
-  :where(html:not([data-sps-desktop])) .hw-services3-copy, :where(html:not([data-sps-desktop])) .hw-services3-row:nth-of-type(even) .hw-services3-copy { padding: 32px var(--rail) 40px; } /* 쌓였을 때도 소개 문장과 같은 왼쪽 선 */
   :where(html:not([data-sps-desktop])) .hw-services3-copy h3 { font-size: 28px; }
   :where(html:not([data-sps-desktop])) .hw-services3-intro h2 { font-size: 30px; line-height: 1.42; }
   :where(html:not([data-sps-desktop])) .hw-services3-intro { min-height: 0; padding-block: 88px 64px; grid-template-columns: 1fr; row-gap: 48px; }
   :where(html:not([data-sps-desktop])) .hw-services3-aside { padding-bottom: 0; }
+}
+/* 태블릿(601~850)은 사진 | 글 두 칸을 그대로 두고, 폰에서만 사진 위 · 글 아래로 쌓는다 */
+@media (max-width: 600px) {
+  :where(html:not([data-sps-desktop])) .hw-services3-row { grid-template-columns: 1fr; min-height: 0; }
+  :where(html:not([data-sps-desktop])) .hw-services3-row:nth-of-type(even) .hw-services3-image { order: 0; }
+  :where(html:not([data-sps-desktop])) .hw-services3-image { min-height: 0; aspect-ratio: 3 / 2; } /* 쌓였을 때 사진도 조금 낮게 */
+  :where(html:not([data-sps-desktop])) .hw-services3-copy, :where(html:not([data-sps-desktop])) .hw-services3-row:nth-of-type(even) .hw-services3-copy { padding: 32px var(--rail) 40px; } /* 쌓였을 때도 소개 문장과 같은 왼쪽 선 */
 }

@@ -453,3 +453,11 @@ test('the 링크 밑줄 표시 toggle (off by default) shows the text-link under
   assert.match(html,/<input id="main-v4-link-rule" type="checkbox">/);
   assert.match(html,/if\(s&&s\.linkRule===true\)document\.documentElement\.dataset\.linkRule="on";/,'shown from the first paint when saved on');
 });
+
+test('phones hide the tweak button from visitors; ?tweaks shows it for review without changing saved settings',()=>{
+  const css=fs.readFileSync(require.resolve('../jll-remix-main-v4.css'),'utf8');
+  assert.match(css,/@media\(max-width:850px\) \{[\s\S]*:where\(html:not\(\[data-sps-desktop\]\)\):not\(\[data-tweaks="show"\]\) \.main-v4-tweaks \{ display:none; \}/);
+  assert.equal(fixture().rootData.tweaks,undefined,'visitors get no flag');
+  const review=fixture({search:'?tweaks'});
+  assert.equal(review.rootData.tweaks,'show');assert.equal(review.panel.hidden,false);assert.deepEqual(review.stored(),DEFAULTS);
+});

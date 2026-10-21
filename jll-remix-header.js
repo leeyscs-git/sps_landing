@@ -97,7 +97,8 @@
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus({preventScroll:true}); }
     }
   });
-  const mobileLayout = matchMedia('(max-width: 850px)');
+  // 폰 헤더(CSS와 같은 조건): 850 이하, 또는 눕힌 폰처럼 낮은 터치 화면(851~1000 × 500 이하)
+  const mobileLayout = matchMedia('(max-width: 850px), (max-width: 1000px) and (max-height: 500px) and (pointer: coarse)');
   mobileLayout.addEventListener('change', event => {
     header.querySelectorAll('sps-service-menu').forEach(item => item.close?.());
     if (event.matches || menu.hidden) return;
@@ -170,7 +171,8 @@
   const updateScroll = () => {
     const y = scrollY;
     header.classList.toggle('is-scrolled', y > 20);
-    const allowed = Boolean(condenseQuery?.matches) && !document.body?.classList?.contains?.('sps-menu-open');
+    const phoneHeader = Boolean(mobileLayout?.matches) && !document.documentElement?.hasAttribute?.('data-sps-desktop');   // 눕힌 폰도 폰 헤더라 접지 않는다
+    const allowed = Boolean(condenseQuery?.matches) && !phoneHeader && !document.body?.classList?.contains?.('sps-menu-open');
     const delta = y - lastY;
     travel = Math.sign(delta) === Math.sign(travel) ? travel + delta : delta;
     lastY = y;
@@ -180,6 +182,7 @@
   };
   window.addEventListener('scroll', updateScroll, { passive: true });
   condenseQuery?.addEventListener?.('change', updateScroll);
+  mobileLayout?.addEventListener?.('change', updateScroll);
   updateScroll();
 
   if (!isSubpage) {

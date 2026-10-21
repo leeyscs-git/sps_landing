@@ -39,7 +39,7 @@ test('the stylesheet alternates rows, slides copy in from the left, wipes photos
   assert.match(css,/\.hw-services3-row\[data-reveal\] \.hw-services3-image > img \{ translate: 0 6%; \}/,'and rises while it is revealed');
   assert.match(css,/\.hw-services3-row\[data-reveal\]\.is-revealed \.hw-services3-image \{ clip-path: inset\(0\); \}/);
   assert.match(css,/@media \(prefers-reduced-motion: reduce\)/);
-  assert.match(css,/@media \(max-width: 850px\) \{[\s\S]*grid-template-columns: 1fr;/);
+  assert.match(css,/@media \(max-width: 600px\) \{[\s\S]*grid-template-columns: 1fr;/);
   assert.doesNotMatch(css,/#[0-9a-fA-F]{3,8}\b/,'no new hex colours');
   for(const token of ['--surface-cool','--muted','--red','--ts-h2','--line'])assert.ok(css.includes('var('+token),token+' used');
   assert.doesNotMatch(css,/--peach|--surface-sage/,'rows share one calm ground');
@@ -120,7 +120,7 @@ test('rows line their copy up with the page rail (logo and intro edge) and drift
   assert.match(css,/\.hw-services3-copy \{[^}]*padding: clamp\(40px, 5vh, 64px\) var\(--rail\) clamp\(40px, 5vh, 64px\) clamp\(48px, 6vw, 112px\);/,'copy on the right ends at the rail');
   assert.match(css,/\.hw-services3-row \{ display: grid; grid-template-columns: 1fr 1fr; min-height: clamp\(320px, 42vh, 420px\);/,'rows are only as tall as their copy needs');
   assert.match(css,/\.hw-services3-row:nth-of-type\(even\) \.hw-services3-copy \{ padding-inline: var\(--rail\) clamp\(48px, 6vw, 112px\); \}/,'copy on the left starts at the rail');
-  assert.match(css,/@media \(max-width: 850px\) \{[\s\S]*\.hw-services3-copy, :where\(html:not\(\[data-sps-desktop\]\)\) \.hw-services3-row:nth-of-type\(even\) \.hw-services3-copy \{ padding: 32px var\(--rail\) 40px; \}/,'stacked rows keep the rail too');
+  assert.match(css,/@media \(max-width: 600px\) \{[\s\S]*\.hw-services3-copy, :where\(html:not\(\[data-sps-desktop\]\)\) \.hw-services3-row:nth-of-type\(even\) \.hw-services3-copy \{ padding: 32px var\(--rail\) 40px; \}/,'stacked rows keep the rail too');
   const api=require('../jll-remix-services3.js');
   assert.equal(api.driftFor(0,800,400-50,100),50,'centred row: photo centred');
   assert.equal(api.driftFor(0,800,5000,100),50-api.DRIFT,'row below the screen: photo shown from higher up');
