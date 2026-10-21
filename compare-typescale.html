@@ -21,14 +21,14 @@
 <body>
   <header class="review-header">
     <a class="review-brand" href="jll-remix-main-v4.html" aria-label="SPS 홈"><img src="assets/logo.svg" alt="SPS" width="90" height="30"></a>
-    <div class="review-title"><h1>V4 타입 스케일 전후 비교</h1><p>왼쪽은 현재 V4, 오른쪽은 본문 16px 기준 1.2배 단계 스케일을 덮어쓴 시안입니다. 토큰만 바꾸고 콘텐츠·레이아웃은 같습니다.</p></div>
+    <div class="review-title"><h1>V4 타입 스케일 전후 비교</h1><p>오른쪽이 현재 V4(본문 16px 기준 1.2배 단계 스케일, 2026-10-15 채택). 왼쪽은 이전 스케일을 ?typescale=0 으로 연 것입니다. 콘텐츠·레이아웃은 같습니다.</p></div>
     <a class="back-link" href="compare.html">전체 시안 비교 ↗</a>
   </header>
   <div class="review-toolbar">
     <div class="view-toggle" role="group" aria-label="비교 방식">
       <button data-view="both" aria-pressed="true">전후 비교</button>
-      <button data-view="before" aria-pressed="false">현재만</button>
-      <button data-view="after" aria-pressed="false">시안만</button>
+      <button data-view="before" aria-pressed="false">이전만</button>
+      <button data-view="after" aria-pressed="false">현재만</button>
     </div>
     <div class="device-toggle" role="group" aria-label="화면 폭">
       <button data-width="1280" aria-pressed="true">데스크톱 1280</button>
@@ -39,30 +39,31 @@
   <details class="scale-note">
     <summary>적용한 스케일 보기</summary>
     <table class="scale-table">
-      <thead><tr><th>역할</th><th>현재 V4</th><th>시안</th><th>굵기</th></tr></thead>
+      <thead><tr><th>역할</th><th>이전</th><th>현재 V4</th><th>굵기</th></tr></thead>
       <tbody>
         <tr><td>라벨 · 메타 (날짜, 스토리 번호)</td><td>11~14px</td><td>12px</td><td>500</td></tr>
         <tr><td>보조 설명 · 링크 · 섹션 라벨</td><td>13~16px</td><td>14px</td><td>500</td></tr>
-        <tr><td>본문</td><td>18px</td><td>16px</td><td>450</td></tr>
-        <tr><td>리드 문장</td><td>18~22px</td><td>19px</td><td>450</td></tr>
-        <tr><td>소제목 (인사이트 카드)</td><td>22~30px</td><td>23px</td><td>500</td></tr>
-        <tr><td>중간 제목 (서비스 패널, 고객지원 본문)</td><td>22~40px</td><td>28px</td><td>600</td></tr>
-        <tr><td>섹션 제목</td><td>24~52px</td><td>36px</td><td>600</td></tr>
+        <tr><td>본문</td><td>18px</td><td>16px</td><td>400</td></tr>
+        <tr><td>리드 문장 (고객지원 설명)</td><td>18px</td><td>22px</td><td>400</td></tr>
+        <tr><td>비전 장면 설명</td><td>22px</td><td>22px (유지)</td><td>400</td></tr>
+        <tr><td>소제목 (인사이트 카드)</td><td>22~30px</td><td>23px</td><td>560</td></tr>
+        <tr><td>중간 제목 (서비스 패널, 고객지원 본문)</td><td>22~40px</td><td>28px</td><td>560</td></tr>
+        <tr><td>섹션 제목</td><td>24~52px</td><td>36px</td><td>560</td></tr>
         <tr><td>비전 슬로건</td><td>59px</td><td>56px</td><td>500</td></tr>
-        <tr><td>히어로 제목</td><td>72px / 400</td><td>64px</td><td>500</td></tr>
+        <tr><td>히어로 제목</td><td>72px / 400</td><td>60px</td><td>500</td></tr>
       </tbody>
     </table>
   </details>
   <main class="comparison" data-view="both" data-device="desktop">
-    <section class="version-panel" data-version="before" aria-label="현재 V4">
-      <div class="panel-heading"><div><span class="version-label">전</span><h2>현재 V4 <small>본문 18 · 섹션 제목 24~52 · 히어로 72/400</small></h2></div><a href="jll-remix-main-v4.html" target="_blank" rel="noopener" aria-label="현재 V4 새 탭으로 열기">새 탭으로 ↗</a></div>
-      <div class="preview-window"><iframe src="jll-remix-main-v4.html?embed=1" title="현재 V4"></iframe></div>
-      <p class="panel-caption">현재 파운데이션 저장값 그대로</p>
+    <section class="version-panel" data-version="before" aria-label="이전 스케일">
+      <div class="panel-heading"><div><span class="version-label">전</span><h2>이전 스케일 <small>본문 18 · 섹션 제목 24~52 · 히어로 72/400</small></h2></div><a href="jll-remix-main-v4.html?typescale=0" target="_blank" rel="noopener" aria-label="이전 스케일 새 탭으로 열기">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?embed=1&typescale=0" title="이전 스케일"></iframe></div>
+      <p class="panel-caption">?typescale=0 · 파운데이션 저장값 그대로</p>
     </section>
-    <section class="version-panel" data-version="after" aria-label="타입 스케일 시안">
-      <div class="panel-heading"><div><span class="version-label">후</span><h2>타입 스케일 시안 <small>본문 16 · 1.2배 단계 · 28px 이상 600</small></h2></div><a href="jll-remix-main-v4.html?typescale=1" target="_blank" rel="noopener" aria-label="타입 스케일 시안 새 탭으로 열기">새 탭으로 ↗</a></div>
-      <div class="preview-window"><iframe src="jll-remix-main-v4.html?embed=1&typescale=1" title="타입 스케일 시안"></iframe></div>
-      <p class="panel-caption">jll-remix-main-v4-typescale.css 덮어쓰기 · ?typescale=1</p>
+    <section class="version-panel" data-version="after" aria-label="현재 V4">
+      <div class="panel-heading"><div><span class="version-label">후</span><h2>현재 V4 <small>본문 16 · 1.2배 단계 · 본문 400 / 라벨 500 / 제목 560</small></h2></div><a href="jll-remix-main-v4.html" target="_blank" rel="noopener" aria-label="현재 V4 새 탭으로 열기">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?embed=1" title="현재 V4"></iframe></div>
+      <p class="panel-caption">jll-remix-main-v4-typescale.css · 기본 적용</p>
     </section>
   </main>
   <script>

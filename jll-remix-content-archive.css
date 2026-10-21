@@ -40,7 +40,7 @@
 .iv2-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:64px calc(var(--card-gap,28px) + 8px); }
 .iv2-post { min-width:0; }
 .iv2-post > a { display:flex; flex-direction:column; height:100%; }
-.iv2-photo { display:block; overflow:hidden; aspect-ratio:1.35; background:var(--surface-cool); border-radius:0; flex-shrink:0; }
+.iv2-photo { display:block; overflow:hidden; aspect-ratio:1.35; background:var(--surface-cool); border-radius:var(--radius-media,6px); flex-shrink:0; } /* 사진 모서리는 공용 토큰 */
 .iv2-photo img { display:block; width:100%; height:100%; object-fit:cover; border-radius:0; transition:transform .8s var(--ease-editorial); }
 .iv2-copy { display:flex; flex-direction:column; flex:1; padding-top:28px; }
 .iv2-meta,.iv2-read { color:var(--muted); }

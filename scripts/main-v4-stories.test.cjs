@@ -211,7 +211,10 @@ test('V4 uses the neutral black-to-white vision without loading the old palette 
   const html=fs.readFileSync(require.resolve('../jll-remix-main-v4.html'),'utf8');
   const css=fs.readFileSync(require.resolve('../jll-remix-main-v4.css'),'utf8');
   assert.doesNotMatch(html,/jll-remix-main-switcher/);
-  assert.match(html,/id="hw-vision"[^>]*data-vision-palette="black-white"[^>]*data-vision-exit="with-last-scene"/);
+  assert.match(html,/<section class="hw-vision" id="hw-vision"[^>]*data-vision-palette="black-white"/,'the film vision scene stays available');
+  assert.match(html,/<section class="hw-fusion" id="hw-vision-fusion"/,'the fused scene is the alternative');
+  assert.match(html,/sps-main-v4-layout-tweaks-v1[\s\S]*\.hw-fusion[\s\S]*fusion\.id="hw-vision"/,'an inline chooser removes the unselected scene before deferred scripts run');
+  assert.match(html,/name="main-v4-vision" value="symbol-rise" checked/,'the panel starts on the default scene (V4 · 바로 심볼)');
   assert.match(css,/--vision-black:#181818/);
   assert.match(css,/data-vision-exit="with-last-scene"[^}]*height:calc\(var\(--hw-height\) \* 6\.6 \+ var\(--hw-stage-height\)\)/);
   assert.doesNotMatch(css,/data-vision-palette="v[234]"/);

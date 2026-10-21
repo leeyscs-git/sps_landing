@@ -107,7 +107,7 @@
   }));
 
   const stories = [
-    {title: '더 나은 내일을 위한\n부동산의 가능성', image: 'assets/jll/seoul.webp', alt: '서울 도심과 남산 전경'},
+    {title: '사람과 공간을 연결하는\n부동산 파트너', image: 'assets/jll/seoul.webp', alt: '서울 도심과 남산 전경'},
     {title: '기술과 경험으로 만드는\n스마트한 자산관리', image: 'assets/landing/workplace.jpg', alt: '유리 파티션으로 정돈된 업무 공간'},
     {title: '사람이 중심이 되는\n새로운 공간의 기준', image: 'assets/jll/spaces.webp', alt: '원목 계단과 녹지가 있는 업무 공간'}
   ];

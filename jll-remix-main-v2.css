@@ -1,7 +1,7 @@
 /* The opening film fills the viewport behind the shared SPS header. */
 .hw-main-v2 #main { margin-top:calc(-1 * var(--sps-header-height,137px)); }
 .hw-main-v2 .hw-hero { height:calc(var(--hw-height) + var(--sps-header-height,137px)); }
-.hw-main-v2 [data-sps-header] { transition:background-color .25s,color .25s,box-shadow .25s; }
+.hw-main-v2 [data-sps-header] { transition:background-color .25s,color .25s,box-shadow .25s,transform .35s var(--ease-editorial),background-size .35s var(--ease-editorial); } /* 공용 헤더의 접힘 전환을 잇는다 */
 .hw-main-v2 [data-sps-header] .nav-links > a,
 .hw-main-v2 [data-sps-header] .nav-links > sps-service-menu { font-weight:550; }
 .hw-main-v2 [data-sps-header].is-over-film { background:transparent; color:var(--surface); border-bottom-color:transparent; box-shadow:none; }

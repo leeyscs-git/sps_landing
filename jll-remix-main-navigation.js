@@ -15,7 +15,8 @@
       const gutter=parseFloat(style.getPropertyValue('--page-gutter'));
       const headerWidth=contentWidth+2*(Number.isFinite(gutter)?gutter:72);
       const narrow=win.innerWidth<=850||win.innerWidth<headerWidth;
-      host.hidden=narrow||host.hasAttribute('data-tweak-hidden')||doc.hidden||host.inert||doc.body.classList.contains('sps-menu-open')||Boolean(doc.querySelector('dialog[open]'));
+      // inert(히어로·푸터 구간의 숨김)는 페이드·슬라이드로 보여야 하므로 display:none 으로 바꾸지 않는다.
+      host.hidden=narrow||host.hasAttribute('data-tweak-hidden')||doc.hidden||doc.body.classList.contains('sps-menu-open')||Boolean(doc.querySelector('dialog[open]'));
     }
     doc.addEventListener('visibilitychange',sync);
     win.addEventListener('pageshow',sync);
@@ -23,7 +24,7 @@
     win.addEventListener('sps-theme-change',sync);
     if('MutationObserver' in win){
       const observer=new win.MutationObserver(sync);
-      observer.observe(host,{attributes:true,attributeFilter:['inert','data-tweak-hidden']});
+      observer.observe(host,{attributes:true,attributeFilter:['data-tweak-hidden']});
       observer.observe(doc.body,{attributes:true,attributeFilter:['class']});
       doc.querySelectorAll('dialog').forEach(dialog=>observer.observe(dialog,{attributes:true,attributeFilter:['open']}));
     }

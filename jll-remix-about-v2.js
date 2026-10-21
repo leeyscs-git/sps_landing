@@ -8,9 +8,12 @@
   const header=document.querySelector('[data-sps-header]');
   let frame=0;
   let current='';
+  window.addEventListener('sps-header-condense',()=>setTimeout(update,400));   // 접힘이 끝난 뒤 기준 높이를 다시 잰다
   function update(){
     frame=0;
-    const headerHeight=header?.getBoundingClientRect().height || 0;
+    // 접힌 헤더는 보이는 띠(--sps-header-visible)만 가린다
+    const live=parseFloat(document.documentElement?.style?.getPropertyValue?.('--sps-header-visible') || '');
+    const headerHeight=Number.isFinite(live)?live:(header?.getBoundingClientRect().height || 0);
     const navHeight=chapters.getBoundingClientRect().height;
     document.documentElement.style.setProperty('--company-chapters-height',navHeight+'px');
     let active=sections[0];

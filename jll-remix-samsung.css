@@ -6,7 +6,7 @@
 .sc-page #main :is(h1,h2,p,ul,ol) { margin: 0; padding: 0; }
 .sc-page #main :is(ul,ol) { list-style: none; }
 .sc-page :focus-visible { outline: 2px solid var(--red); outline-offset: 5px; }
-.sc-page [data-sps-header] { transition: transform 600ms cubic-bezier(.165,.84,.44,1),box-shadow .35s; }
+.sc-page [data-sps-header] { transition: transform 600ms cubic-bezier(.165,.84,.44,1),box-shadow .35s,background-size .35s var(--ease-editorial); } /* 공용 헤더의 접힘 전환을 잇는다 */
 .sc-page [data-sps-header].sc-header-hidden { transform: translateY(-100%); }
 .sc-page [data-sps-header]:focus-within { transform: translateY(0); }
 .sc-title-section { padding-block: 100px; }

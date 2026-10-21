@@ -115,7 +115,8 @@
       if (!rect.width || !article.offsetWidth) return;
       const scale = rect.width / article.offsetWidth;
       const header = doc.querySelector('[data-sps-header]');
-      const headerHeight = header ? header.getBoundingClientRect().height : 0;
+      const liveHeader = parseFloat(doc.documentElement?.style?.getPropertyValue?.('--sps-header-visible') || '');   // 접힌 헤더는 보이는 띠만 가린다(header.js 가 인라인으로 적는 값)
+      const headerHeight = Number.isFinite(liveHeader) ? liveHeader : (header ? header.getBoundingClientRect().height : 0);
       const navHeight = nav ? nav.getBoundingClientRect().height : 0;
       article.style.setProperty('--iv2-page-nav-height', navHeight / scale + 'px');
       const width = doc.documentElement.clientWidth / scale;
@@ -195,6 +196,7 @@
     win.addEventListener('scroll', () => schedule(), {passive:true});
     win.addEventListener('resize', () => schedule(true), {passive:true});
     win.addEventListener('sps-theme-change', () => schedule(true));
+    win.addEventListener('sps-header-condense', () => setTimeout(() => schedule(true), 400));
     win.addEventListener('pageshow', () => schedule(true));
     reduce.addEventListener('change', () => schedule(true));
     doc.fonts?.ready.then(() => schedule(true));

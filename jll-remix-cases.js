@@ -1,12 +1,15 @@
 /* Service case content uses the same archive presentation as Insights. */
 (function(root,factory){
   const node=typeof module==='object'&&module.exports;
-  const api=factory(node?require('./jll-remix-content-archive.js'):root.SPSContentArchive,node?require('./jll-remix-cases-data.js'):root.SPSCaseSamples);
+  const api=factory(node?require('./jll-remix-content-archive.js'):root.SPSContentArchive,node?require('./jll-remix-cases-data.js'):root.SPSCaseSamples,node?require('./jll-remix-buildings.js'):root.SPSManagedBuildings);
   if(typeof module==='object'&&module.exports)module.exports=api;
   else api.start(root);
-})(typeof window==='undefined'?null:window,function(archive,samples){
+})(typeof window==='undefined'?null:window,function(archive,samples,managed){
   'use strict';
-  const categories={all:'서비스 사례',management:'부동산 자산관리',marketing:'임대 마케팅',interior:'실내건축',other:'기타'};
+  // 탭: 전체 · 부동산 자산관리 · 실내건축 · 기타(임대 마케팅은 2026-10-21 뺐다). 관리 중인 건물은 부동산 자산관리 실적이라
+  // '부동산 자산관리'와 '전체'에서 사례 카드 앞에 놓인다. 탭이 없는 분류의 사례는 이 페이지에 내지 않는다
+  const categories={all:'사업실적',management:'부동산 자산관리',interior:'실내건축',other:'기타'};
+  const BUILDINGS_IN=['all','management'];
   function categoryFor(search){
     const requested=new URLSearchParams(search).get('category');
     return Object.hasOwn(categories,requested)?requested:'all';
@@ -21,20 +24,22 @@
     let renderedCategory=null;
     function render(){
       const category=categoryFor(win.location.search);
-      const shown=(samples||[]).filter(item=>category==='all'||item.category===category);
+      const shown=(samples||[]).filter(item=>Object.hasOwn(categories,item.category)&&(category==='all'||item.category===category));
+      const buildings=BUILDINGS_IN.includes(category)?(managed?.buildings||[]):[];
+      const count=shown.length+buildings.length;
       buttons.forEach(button=>{
         const selected=button.dataset.caseCategory===category;
         button.setAttribute('aria-pressed',String(selected));
         button.classList.toggle('active',selected);
       });
-      grid.hidden=!shown.length;
-      empty.hidden=Boolean(shown.length);
+      grid.hidden=!count;
+      empty.hidden=Boolean(count);
       if(renderedCategory!==category){
         empty.innerHTML=archive.emptyState({
           title:category==='all'?'공개할 사례를 준비하고 있습니다.':categories[category]+' 사례를 준비하고 있습니다.',
           actionLabel:'서비스 안내 보기',href:'jll-remix.html#services'
         });
-        grid.innerHTML=archive.cards(shown,{
+        grid.innerHTML=(buildings.length?managed.cards(buildings,{label:categories.management}):'')+archive.cards(shown,{
           hrefFor:()=> 'jll-remix.html#services',
           labelFor:item=>categories[item.category]+(item.sample?' · 샘플':''),
           readLabel:'서비스 안내 보기',linkAttribute:'data-case'

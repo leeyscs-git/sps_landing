@@ -1,4 +1,4 @@
-@import url('jll-remix-tokens.css?v=insight-title59');
+@import url('jll-remix-tokens.css?v=footer-motion1');
 
 /* Hold the old document until the next one can paint, then replace it opaquely.
    Cross-fading two bright heroes (or a header with late theme values) flashes. */
@@ -24,13 +24,52 @@ body:has(> [data-sps-header]):is(.sps-menu-open,.sps-inquiry-open,.modal-open) {
   position: sticky; top: 0; z-index: 40;
   min-height: calc(var(--header-height, 87px) + 50px + var(--header-top-space, 16px));
   padding-top: var(--header-top-space, 16px);
-  background: var(--surface); color: var(--ink);
-  border-bottom: 1px solid var(--line);
+  --sps-brand-nav-gap: 48px; /* 접혔을 때 로고와 첫 메뉴 사이 */
+  background: linear-gradient(var(--surface) calc(100% - 1px), var(--line) 0) top / 100% var(--sps-header-paint, 100%) no-repeat; color: var(--ink);
+  background-origin: border-box; /* 100% 가 테두리 상자: 아래 선이 맨 아래 1px(테두리 줄)에 그려진다 */
+  border-bottom: 1px solid transparent; /* 선은 배경이 그린다: 접히면 로고 줄 아래로 올라온다 */
   font: 450 16px/1.65 var(--font);
   word-break: keep-all;
   transition: box-shadow .35s;
 }
-[data-sps-header].is-scrolled { box-shadow: 0 5px 24px #10252b0c; }
+[data-sps-header].is-scrolled:not(.is-condensed) { box-shadow: 0 5px 24px #10252b0c; }
+/* 접힘(데스크톱). 기본(row): 헤더 상자는 그대로 두고 윗여백만큼 위로 밀고, 흰 바탕과 아래 선은 로고 줄까지만 칠한다(--sps-header-paint).
+   메뉴 항목은 메뉴 줄 왼쪽에서 로고 줄 가운데로 한 덩어리로 올라온다(--sps-nav-dx/dy). 로고와 문의하기 버튼은 제자리. 칠하지 않은 아래 띠는 클릭이 통과한다.
+   이전 방식(bar · html[data-sps-condense="bar"]): 로고 줄 높이만큼 위로 밀어 메뉴 줄만 띠로 남기고, 작은 로고와 문의하기 글자 링크가 띠 양끝에 들어온다. */
+[data-sps-header][data-sps-header] { transition: box-shadow .35s, transform .35s var(--ease-editorial, cubic-bezier(.22,1,.36,1)), background-size .35s var(--ease-editorial, cubic-bezier(.22,1,.36,1)); } /* 두 번 써서 .nav-shell 의 transition(jll-remix-motion.css)보다 앞선다 */
+[data-sps-header].is-condensed { transform: translateY(calc(-1 * var(--sps-header-shift, 0px))); box-shadow: none; pointer-events: none; }
+[data-sps-header].is-condensed :is(.header-main, .nav-links > a, .sps-service-trigger, .sps-service-panel) { pointer-events: auto; } /* 메뉴 줄에 남은 빈 상자(.nav-links · sps-service-menu)는 투명 띠에서 클릭·호버를 가로채지 않는다 */
+[data-sps-header]::after { content: ''; position: absolute; left: 0; right: 0; top: var(--sps-header-paint, 100%); height: 28px; z-index: -1; pointer-events: none; background: linear-gradient(180deg, #10252b14, transparent); opacity: 0; transition: opacity .35s, top .35s var(--ease-editorial, cubic-bezier(.22,1,.36,1)); } /* 접힌 띠의 그림자 */
+[data-sps-header].is-condensed::after { opacity: 1; }
+[data-sps-header] .nav-links > a, [data-sps-header] .nav-links > sps-service-menu > .sps-service-trigger { transition: transform .35s var(--ease-editorial, cubic-bezier(.22,1,.36,1)); }
+[data-sps-header].is-condensed .nav-links > a, [data-sps-header].is-condensed .nav-links > sps-service-menu > .sps-service-trigger { transform: translate(var(--sps-nav-dx, 0px), var(--sps-nav-dy, 0px)); } /* 메뉴 줄 왼쪽에서 로고 줄 가운데로, 한 덩어리로 */
+[data-sps-header] .header-locale { transition: opacity .2s, visibility 0s; }
+[data-sps-header].is-condensed .header-locale { opacity: 0; visibility: hidden; transition: opacity .2s, visibility 0s .2s; }
+/* 서비스 패널: 헤더 상자 아래가 아니라 접힌 띠 바로 아래에 붙는다. '서비스'와 패널 사이 틈에 다리를 놓아 포인터가 빠져나가며 닫히지 않게 한다 */
+[data-sps-header].is-condensed .sps-service-panel { top: calc(100% - var(--sps-nav-row, 49px)); }
+[data-sps-header].is-condensed .nav-links > sps-service-menu > .sps-service-trigger[aria-expanded="true"]::before { content: ''; position: absolute; left: -8px; right: -8px; top: 100%; height: var(--sps-nav-bridge, 20px); }
+@media (max-width: 1000px) { [data-sps-header].is-condensed .nav-links { gap: 24px; } } /* 좁은 데스크톱: 로고와 문의하기 사이에 들어가도록 */
+/* 이전 방식의 띠 양끝: 작은 로고(큰 로고가 접히는 동안 위에서 내려온다)와 문의하기 글자 링크. 평소에는 숨김 */
+[data-sps-header] .nav-brand { display: flex; align-items: center; flex-shrink: 0; max-width: 0; margin-right: 0; opacity: 0; overflow: hidden; transform: translateY(-12px); transition: max-width .35s var(--ease-editorial, cubic-bezier(.22,1,.36,1)), margin-right .35s, opacity .3s, transform .35s var(--ease-editorial, cubic-bezier(.22,1,.36,1)); }
+[data-sps-header] .nav-brand-logo { display: block; height: 28px; width: auto; overflow: visible; }
+/* 인라인 로고의 면 색: 로고 원본(assets/logo.svg)의 값 그대로 */
+[data-sps-header] .nav-brand-logo .cls-1 { fill: var(--surface); }
+[data-sps-header] .nav-brand-logo .cls-2 { fill: #e72a0f; }
+[data-sps-header] .nav-brand-logo .cls-3 { fill: #231815; font: 500 6.56px/1 'Neue Haas Grotesk Display Pro', var(--font), sans-serif; letter-spacing: 0; } /* ™ */
+[data-sps-header] .nav-brand-logo .cls-4 { fill: #0a0808; }
+[data-sps-header] .nav-contact.header-contact { display: none; margin-left: auto; } /* .header-contact 의 display:flex 보다 앞서야 평소에는 숨는다 */ /* 띠 방식의 문의하기: 로고 줄의 버튼(.header-contact)과 같은 모양·크기 */
+html[data-sps-condense="bar"] [data-sps-header].is-condensed { box-shadow: 0 5px 24px #10252b14; pointer-events: auto; }
+html[data-sps-condense="bar"] [data-sps-header].is-condensed::after { opacity: 0; }
+html[data-sps-condense="bar"] [data-sps-header].is-condensed .header-main { visibility: hidden; }
+html[data-sps-condense="bar"] [data-sps-header].is-condensed .header-locale { display: none; }
+/* 띠 안의 메뉴·작은 로고·문의하기 버튼은 띠가 높아진 만큼의 절반 올라가 띠 가운데에 앉는다(--sps-nav-dy) */
+html[data-sps-condense="bar"] [data-sps-header].is-condensed .nav-links > a, html[data-sps-condense="bar"] [data-sps-header].is-condensed .nav-links > sps-service-menu > .sps-service-trigger { transform: translateY(var(--sps-nav-dy, 0px)); }
+html[data-sps-condense="bar"] [data-sps-header].is-condensed .nav-brand { max-width: 120px; margin-right: var(--sps-brand-nav-gap, 48px); opacity: 1; transform: translateY(var(--sps-nav-dy, 0px)); }
+html[data-sps-condense="bar"] [data-sps-header].is-condensed .nav-contact { display: flex; transform: translateY(var(--sps-nav-dy, 0px)); }
+[data-sps-header] .nav-contact { transition: transform .35s var(--ease-editorial, cubic-bezier(.22,1,.36,1)), background-color .2s; }
+html[data-sps-condense="bar"] [data-sps-header].is-condensed .sps-service-panel { top: 100%; }
+
+@media (prefers-reduced-motion: reduce) { [data-sps-header], [data-sps-header] .nav { transition: none; } }
 [data-sps-header] *, [data-sps-header] *::before, [data-sps-header] *::after { box-sizing: border-box; }
 [data-sps-header] a { color: inherit; text-decoration: none; }
 [data-sps-header] :is(a, button):focus-visible { outline: 3px solid var(--red); outline-offset: 5px; }
@@ -50,6 +89,7 @@ body:has(> [data-sps-header]):is(.sps-menu-open,.sps-inquiry-open,.modal-open) {
 [data-sps-header] .nav { min-height: 49px; height: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 20px; }
 [data-sps-header] .nav-links { display: flex; align-items: center; gap: var(--sps-nav-gap, 34px); height: 49px; }
 [data-sps-header] .nav-links > a { position: relative; display: flex; align-items: center; gap: 9px; font-size: var(--nav-font-size, 13px); height: 100%; border-bottom: 0; padding-block: calc(var(--sps-nav-indicator-gap) + var(--sps-nav-indicator-size)); line-height: var(--sps-nav-line-height); white-space: nowrap; }
+[data-sps-header] .nav-links > a, [data-sps-header] .nav-links .sps-service-trigger, [data-sps-header] .locale-field select { font-weight: var(--sps-nav-weight, 450); } /* 메뉴와 국가·언어 선택: 기본 500. --sps-nav-weight 로 바꿀 수 있다 (compare-nav-weight.html 미리보기용) */
 [data-sps-header] .nav-links > a::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: var(--sps-nav-indicator-size); z-index: 1; pointer-events: none; background: var(--line); transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease-editorial), background-color .2s; }
 [data-sps-header] .nav-links > a:is(:hover, :focus-visible)::after { background: var(--line); transform: scaleX(1); }
 /* Current location stays red, including while hovered or focused. */
@@ -57,7 +97,7 @@ body:has(> [data-sps-header]):is(.sps-menu-open,.sps-inquiry-open,.modal-open) {
 [data-sps-header] .header-locale { display: flex; align-items: center; gap: 9px; flex-shrink: 0; color: var(--muted); margin-left: auto; }
 [data-sps-header] .locale-globe { width: 17px; height: 17px; flex-shrink: 0; }
 [data-sps-header] .locale-field { display: inline-flex; align-items: center; position: relative; }
-[data-sps-header] .locale-field select { appearance: none; -webkit-appearance: none; min-height: 44px; border: 0; border-radius: var(--radius-control); background: transparent; color: var(--ink); padding: 0 calc(var(--chevron-size, 14px) + 8px) 0 0; font: 450 var(--locale-font-size, 12px)/1.65 var(--font); cursor: pointer; }
+[data-sps-header] .locale-field select { appearance: none; -webkit-appearance: none; min-height: 44px; border: 0; border-radius: var(--radius-control); background: transparent; color: var(--ink); padding: 0 calc(var(--chevron-size, 14px) + 8px) 0 0; font: var(--sps-nav-weight, 450) var(--locale-font-size, 12px)/1.65 var(--font); cursor: pointer; }
 [data-sps-header] .locale-field select:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
 [data-sps-header] .locale-field option { color: var(--ink); background: var(--surface); }
 [data-sps-header] .locale-divider { width: 1px; height: 13px; background: var(--line); margin-inline: 2px; }

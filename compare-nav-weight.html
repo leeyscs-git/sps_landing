@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SPS — 헤더 메뉴 굵기 비교</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
+  <link rel="stylesheet" href="compare.css?v=typescale1">
+  <style>
+    .comparison { grid-template-columns: repeat(var(--panel-columns,3),minmax(0,1fr)); }
+    .preview-window { overflow: hidden; }
+  </style>
+</head>
+<body>
+  <header class="review-header">
+    <a class="review-brand" href="jll-remix-main-v4.html" aria-label="SPS 홈"><img src="assets/logo.svg" alt="SPS" width="90" height="30"></a>
+    <div class="review-title"><h1>헤더 메뉴 굵기 비교</h1><p>같은 V4를 메뉴·국가·언어 선택 굵기만 400 · 450 · 500으로 바꿔 나란히 놓았습니다. 지금 기본값은 450입니다.</p></div>
+    <a class="back-link" href="compare-typescale.html">타입 스케일 비교 ↗</a>
+  </header>
+  <div class="review-toolbar">
+    <div class="view-toggle" role="group" aria-label="비교 방식">
+      <button data-view="all" aria-pressed="true">셋 다</button>
+      <button data-view="400" aria-pressed="false">400만</button>
+      <button data-view="450" aria-pressed="false">450만</button>
+      <button data-view="500" aria-pressed="false">500만</button>
+    </div>
+    <p class="scroll-note">헤더만 보면 되므로 미리보기는 상단 320px만 보여줍니다.</p>
+  </div>
+  <main class="comparison" data-view="all" data-device="desktop">
+    <section class="version-panel" data-version="400" aria-label="굵기 400">
+      <div class="panel-heading"><div><span class="version-label">400</span><h2>Regular <small>본문보다 가벼움</small></h2></div><a href="jll-remix-main-v4.html?navweight=400" target="_blank" rel="noopener">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?embed=1&navweight=400" title="굵기 400"></iframe></div>
+    </section>
+    <section class="version-panel" data-version="450" aria-label="굵기 450">
+      <div class="panel-heading"><div><span class="version-label">450</span><h2>현재 기본 <small>본문보다 한 단계 위</small></h2></div><a href="jll-remix-main-v4.html?navweight=450" target="_blank" rel="noopener">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?embed=1&navweight=450" title="굵기 450"></iframe></div>
+    </section>
+    <section class="version-panel" data-version="500" aria-label="굵기 500">
+      <div class="panel-heading"><div><span class="version-label">500</span><h2>Medium <small>라벨 단계</small></h2></div><a href="jll-remix-main-v4.html?navweight=500" target="_blank" rel="noopener">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?embed=1&navweight=500" title="굵기 500"></iframe></div>
+    </section>
+  </main>
+  <script>
+    'use strict';
+    const comparison = document.querySelector('.comparison');
+    const all = ['400','450','500'];
+    const viewportWidth = 1280, viewportHeight = 320;
+    function resizePreviews() {
+      document.querySelectorAll('.preview-window').forEach(container => {
+        if (!container.clientWidth) return;
+        const frame = container.querySelector('iframe');
+        const scale = Math.min(1, container.clientWidth / viewportWidth);
+        frame.style.width = viewportWidth + 'px';
+        frame.style.height = '900px';
+        container.style.height = (Math.ceil(viewportHeight * scale) + 1) + 'px';
+        frame.style.transform = 'scale(' + scale + ')';
+        frame.style.left = Math.max(0, (container.clientWidth - viewportWidth * scale) / 2) + 'px';
+      });
+    }
+    function setView(view) {
+      comparison.dataset.view = view;
+      const selected = view === 'all' ? all : [view];
+      comparison.style.setProperty('--panel-columns', selected.length);
+      document.querySelectorAll('.version-panel').forEach(panel => { panel.hidden = !selected.includes(panel.dataset.version); });
+      document.querySelectorAll('button[data-view]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === view)));
+      resizePreviews();
+    }
+    document.querySelectorAll('button[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
+    new ResizeObserver(resizePreviews).observe(document.body);
+    setView('all');
+  </script>
+</body>
+</html>

@@ -5,6 +5,7 @@
   const clamp = (n, min = 0, max = 1) => Math.max(min, Math.min(max, n));
   const mix = (a, b, p) => a + (b - a) * clamp(p);
   const range = (n, a, b) => clamp((n - a) / (b - a));
+  const ease = p => { p = clamp(p); return p * p * (3 - 2 * p); };   // 양끝에서 느려지는 이동
   function sceneState(t, index, exitWithFinalScene = false, finalExitDuration = 1) {
     const start = 1.6 + index * 2;
     const holdForExit = exitWithFinalScene && index === 2;
@@ -35,8 +36,11 @@
       list: t >= 1.6
     };
   }
+  // travel · light · headingStay 는 제목이 옮겨가는 판(data-heading-travel)용: 사진이 커지는 동안 제목이 사진 위 문장 자리로 가며(1.0 도착) 흰색이 되고,
+  // 잠시 머물다 1.02~1.18에 사라지면 그 자리에 사진 위 문장(top, 1.15~)이 올라온다. 두 글이 겹치지 않게 차례로 넘긴다.
   function futureState(t) {
-    return { expand: range(t, .2, 1.2), heading: 1 - range(t, .1, .65), top: range(t, 1.15, 1.6), bottom: range(t, 1.75, 2.35) };
+    return { expand: range(t, .2, 1.2), heading: 1 - range(t, .1, .65), top: range(t, 1.15, 1.6), bottom: range(t, 1.75, 2.35),
+      travel: range(t, .2, 1.0), light: range(t, .55, .95), headingStay: 1 - range(t, 1.02, 1.18) };
   }
   function heroOffset(scroll, heroTop, headerHeight, overlayHeader = false) {
     return Math.max(0, (scroll + (overlayHeader ? heroTop : headerHeight) - heroTop) * .5);
@@ -77,12 +81,15 @@
   const sky = doc.querySelector('.hw-sky');
   const mountains = [doc.querySelector('.hw-mountain-back'), doc.querySelector('.hw-mountain-front')];
   const rocketWorld = doc.querySelector('.hw-rocket-world');
+  // V4는 비전 장면 대신 결합 장면(.hw-fusion)을 쓴다: 영상 비전 관련 코드는 요소가 있을 때만 돈다.
+  const afterHero = vision || doc.querySelector('.hw-fusion');
   const future = doc.querySelector('.hw-future');
   const futurePicture = doc.querySelector('.hw-future-picture');
   const futureImage = futurePicture.querySelector('img');
   const futureHeading = doc.querySelector('.hw-future-heading');
   const futureTop = doc.querySelector('.hw-future-top');
   const futureBottom = doc.querySelector('.hw-future-bottom');
+  const headingTravel = Boolean(future && future.hasAttribute && future.hasAttribute('data-heading-travel'));   // V4: 제목이 사진 위 문장 자리로 옮겨간다
   const nav = doc.querySelector('.hw-section-nav');
   const navLinks = [...nav.querySelectorAll('a')];
   const sections = navLinks.map(a => doc.querySelector(a.getAttribute('href')));
@@ -107,11 +114,11 @@
     // A viewport/motion change may replace Lenis while a menu or dialog is open.
     syncOverlays();
     if (!mode) {
-      vision.style.removeProperty('--hw-vision-base-weight');
-      vision.style.removeProperty('--hw-vision-film-weight');
-      const animated = [heroMedia, ...sloganLines, ...sloganInner, ...sloganRest, ...from, keyList, ...scenes.flatMap(s => [s.el, s.frame, s.content, s.copy]), rocket, smoke, sky, ...mountains, rocketWorld, futurePicture, futureImage, futureHeading, futureTop, futureBottom];
+      vision?.style.removeProperty('--hw-vision-base-weight');
+      vision?.style.removeProperty('--hw-vision-film-weight');
+      const animated = [heroMedia, ...sloganLines, ...sloganInner, ...sloganRest, ...from, keyList, ...scenes.flatMap(s => [s.el, s.frame, s.content, s.copy]), rocket, smoke, sky, ...mountains, rocketWorld, futurePicture, futureImage, futureHeading, futureTop, futureBottom].filter(Boolean);
       animated.forEach(el => el.removeAttribute('style'));
-      slogan.classList.remove('is-keyword-travel', 'is-keyword-list');
+      slogan?.classList.remove('is-keyword-travel', 'is-keyword-list');
       from.forEach(el => el.classList.remove('is-active'));
       if (reduced.matches) userPaused = true;
       doc.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('is-revealed'));
@@ -153,13 +160,22 @@
     });
   });
 
+  // 접힌 헤더는 상자가 아니라 보이는 띠만 가린다: header.js 가 html 인라인 스타일에 적는 --sps-header-visible(접히면 '88px', 펼치면 var()).
+  function headerOffset() {
+    const visible = parseFloat(doc.documentElement?.style?.getPropertyValue?.('--sps-header-visible') || '');
+    return Number.isFinite(visible) ? visible : header.getBoundingClientRect().height;
+  }
+  function cssNumber(el, name, fallback) {
+    const v = parseFloat(typeof getComputedStyle === 'function' ? getComputedStyle(el).getPropertyValue(name) : '');
+    return Number.isFinite(v) ? v : fallback;
+  }
   function measure() {
-    const headerH = header.getBoundingClientRect().height;
-    const height = mode ? stage.clientHeight : Math.max(1, innerHeight - headerH);
-    const scrollHeight = mode ? scrollUnit(vision.clientHeight, height, vision.dataset.visionExit === 'with-last-scene' ? 6.6 : 7.6) : height;
+    const headerH = headerOffset();
+    const height = mode && stage ? stage.clientHeight : Math.max(1, innerHeight - headerH);
+    const scrollHeight = mode && vision ? scrollUnit(vision.clientHeight, height, vision.dataset.visionExit === 'with-last-scene' ? 6.6 : 7.6) : height;
     const width = doc.documentElement.clientWidth;
     page.style.setProperty('--hw-width', width + 'px');
-    const rect = stage.getBoundingClientRect();
+    const rect = (stage || hero).getBoundingClientRect();
     // Measure the untransformed source, even after a resize mid-animation.
     const measured = [...sloganInner, ...from];
     const savedTransforms = measured.map(el => el.style.transform);
@@ -169,14 +185,30 @@
       return { x: a.left - rect.left, y: a.top - rect.top, toX: b.left - rect.left, toY: b.top - rect.top };
     });
     measured.forEach((el, i) => { el.style.transform = savedTransforms[i]; });
+    // 제목이 옮겨갈 거리: 제목(h2)의 글 상자 왼쪽 위가 사진 위 문장(h3)의 왼쪽 위에 닿도록. 변형을 걷어낸 상태에서 잰다.
+    let headingShift = { x: 0, y: 0 };
+    if (headingTravel && futureHeading && futureTop) {
+      const savedHeading = futureHeading.style.transform, savedTop = futureTop.style.transform;
+      futureHeading.style.transform = ''; futureTop.style.transform = '';
+      const h2 = futureHeading.querySelector('h2'), h3 = futureTop.querySelector('h3');
+      if (h2 && h3 && doc.createRange) {
+        const text = doc.createRange(); text.selectNodeContents(h2);
+        const from = text.getBoundingClientRect(), to = h3.getBoundingClientRect();
+        headingShift = { x: to.left - from.left, y: to.top - h2.getBoundingClientRect().top };
+      }
+      futureHeading.style.transform = savedHeading; futureTop.style.transform = savedTop;
+    }
     metrics = {
-      headerH, height, scrollHeight, width, coordinates,
+      headerH, height, scrollHeight, width, coordinates, headingShift,
       heroTop: hero.getBoundingClientRect().top + scrollY,
-      visionTop: vision.getBoundingClientRect().top + scrollY,
+      visionTop: (afterHero || future).getBoundingClientRect().top + scrollY,
       futureTop: future.getBoundingClientRect().top + scrollY,
       footerTop: footer.getBoundingClientRect().top + scrollY,
       sections: sections.map(el => el.getBoundingClientRect().top + scrollY),
       portraitWidth: Math.min(width <= 600 ? width * .48 : width * .35, 360, height * .45),
+      // 사진의 시작 자리(%): 페이지가 --hw-future-picture-top/left 로 정한다(V4: 글이 왼쪽에 있어 사진은 가운데 높이, 오른쪽 60%). 커지면 가운데로 돌아온다.
+      portraitTop: cssNumber(future, '--hw-future-picture-top', 68),
+      portraitLeft: cssNumber(future, '--hw-future-picture-left', 50),
     };
     layoutPending = false;
   }
@@ -192,12 +224,12 @@
     if (mode) {
       // Fixed-reference hero rises at half the native scroll speed.
       heroMedia.style.transform = 'translateY(' + heroOffset(scrollY, metrics.heroTop, headerH, page.hasAttribute('data-overlay-header')) + 'px)';
-      if (vision.hasAttribute('data-vision-palette')) {
+      if (vision?.hasAttribute('data-vision-palette')) {
         vision.style.setProperty('--hw-vision-base-weight', (keyword.baseWeight * 100) + '%');
         vision.style.setProperty('--hw-vision-film-weight', (keyword.filmWeight * 100) + '%');
       }
-      slogan.classList.toggle('is-keyword-travel', keyword.travel);
-      slogan.classList.toggle('is-keyword-list', keyword.list);
+      slogan?.classList.toggle('is-keyword-travel', keyword.travel);
+      slogan?.classList.toggle('is-keyword-list', keyword.list);
       sloganRest.forEach(el => { el.style.opacity = keyword.restOpacity; });
       sloganInner.forEach(el => { el.style.transform = 'translateY(' + ((1 - keyword.reveal) * 110) + '%)'; });
       // Move the original words. There is no second painted copy and no handoff.
@@ -233,11 +265,20 @@
       const pw = metrics.portraitWidth, ph = pw * 468 / 360;
       futurePicture.style.width = mix(pw,w,f.expand) + 'px';
       futurePicture.style.height = mix(ph,h,f.expand) + 'px';
-      futurePicture.style.top = mix(68,50,f.expand) + '%';
+      futurePicture.style.top = mix(metrics.portraitTop,50,f.expand) + '%';
+      futurePicture.style.left = mix(metrics.portraitLeft,50,f.expand) + '%';
       futurePicture.style.borderRadius = (8*(1-f.expand)) + 'px';
       futureImage.style.transform = 'translate(-50%,-50%) scale(' + mix(.6,1,f.expand) + ')';
-      futureHeading.style.opacity = f.heading;
-      futureHeading.style.transform = 'translateY(' + (-30*(1-f.heading)) + 'px)';
+      if (headingTravel) {
+        // 제목은 사라지지 않고 사진 위 문장 자리로 옮겨간다. 사진이 뒤를 덮으면 흰색이 되고, 문장이 올라올 때 같은 자리에서 자리를 내준다.
+        const go = ease(f.travel), shift = metrics.headingShift;
+        futureHeading.style.opacity = f.headingStay;
+        futureHeading.style.transform = 'translate(' + (shift.x*go).toFixed(1) + 'px,' + (shift.y*go).toFixed(1) + 'px)';
+        futureHeading.style.setProperty('--hw-future-heading-light', f.light.toFixed(3));
+      } else {
+        futureHeading.style.opacity = f.heading;
+        futureHeading.style.transform = 'translateY(' + (-30*(1-f.heading)) + 'px)';
+      }
       futureTop.style.opacity = f.top;
       futureTop.style.transform = 'translateY(' + (35*(1-f.top)) + 'px)';
       futureBottom.style.opacity = f.bottom;
@@ -260,13 +301,23 @@
         else a.removeAttribute('aria-current');
       });
     }
-    const lightVision = vision.dataset.visionPalette === 'black-white'
+    const lightVision = !vision ? true : vision.dataset.visionPalette === 'black-white'
       ? !mode || keyword.baseWeight > .5 || keyword.filmWeight > .5
       : !['v1','v2','v4'].includes(vision.dataset.visionPalette) || (mode && keyword.baseWeight < .5);
     nav.classList.toggle('is-light', index === 0 || (index === 1 && lightVision) || (index === 4 && ft > 1));
     const footerVisible = scrollY + innerHeight > metrics.footerTop + 50;
+    // V4 페이지 메뉴는 비전 섹션(2번째) 첫 화면의 세로 가운데에 '놓여' 있다. 본문과 함께 올라오다가
+    // 화면 가운데에 닿으면 그 자리에 고정된다(sticky). 히어로에서는 화면 아래에 있어 보이지 않는다.
+    const v4Nav = nav.classList.contains('main-v4-page-nav');
+    let navHidden = footerVisible;
+    if (v4Nav) {
+      const rest = innerHeight * .5;                                   // 고정될 때의 화면 위치
+      const flow = (metrics.sections[1] ?? 0) + rest - scrollY;        // 섹션 2 안의 제자리가 지금 화면에서 어디인지
+      nav.style.top = Math.max(rest, flow).toFixed(1) + 'px';
+      navHidden = footerVisible || flow > innerHeight + 80;             // 아직 화면 아래면 포커스 대상에서 제외
+    }
     nav.style.opacity = footerVisible ? '0' : '1';
-    nav.inert = footerVisible;
+    nav.inert = navHidden;
     paintPending = false;
   }
 
@@ -281,8 +332,8 @@
     pointerCurrentX += (pointerX-pointerCurrentX)*amount;
     pointerCurrentY += (pointerY-pointerCurrentY)*amount;
     if (mode && Math.abs(pointerCurrentX)+Math.abs(pointerCurrentY) > .005) {
-      rocketWorld.style.transform = 'rotateY(' + (-4*pointerCurrentX) + 'deg) rotateX(' + (-pointerCurrentY) + 'deg)';
-    } else rocketWorld.style.transform = '';
+      if (rocketWorld) rocketWorld.style.transform = 'rotateY(' + (-4*pointerCurrentX) + 'deg) rotateX(' + (-pointerCurrentY) + 'deg)';
+    } else if (rocketWorld) rocketWorld.style.transform = '';
     if (lenis || paintPending || Math.abs(pointerCurrentX-pointerX)+Math.abs(pointerCurrentY-pointerY) > .005) wake();
   }
   function wake() { if (!rafID && !doc.hidden) rafID = requestAnimationFrame(frame); }
@@ -291,19 +342,20 @@
   addEventListener('sps-vision-palette-change', () => { paintPending = true; wake(); });
   addEventListener('resize', () => { layoutPending = paintPending = true; wake(); }, {passive:true});
   addEventListener('sps-theme-change', () => { layoutPending = paintPending = true; wake(); });
+  addEventListener('sps-header-condense', () => { setTimeout(() => { layoutPending = paintPending = true; wake(); }, 400); });
   const layoutObserver = new ResizeObserver(() => { layoutPending = paintPending = true; wake(); });
   layoutObserver.observe(header, {box:'border-box'});
   layoutObserver.observe(hero, {box:'border-box'});
   // Mobile browser chrome changes dvh without consistently firing window.resize.
-  layoutObserver.observe(stage, {box:'border-box'});
+  if (stage) layoutObserver.observe(stage, {box:'border-box'});
   doc.fonts?.ready.then(() => { layoutPending = paintPending = true; wake(); });
-  vision.addEventListener('pointermove', event => {
+  vision?.addEventListener('pointermove', event => {
     if (!mode || !finePointer.matches || portrait.matches) return;
     pointerX = clamp((event.clientX / innerWidth -.5)*2,-1,1);
     pointerY = clamp(((event.clientY-metrics.headerH)/metrics.height -.5)*2,-1,1);
     wake();
   });
-  vision.addEventListener('pointerleave', () => { pointerX = pointerY = 0; wake(); });
+  vision?.addEventListener('pointerleave', () => { pointerX = pointerY = 0; wake(); });
   doc.addEventListener('visibilitychange', () => {
     if (doc.hidden) videos.forEach(video => setVideo(video,false));
     else { layoutPending = paintPending = true; wake(); }
@@ -322,6 +374,11 @@
   }, {threshold:.1});
   doc.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
 
+  // 다른 장면(결합 장면의 원 클릭 등)이 같은 부드러운 스크롤을 쓰도록 내보낸다
+  root.SPSScrollTo = (top, duration = 1.1) => {
+    if (lenis) lenis.scrollTo(Math.max(0, top), { duration });
+    else root.scrollTo({ top: Math.max(0, top), behavior: reduced.matches ? 'instant' : 'smooth' });
+  };
   function scrollToElement(element, focus = true, duration = 1.1) {
     if (layoutPending) measure();
     const top = element.getBoundingClientRect().top + scrollY - metrics.headerH;
@@ -356,12 +413,13 @@
   }
   let aligning = false;
   function alignPanels() {
-    if (!mode || compactPanels.matches || aligning) return;
+    if (!mode || !panelGroup || compactPanels.matches || aligning) return;
     const rect = panelGroup.getBoundingClientRect();
-    const gap = rect.top-metrics.headerH;
+    const headerH = headerOffset();   // 접힘 직후에도 지금 보이는 높이로
+    const gap = rect.top-headerH;
     if (Math.abs(gap) > 8 && Math.abs(gap) < metrics.height*.5 && lenis) {
       aligning = true;
-      lenis.scrollTo(panelGroup,{offset:-metrics.headerH,duration:.8,easing:t=>t<.5?16*t**5:1-((-2*t+2)**5)/2,onComplete:()=>{aligning=false;}});
+      lenis.scrollTo(panelGroup,{offset:-headerH,duration:.8,easing:t=>t<.5?16*t**5:1-((-2*t+2)**5)/2,onComplete:()=>{aligning=false;}});
       setTimeout(()=>{aligning=false;},1000);
     }
   }
@@ -375,10 +433,10 @@
       alignPanels();
     });
   });
-  panelGroup.addEventListener('pointerleave', () => {
+  panelGroup?.addEventListener('pointerleave', () => {   // 서비스 섹션은 화면 조정으로 떼어낼 수 있다
     if (!panelGroup.contains(doc.activeElement)) choosePanel(null);
   });
-  panelGroup.addEventListener('focusout', event => {
+  panelGroup?.addEventListener('focusout', event => {
     if (!panelGroup.contains(event.relatedTarget)) choosePanel(null);
   });
   compactPanels.addEventListener('change', () => choosePanel(null));

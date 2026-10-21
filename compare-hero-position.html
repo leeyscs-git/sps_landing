@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SPS — 히어로 문구 위치 비교</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
+  <link rel="stylesheet" href="compare.css?v=typescale1">
+  <style>
+    .comparison { grid-template-columns: repeat(var(--panel-columns,2),minmax(0,1fr)); }
+    .preview-window { overflow: hidden; }
+    .panel-heading p.rule { margin: 4px 0 0; font-size: 12px; color: #50616a; }
+  </style>
+</head>
+<body>
+  <header class="review-header">
+    <a class="review-brand" href="jll-remix-main-v4.html" aria-label="SPS 홈"><img src="assets/logo.svg" alt="SPS" width="90" height="30"></a>
+    <div class="review-title"><h1>히어로 문구 위치 비교</h1><p>같은 V4 히어로를 문구 위치 규칙만 바꿔 놓았습니다. 숫자를 고르는 대신 규칙을 고릅니다. 각 칸은 1280×800 기준이고, 규칙은 화면 높이가 바뀌어도 같은 방식으로 다시 계산됩니다.</p></div>
+    <a class="back-link" href="compare-typescale.html">타입 스케일 비교 ↗</a>
+  </header>
+  <div class="review-toolbar">
+    <div class="view-toggle" role="group" aria-label="비교 방식">
+      <button data-view="all" aria-pressed="true">넷 다</button>
+      <button data-view="bottom" aria-pressed="false">A 바 위</button>
+      <button data-view="center" aria-pressed="false">B 빈 영역 가운데</button>
+      <button data-view="middle" aria-pressed="false">C 화면 가운데</button>
+      <button data-view="top" aria-pressed="false">D 위쪽</button>
+    </div>
+    <p class="scroll-note">각 칸의 '새 탭으로'를 누르면 실제 크기로 볼 수 있습니다.</p>
+  </div>
+  <main class="comparison" data-view="all" data-device="desktop">
+    <section class="version-panel" data-version="bottom" aria-label="A 바 위">
+      <div class="panel-heading"><div><span class="version-label">A</span><h2>바 위 <small>현재 기본 · KT&amp;G · 한화 방식</small></h2><p class="rule">문구가 하단 바 바로 위(48px)에 앉는다. 문구와 바가 한 덩어리로 읽히고, 영상은 위쪽에 넓게 남는다.</p></div><a href="jll-remix-main-v4.html?title=bottom" target="_blank" rel="noopener">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?title=bottom" title="A 바 위"></iframe></div>
+    </section>
+    <section class="version-panel" data-version="center" aria-label="B 빈 영역 가운데">
+      <div class="panel-heading"><div><span class="version-label">B</span><h2>빈 영역 가운데 <small>대안</small></h2><p class="rule">바를 뺀 나머지 영역의 세로 가운데. 위아래 여백이 항상 같다.</p></div><a href="jll-remix-main-v4.html?title=center" target="_blank" rel="noopener">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?title=center" title="B 빈 영역 가운데"></iframe></div>
+    </section>
+    <section class="version-panel" data-version="middle" aria-label="C 화면 가운데">
+      <div class="panel-heading"><div><span class="version-label">C</span><h2>화면 가운데 <small>바 무시</small></h2><p class="rule">히어로 전체 높이의 세로 가운데. B보다 조금 아래, A보다 위. 영상 중심과 문구 중심이 겹친다.</p></div><a href="jll-remix-main-v4.html?title=middle" target="_blank" rel="noopener">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?title=middle" title="C 화면 가운데"></iframe></div>
+    </section>
+    <section class="version-panel" data-version="top" aria-label="D 위쪽">
+      <div class="panel-heading"><div><span class="version-label">D</span><h2>위쪽 <small>잡지 표지 방식</small></h2><p class="rule">헤더 아래 96px에 문구를 두고 영상은 아래로 흐른다. 문구와 바가 멀어 둘이 따로 읽힌다.</p></div><a href="jll-remix-main-v4.html?title=top" target="_blank" rel="noopener">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?title=top" title="D 위쪽"></iframe></div>
+    </section>
+  </main>
+  <script>
+    'use strict';
+    const comparison = document.querySelector('.comparison');
+    const all = ['bottom','center','middle','top'];
+    const viewportWidth = 1280, viewportHeight = 800;
+    function resizePreviews() {
+      document.querySelectorAll('.preview-window').forEach(container => {
+        if (!container.clientWidth) return;
+        const frame = container.querySelector('iframe');
+        const scale = Math.min(1, container.clientWidth / viewportWidth);
+        frame.style.width = viewportWidth + 'px';
+        frame.style.height = viewportHeight + 'px';
+        container.style.height = (Math.ceil(viewportHeight * scale) + 1) + 'px';
+        frame.style.transform = 'scale(' + scale + ')';
+        frame.style.left = Math.max(0, (container.clientWidth - viewportWidth * scale) / 2) + 'px';
+      });
+    }
+    function setView(view) {
+      comparison.dataset.view = view;
+      const selected = view === 'all' ? all : [view];
+      comparison.style.setProperty('--panel-columns', selected.length === 4 ? 2 : 1);
+      document.querySelectorAll('.version-panel').forEach(panel => { panel.hidden = !selected.includes(panel.dataset.version); });
+      document.querySelectorAll('button[data-view]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === view)));
+      resizePreviews();
+    }
+    document.querySelectorAll('button[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
+    new ResizeObserver(resizePreviews).observe(document.body);
+    setView('all');
+  </script>
+</body>
+</html>

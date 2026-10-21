@@ -19,13 +19,15 @@ function fixture(width=1600){
   };
 }
 
-test('the section rail stays visible without a timer and yields to menus, dialogs and footer',()=>{
+test('the section rail stays visible without a timer and yields to menus and dialogs; the inert footer/hero state only fades it',()=>{
   const h=fixture();
   assert.equal(h.host.hidden,false);
-  for(const kind of ['menu','dialog','footer']){
+  for(const kind of ['menu','dialog']){
     h.block(kind,true);assert.equal(h.host.hidden,true);
     h.block(kind,false);assert.equal(h.host.hidden,false);
   }
+  h.block('footer',true);assert.equal(h.host.hidden,false,'inert keeps the rail in layout so opacity/transform can transition');
+  h.block('footer',false);assert.equal(h.host.hidden,false);
   h.block('menu',true);h.block('dialog',true);h.block('menu',false);
   assert.equal(h.host.hidden,true);
   h.block('dialog',false);assert.equal(h.host.hidden,false);
@@ -35,7 +37,7 @@ test('background and page restoration update visibility without overriding foote
   const h=fixture();
   h.doc.hidden=true;h.docEvents.visibilitychange();assert.equal(h.host.hidden,true);
   h.doc.hidden=false;h.winEvents.pageshow();assert.equal(h.host.hidden,false);
-  h.block('footer',true);h.winEvents.pageshow();assert.equal(h.host.hidden,true);
+  h.block('footer',true);h.winEvents.pageshow();assert.equal(h.host.hidden,false,'footer state is expressed by inert, not hidden');
   assert.doesNotThrow(()=>start({document:{querySelector:()=>null}}));
 });
 
@@ -46,7 +48,7 @@ test('a manually hidden rail stays hidden across section, menu and page restorat
     h.block(kind,true);h.block(kind,false);assert.equal(h.host.hidden,true);
   }
   h.winEvents.pageshow();assert.equal(h.host.hidden,true);
-  h.block('footer',true);h.block('tweak',false);assert.equal(h.host.hidden,true);
+  h.block('footer',true);h.block('tweak',false);assert.equal(h.host.hidden,false);
   h.block('footer',false);assert.equal(h.host.hidden,false);
 });
 

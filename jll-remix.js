@@ -3,16 +3,16 @@ const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
 const slides = [
-  { title: '더 나은 내일을 위한<br>부동산의 가능성을<br>열어갑니다.', description: '사람을 이해하고, 공간을 연결하고, 가치를 만들어갑니다.<br>당신의 부동산 파트너, SPS.', image: 'assets/jll/seoul.webp', alt: '노을이 내려앉은 서울의 도심과 남산 전경', cta: 'SPS 알아보기', target: window.SPSHeader.about },
-  { title: '자산의 오늘을 읽고,<br>더 나은 내일을<br>준비합니다.', description: '시설부터 임차인, 매일의 운영 현황까지.<br>현장의 경험과 기술로 연결하는 자산관리.', image: 'assets/landing/architecture.jpg', alt: '도심에 서 있는 현대적인 오피스 빌딩', cta: '자산관리 솔루션 보기', target: '#services' },
-  { title: '사람을 위한 공간,<br>함께 성장하는<br>새로운 가능성.', description: '사람을 이해하는 것에서 공간의 변화는 시작됩니다.<br>머물고 싶은 곳, 함께 성장하는 공간을 만듭니다.', image: 'assets/jll/spaces.webp', alt: '원목 계단과 녹지가 어우러진 개방적인 공간', cta: '공간의 가치 살펴보기', target: '#spaces' },
-  { title: '새로운 관점으로,<br>부동산의 다음을<br>발견합니다.', description: '매일의 운영에서 미래의 공간까지.<br>당신의 선택에 깊이를 더하는 SPS 인사이트.', image: 'assets/landing/city.jpg', alt: '도시 속 빌딩과 거리의 전경', cta: '인사이트 살펴보기', target: '#insights' },
+  { title: '더 나은 내일을 위한<br>부동산의 가능성을 열어갑니다.', description: '사람을 이해하고, 공간을 연결하고, 가치를 만들어갑니다.<br>당신의 부동산 파트너, SPS.', image: 'assets/jll/seoul.webp', alt: '노을이 내려앉은 서울의 도심과 남산 전경', cta: 'SPS 알아보기', target: window.SPSHeader.about },
+  { title: '자산의 오늘을 읽고,<br>내일의 가치를 준비합니다.', description: '시설부터 임차인, 매일의 운영 현황까지.<br>현장의 경험과 기술로 연결하는 자산관리.', image: 'assets/landing/architecture.jpg', alt: '도심에 서 있는 현대적인 오피스 빌딩', cta: '자산관리 솔루션 보기', target: '#services' },
+  { title: '사람을 위한 공간에서<br>함께 성장하는 가능성을 봅니다.', description: '사람을 이해하는 것에서 공간의 변화는 시작됩니다.<br>머물고 싶은 곳, 함께 성장하는 공간을 만듭니다.', image: 'assets/jll/spaces.webp', alt: '원목 계단과 녹지가 어우러진 개방적인 공간', cta: '공간의 가치 살펴보기', target: '#spaces' },
+  { title: '새로운 관점으로<br>부동산의 다음을 발견합니다.', description: '매일의 운영에서 미래의 공간까지.<br>당신의 선택에 깊이를 더하는 SPS 인사이트.', image: 'assets/landing/city.jpg', alt: '도시 속 빌딩과 거리의 전경', cta: '인사이트 살펴보기', target: '#insights' },
 ];
 function closeMenu() { window.SPSHeader.close(); }
 
 function openDialog(dialog) { closeMenu(); dialog.showModal(); document.body.classList.add('modal-open'); }
 $$('dialog').forEach(dialog => {
-  $('.dialog-close', dialog).addEventListener('click', () => dialog.close());
+  $('.dialog-close', dialog)?.addEventListener('click', () => dialog.close());   // 문의 창(sps-inquiry)처럼 닫기 버튼 구조가 다른 dialog 도 있다: 여기서 멈추면 아래 상세·진단 코드가 모두 죽는다
   dialog.addEventListener('close', () => { if (!$('dialog[open]')) document.body.classList.remove('modal-open'); });
   dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
 });

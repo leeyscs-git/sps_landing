@@ -32,6 +32,11 @@ html[data-sps-desktop] [data-sps-header] { top: var(--sps-visible-top, 0px); }
   --page-tab-size: 21px;
   --radius-control: 3px;
   --radius-panel: 4px;
+  /* 쌓임 간격: 라벨 → 제목 → 설명 → 링크로 쌓이는 블록(서비스 V3 행, 카드, 영상 글 등). 화면 크기와 관계없이 고정 */
+  --space-stack-label: 16px;   /* 라벨(소제목) → 제목 */
+  --space-stack-text: 12px;    /* 제목 → 설명 */
+  --space-stack-action: 28px;  /* 제목·설명 → 링크 */
+  --radius-media: 6px; /* 사진·카드(인사이트 카드, 서비스 카드, 섬네일) 모서리: 패널(4)보다 살짝 둥글고 8은 너무 둥글다 */
   --ease-editorial: cubic-bezier(.22, 1, .36, 1);
   --chevron-size: 14px;
   --chevron-stroke: 1.6px;

@@ -5,11 +5,13 @@
   else api.start(root,typeof slides==='undefined'?[]:slides);
 })(typeof window==='undefined'?null:window,function(){
   const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  // 스토리별 CTA 목적지: 소개 · 서비스 섹션 · 서비스 사례 · 인사이트
+  const STORY_LINKS=['jll-remix-about.html','#hw-business','jll-remix-cases.html','jll-remix-journal-v2.html'];
   function start(win,stories){
     const doc=win.document,bar=doc.querySelector('.main-v4-stories');
     if(!bar||!stories.length)return;
     const hero=bar.closest('.hw-hero'),copy=hero.querySelector('.hw-hero-copy');
-    const title=hero.querySelector('#hw-title'),shade=hero.querySelector('.hw-hero-shade');
+    const title=hero.querySelector('#hw-title'),desc=hero.querySelector('#hw-story-desc'),cta=hero.querySelector('#hw-story-cta'),shade=hero.querySelector('.hw-hero-shade');
     // Any story may carry a film: <video class="hw-hero-video" data-story="N">; stories without one use the photo.
     const videos=[...hero.querySelectorAll('.hw-hero-video')];
     const videoFor=index=>videos.find(v=>Number(v.dataset.story)===index)||null;
@@ -25,6 +27,9 @@
     const buttons=[...bar.querySelectorAll('[data-slide]')];
     const reduced=win.matchMedia('(prefers-reduced-motion: reduce)');
     let photo=hero.querySelector('.hw-hero-image');
+    let ctaMotion=null;
+    // 서비스 섹션은 화면 조정으로 V2·V3 중 하나만 남을 수 있다: #hw-business 링크는 남아 있는 섹션으로
+    const resolveLink=href=>href==='#hw-business'&&!doc.getElementById('hw-business')?'#'+(doc.querySelector('#hw-services2, #hw-services3')?.id||'hw-business'):href;
     let current=-1,requestId=0,zoom=null,progress=null,fade=null,previous=null;
     let transitioning=false,heroVisible=true;
     const tracks=buttons.map(button=>{
@@ -109,13 +114,26 @@
       current=index;
       mediaChanged();
       title.innerHTML=story.title.split(/<br\s*\/?>/i).map(line=>'<span class="hw-line"><span>'+escape(line)+'</span></span>').join('');
+      if(desc)desc.innerHTML=(story.description||'').split(/<br\s*\/?>/i).map(escape).join('<br>');
+      if(cta){
+        cta.innerHTML=escape(story.cta||'자세히 보기')+' <sps-arrow-up-right></sps-arrow-up-right>';cta.setAttribute('href',resolveLink(STORY_LINKS[index]||'#'));
+        // 스토리가 바뀌면 제목 줄이 올라온 뒤 CTA가 다시 떠오른다(첫 등장은 CSS가 바 → 제목 → CTA 순서로 맡는다)
+        ctaMotion?.cancel();ctaMotion=null;
+        if(outgoing&&!reduced.matches&&typeof cta.animate==='function')ctaMotion=cta.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:900,delay:1500,easing:'cubic-bezier(.23,1,.32,1)',fill:'backwards'});
+      }
       buttons.forEach(button=>{
         const selected=Number(button.dataset.slide)===index;
         button.classList.toggle('active',selected);button.setAttribute('aria-pressed',String(selected));
       });
       startPhotoMotion();measure();resetProgress();
-      // Stories cut straight to the next media (no cross-fade).
-      if(outgoing){previous=outgoing;clearTransition();}
+      // 다음 매체가 앞 매체 위로 서서히 겹쳐 들어온다(0.8초). 움직임 줄임이면 바로 바뀐다.
+      if(outgoing){
+        previous=outgoing;
+        if(!reduced.matches&&typeof incoming.animate==='function'){
+          fade=incoming.animate([{opacity:0},{opacity:1}],{duration:800,easing:'ease-out',fill:'both'});
+          fade.onfinish=()=>{fade=null;clearTransition();};
+        }else clearTransition();
+      }
       transitioning=false;syncPlayback();
     }
     buttons.forEach(button=>button.addEventListener('click',()=>choose(Number(button.dataset.slide))));

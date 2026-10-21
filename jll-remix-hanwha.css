@@ -32,7 +32,7 @@ html.lenis { height: auto; }
 .hw-peek-toggle[aria-expanded=true] { transform: rotate(180deg); }
 .hw-peek-panel { position: absolute; width: min(660px,calc(100vw - 100px)); right: 70px; top: 0; transform: translate(120%,-50%); visibility: hidden; opacity: 0; background: var(--surface); color: var(--ink); padding: 24px; border-radius: 16px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; transition: transform .5s var(--hw-ease),opacity .3s,visibility .5s; }
 .hw-peek-panel.is-open { transform: translate(0,-50%); visibility: visible; opacity: 1; }
-.hw-peek-panel img { width: 100%; height: 235px; object-fit: cover; border-radius: 8px; }
+.hw-peek-panel img { width: 100%; height: 235px; object-fit: cover; border-radius: var(--radius-media, 6px); }
 .hw-peek-panel > div { align-self: center; }
 .hw-peek-panel p { color: var(--muted); font-size: 13px; }
 .hw-peek-panel h2 { font-size: 24px; line-height: 1.45; margin: 18px 0 24px; }
@@ -42,7 +42,8 @@ html.lenis { height: auto; }
 .hw-vision { background: var(--ink); color: var(--surface); position: relative; }
 .hw-motion .hw-vision { height: calc(var(--hw-height) * 8.6); }
 .hw-vision-stage { min-height: var(--hw-height); position: relative; }
-.hw-motion .hw-vision-stage { height: var(--hw-height); min-height: 0; position: sticky; top: var(--sps-header-height,140px); overflow: clip; isolation: isolate; }
+.hw-page { --hw-stage-live: calc(100svh - var(--sps-header-visible, var(--sps-header-height, 140px))); } /* 헤더가 접히면 메뉴 줄 아래까지 무대가 늘어난다 */
+.hw-motion .hw-vision-stage { height: var(--hw-stage-live); min-height: 0; position: sticky; top: var(--sps-header-visible, var(--sps-header-height,140px)); transition: top .35s, height .35s; overflow: clip; isolation: isolate; }
 .hw-slogan { min-height: var(--hw-height); display: flex; align-items: center; justify-content: center; flex-direction: column; font-size: clamp(34px,3.125vw,60px); line-height: 1.45; padding: 50px 20px; text-align: center; position: relative; z-index: 3; }
 .hw-slogan-line { display: block; overflow: clip; padding-bottom: .08em; margin-bottom: -.08em; }
 .hw-slogan-line > span { display: block; }
@@ -113,23 +114,25 @@ html[data-sps-desktop] :is(.hw-main-v2,.hw-main-v4) :is(.hw-slogan,.hw-keywords)
 .hw-news-heading { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 50px; }
 .hw-news-heading h2 { font-size: 24px; }
 .hw-news-heading a { display: flex; gap: 14px; align-items: center; font-size: 14px; }
+.hw-news.hw-cases { padding-bottom: 0; } /* 서비스 사례 바로 아래 인사이트: 한 덩어리로 보이도록 사이는 한 번의 짧은 간격만 */
+.hw-cases + .hw-news { padding-top: clamp(64px, 6vw, 96px); }
 .hw-news-heading sps-arrow-up-right { color: var(--red); }
 .hw-news-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 36px; }
-.hw-news-grid a > div { overflow: clip; aspect-ratio: 1.35; border-radius: 8px; }
+.hw-news-grid a > div { overflow: clip; aspect-ratio: 1.35; border-radius: var(--radius-media, 6px); }
 .hw-news-grid img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--hw-ease); }
 .hw-news-grid a:hover img { transform: scale(1.06); }
-.hw-news-grid small { display: block; margin: 28px 0 15px; color: var(--muted); font-size: 11px; letter-spacing: .07em; }
+.hw-news-grid small { display: block; margin: 24px 0 var(--space-stack-label, 16px); color: var(--muted); font-size: 11px; letter-spacing: .07em; }
 .hw-news-grid h3 { font-size: clamp(22px,1.6vw,30px); line-height: 1.45; }
-.hw-news-grid a > span { display: inline-block; margin-top: 24px; color: var(--muted); font-size: 13px; }
+.hw-news-grid a > span { display: inline-block; margin-top: var(--space-stack-action, 28px); color: var(--muted); font-size: 13px; }
 .hw-news-grid a:hover > span { color: var(--red); }
 .hw-future { position: relative; }
 .hw-future-stage { position: relative; min-height: var(--hw-height); }
 .hw-motion .hw-future { height: calc(var(--hw-height) * 3.8); }
-.hw-motion .hw-future-stage { height: var(--hw-height); position: sticky; top: var(--sps-header-height,140px); overflow: clip; isolation: isolate; }
+.hw-motion .hw-future-stage { height: var(--hw-stage-live); position: sticky; top: var(--sps-header-visible, var(--sps-header-height,140px)); transition: top .35s, height .35s; overflow: clip; isolation: isolate; }
 .hw-future-heading { padding: 55px 20px 40px; text-align: center; position: relative; z-index: 2; }
 .hw-future-heading .hw-kicker { margin-bottom: 25px; }
 .hw-future-heading h2 { font-size: clamp(28px,2.71vw,52px); line-height: 1.4; }
-.hw-future-picture { width: min(360px,35vw); aspect-ratio: 360/468; position: relative; margin: 0 auto; overflow: clip; border-radius: 8px; background: var(--ink); }
+.hw-future-picture { width: min(360px,35vw); aspect-ratio: 360/468; position: relative; margin: 0 auto; overflow: clip; border-radius: var(--radius-media, 6px); background: var(--ink); }
 .hw-future-picture img { position: absolute; width: 100%; height: 100%; object-fit: cover; }
 .hw-motion .hw-future-picture { position: absolute; margin: 0; left: 50%; top: 68%; transform: translate(-50%,-50%); will-change: width,height; }
 .hw-motion .hw-future-picture img { width: var(--hw-width,100vw); max-width: none; height: var(--hw-height); left: 50%; top: 50%; transform: translate(-50%,-50%) scale(.6); }

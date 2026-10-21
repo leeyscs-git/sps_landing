@@ -37,6 +37,7 @@
     size('--card-gap','카드 사이 간격',28,16,48,'layout',2),
     size('--radius-control','버튼·입력 모서리',3,0,24,'surfaces'),
     size('--radius-panel','패널·대화상자 모서리',4,0,28,'surfaces'),
+    size('--radius-media','사진·카드 모서리',6,0,28,'surfaces'),
     {...size('--reveal-duration','스크롤 등장 시간',800,200,1600,'expression',50),unit:'ms'},
     size('--reveal-distance','스크롤 등장 거리',28,0,60,'expression',2),
     size('--contact-height','문의 버튼 최소 높이',44,44,64,'buttons',2),

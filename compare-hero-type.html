@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SPS — 히어로 제목 크기·굵기 비교</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
+  <link rel="stylesheet" href="compare.css?v=typescale1">
+  <style>
+    .comparison { grid-template-columns: repeat(var(--panel-columns,2),minmax(0,1fr)); }
+    .preview-window { overflow: hidden; }
+    .panel-heading p.rule { margin: 4px 0 0; font-size: 12px; color: #50616a; }
+  </style>
+</head>
+<body>
+  <header class="review-header">
+    <a class="review-brand" href="jll-remix-main-v4.html" aria-label="SPS 홈"><img src="assets/logo.svg" alt="SPS" width="90" height="30"></a>
+    <div class="review-title"><h1>히어로 제목 크기·굵기 비교</h1><p>같은 V4 히어로를 제목 크기·굵기·자간만 바꿔 놓았습니다. 1280×800 기준이며 두 번째 스토리로 넘어가면 '자산의 오늘을 읽고' 문장으로 볼 수 있습니다.</p></div>
+    <a class="back-link" href="compare-hero-position.html">문구 위치 비교 ↗</a>
+  </header>
+  <div class="review-toolbar">
+    <div class="view-toggle" role="group" aria-label="비교 방식">
+      <button data-view="all" aria-pressed="true">넷 다</button>
+      <button data-view="a" aria-pressed="false">A 64/500</button>
+      <button data-view="b" aria-pressed="false">B 64/560</button>
+      <button data-view="c" aria-pressed="false">C 60/500</button>
+      <button data-view="d" aria-pressed="false">D 72/450</button>
+    </div>
+    <p class="scroll-note">각 칸의 '새 탭으로'를 누르면 실제 크기로 볼 수 있습니다.</p>
+  </div>
+  <main class="comparison" data-view="all" data-device="desktop">
+    <section class="version-panel" data-version="a" aria-label="A 64/500">
+      <div class="panel-heading"><div><span class="version-label">A</span><h2>64px · 500 <small>이전</small></h2><p class="rule">자간 -.03em, 줄 간격 1.16. 사진 위에서 획이 조금 가늘게 보일 수 있다.</p></div><a href="jll-remix-main-v4.html?herotype=a" target="_blank" rel="noopener">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?herotype=a" title="A"></iframe></div>
+    </section>
+    <section class="version-panel" data-version="b" aria-label="B 64/560">
+      <div class="panel-heading"><div><span class="version-label">B</span><h2>64px · 560 <small>대안</small></h2><p class="rule">크기는 그대로, 섹션 제목과 같은 560. 밝은 영상 위에서도 획이 서고 600처럼 무겁지는 않다.</p></div><a href="jll-remix-main-v4.html?herotype=b" target="_blank" rel="noopener">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?herotype=b" title="B"></iframe></div>
+    </section>
+    <section class="version-panel" data-version="c" aria-label="C 60/500">
+      <div class="panel-heading"><div><span class="version-label">C</span><h2>60px · 500 <small>현재 기본</small></h2><p class="rule">자간 -.02em, 줄 간격 1.2. 여유는 생기지만 영상 위 존재감은 줄어든다.</p></div><a href="jll-remix-main-v4.html?herotype=c" target="_blank" rel="noopener">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?herotype=c" title="C"></iframe></div>
+    </section>
+    <section class="version-panel" data-version="d" aria-label="D 72/450">
+      <div class="panel-heading"><div><span class="version-label">D</span><h2>72px · 450 <small>크고 가볍게</small></h2><p class="rule">자간 -.035em, 줄 간격 1.12. 한화 쪽 인상. 크지만 가벼워 둘째 줄이 길어지면 폭이 빠듯하다.</p></div><a href="jll-remix-main-v4.html?herotype=d" target="_blank" rel="noopener">새 탭으로 ↗</a></div>
+      <div class="preview-window"><iframe src="jll-remix-main-v4.html?herotype=d" title="D"></iframe></div>
+    </section>
+  </main>
+  <script>
+    'use strict';
+    const comparison = document.querySelector('.comparison');
+    const all = ['a','b','c','d'];
+    const viewportWidth = 1280, viewportHeight = 800;
+    function resizePreviews() {
+      document.querySelectorAll('.preview-window').forEach(container => {
+        if (!container.clientWidth) return;
+        const frame = container.querySelector('iframe');
+        const scale = Math.min(1, container.clientWidth / viewportWidth);
+        frame.style.width = viewportWidth + 'px';
+        frame.style.height = viewportHeight + 'px';
+        container.style.height = (Math.ceil(viewportHeight * scale) + 1) + 'px';
+        frame.style.transform = 'scale(' + scale + ')';
+        frame.style.left = Math.max(0, (container.clientWidth - viewportWidth * scale) / 2) + 'px';
+      });
+    }
+    function setView(view) {
+      comparison.dataset.view = view;
+      const selected = view === 'all' ? all : [view];
+      comparison.style.setProperty('--panel-columns', selected.length === 4 ? 2 : 1);
+      document.querySelectorAll('.version-panel').forEach(panel => { panel.hidden = !selected.includes(panel.dataset.version); });
+      document.querySelectorAll('button[data-view]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === view)));
+      resizePreviews();
+    }
+    document.querySelectorAll('button[data-view]').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
+    new ResizeObserver(resizePreviews).observe(document.body);
+    setView('all');
+  </script>
+</body>
+</html>

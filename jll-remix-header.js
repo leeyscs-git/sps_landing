@@ -17,8 +17,8 @@
   const sectionHref = id => `${isSubpage ? home : ''}#${id}`;
   const links = [
     { label: 'SPS 소개', href: about, current: isAbout },
-    { label: '서비스', href: sectionHref('services'), section: 'services' },
-    { label: '서비스 사례', href: 'jll-remix-cases.html', current: isCases },
+    { label: '사업영역', href: sectionHref('services'), section: 'services' },   // 2026-10-21: '서비스' → '사업영역'
+    { label: '사업실적', href: 'jll-remix-cases.html', current: isCases },       // 2026-10-21: '서비스 사례' → '사업실적'
     { label: '인사이트', href: header.dataset.journalHref || 'jll-remix-journal-v2.html', current: isJournal, section: null },
     { label: '고객지원', href: 'jll-remix-support.html', current: isSupport },
   ];
@@ -48,8 +48,10 @@
       </div>
     </div>
     <nav class="nav wrap" aria-label="주 메뉴">
+      <a class="nav-brand" href="${isSubpage ? home : '#main'}" target="_top" aria-label="SPS 홈" aria-hidden="true" tabindex="-1"><svg class="nav-brand-logo" width="96" height="32" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70.87 23.73"><g><g><g><path class="cls-1" d="M46.29,11.47v-6.86c0-.97,2.78-.92,3.37.88.8,2.44.22,6.95-3.37,5.98Z"/><g><path class="cls-4" d="M46.29,12.26v5.89c0,1.56,2.21.59,1.96,1.49-.02.05-.2.15-.23.15h-6.83c-.13,0-.29-.35-.11-.51.34-.3,1.45.14,1.66-.78-.08-4.19,0-14.18-.2-14.36-.4-.38-1.5.04-1.64-.53-.09-.37.43-.37.64-.39,1.87-.19,7.79-.17,9.44.4,3.6,1.26,3.51,6.57.27,8.15-1.59.77-3.25.6-4.97.48ZM46.29,11.47c3.6.96,4.17-3.55,3.37-5.98-.59-1.81-3.37-1.85-3.37-.88v6.86Z"/><path class="cls-4" d="M63.99,18.61c-1.37,1.31-3.48,1.71-5.31,1.42-.74-.12-2.75-1.12-3.22-.78-.23.16-.19,1.24-.88.54.23-1.42-.21-3.51.04-4.83.07-.4.43-.58.71-.25.12.14.41,1.6.61,2.05,1.46,3.14,6.41,3.6,6.57-.12.17-4.02-7.71-3.31-7.71-8.93,0-3.32,3.01-5.08,6.05-4.71.63.08,1.85.67,2.26.66s.78-1.08,1.12-.39c.1.19.12,4.22-.08,4.3-.59.23-.73-1.03-.93-1.44-2.11-4.18-6.96-2.16-5.53,1.18.83,1.94,5.6,2.73,7.06,5.08,1.19,1.9.87,4.67-.76,6.23Z"/><path class="cls-4" d="M38.69,3.16c.21-.17.51-.19.6.11.05.19.13,3.7.09,3.9-.3,1.59-1.14-1.17-1.23-1.35-1.54-3.03-6.03-2.63-5.6.81.36,2.91,6.61,3.02,7.71,6.82,1.23,4.22-2.28,7.11-6.33,6.59-.81-.11-2.7-.98-3.12-.95-.33.02-1.13,1.91-1.2.3-.03-.81-.03-3.75.09-4.43.08-.45.44-.56.7-.16.22.34.41,1.59.73,2.19,2.05,3.87,7.65,2.39,6.21-1.6-.82-2.26-6.2-2.68-7.24-6.14-1.14-3.8,1.86-6.59,5.58-6.28.67.06,2.4.79,2.8.57.12-.06.12-.31.2-.38Z"/></g></g><g><circle class="cls-2" cx="20.28" cy="11.86" r="3.19"/><circle class="cls-2" cx="11.73" cy="11.86" r="3.19"/><circle class="cls-2" cx="11.73" cy="3.19" r="3.19"/><circle class="cls-2" cx="11.73" cy="20.54" r="3.19"/><circle class="cls-2" cx="3.19" cy="11.86" r="3.19"/></g></g><text class="cls-3" transform="translate(66.59 6.38) scale(.96 1)"><tspan x="0" y="0">™</tspan></text></g></svg></a>
       <div class="nav-links" id="nav-links">${links.map(link => renderLink(link)).join('')}</div>
       ${renderLocale()}
+      <a class="nav-contact header-contact" href="jll-remix-support.html#inquiry" data-inquiry aria-haspopup="dialog" aria-hidden="true" tabindex="-1"><span class="header-contact-label">문의하기</span> <sps-arrow-up-right></sps-arrow-up-right></a>
     </nav>
     <nav class="sps-header-menu" id="sps-header-menu" aria-label="전체 메뉴" hidden>
       ${links.map(link => renderLink(link, true)).join('')}
@@ -108,8 +110,76 @@
   window.addEventListener('sps-theme-change', updateHeight);
   window.addEventListener('pageshow', updateHeight);
   updateHeight();
-  const updateScroll = () => header.classList.toggle('is-scrolled', scrollY > 20);
+  // 아래로 스크롤(데스크톱)하면 헤더를 접는다. 두 방식:
+  //  row(기본): 윗여백과 메뉴 줄을 접고 로고 줄(로고 · 메뉴 · 문의하기 버튼)만 남긴다. 메뉴 항목은 메뉴 줄 가운데에서 로고 줄 가운데로 곧게 올라온다.
+  //  bar(이전 방식, V4 화면 조정에서 선택 · html[data-sps-condense="bar"]): 로고 줄을 접고 메뉴 줄만 띠로 남긴다. 작은 로고와 문의하기 글자 링크가 띠 양끝에 들어온다.
+  // 위로 스크롤하거나 맨 위 근처면 전체 헤더로 돌아온다.
+  const mainRow = header.querySelector('.header-main');
+  const navRow = header.querySelector('.nav');
+  const navLinks = header.querySelector('.nav-links');
+  const condenseQuery = window.matchMedia?.('(min-width: 851px)');
+  const px = value => (Number.isFinite(value) ? value : 0);
+  const setVar = (name, value) => header.style?.setProperty?.(name, value);
+  const condenseMode = () => (document.documentElement?.dataset?.spsCondense === 'bar' ? 'bar' : 'row');
+  let lastY = scrollY, travel = 0, condensed = false;   // travel: 같은 방향으로 누적된 이동량
+  // 접힌 상태의 치수. 창 크기나 방식이 바뀌면 다시 잰다. 돌려주는 값은 화면에 남는 높이.
+  function condensedGeometry() {
+    if (condenseMode() === 'bar') {
+      // 띠 높이(--sps-bar-height, 기본 58px)만큼 남긴다. 메뉴 줄(49px)보다 높으면 로고 줄 아래쪽 빈 흰 면까지 보이게 하고, 메뉴 줄의 글자·로고·버튼을 그만큼의 절반 올려 띠 가운데에 둔다.
+      const row = px(navRow?.offsetHeight), inline = parseFloat(document.documentElement?.style?.getPropertyValue?.('--sps-bar-height') || '');
+      const bar = Math.max(row, Number.isFinite(inline) ? inline : 58), lift = (bar - row) / 2;   // 기본 58px: 49px 메뉴 줄 위아래로 4.5px
+      const visible = bar + 1;                                               // 띠 + 아래 선
+      setVar('--sps-header-shift', `${px(header.offsetHeight) - visible}px`);   // 띠만 남기고 위로
+      setVar('--sps-header-paint', '100%'); setVar('--sps-nav-dx', '0px'); setVar('--sps-nav-dy', `${-lift}px`); setVar('--sps-nav-bridge', `${lift}px`);
+      return visible;
+    }
+    const mainTop = px(mainRow.offsetTop), mainHeight = px(mainRow.offsetHeight);
+    const linksTop = px(navLinks?.offsetTop), linksHeight = px(navLinks?.offsetHeight);
+    setVar('--sps-header-shift', `${mainTop}px`);                        // 윗여백만큼 위로
+    setVar('--sps-header-paint', `${mainTop + mainHeight + 1}px`);        // 흰 바탕과 선은 로고 줄까지만
+    const dy = (mainTop + mainHeight / 2) - (linksTop + linksHeight / 2);
+    const dx = (px(navRow?.offsetLeft) + px(navRow?.offsetWidth) / 2) - (px(navLinks?.offsetLeft) + px(navLinks?.offsetWidth) / 2);
+    setVar('--sps-nav-dx', `${dx}px`);                                      // 메뉴 줄 왼쪽 → 로고 줄 가운데
+    setVar('--sps-nav-dy', `${dy}px`);                                      // 메뉴 줄 → 로고 줄 세로 가운데
+    setVar('--sps-nav-bridge', `${Math.max(0, (mainTop + mainHeight + 1) - (linksTop + linksHeight + dy))}px`);   // 올라간 '서비스'와 패널 사이 틈
+    setVar('--sps-nav-row', `${px(navRow?.offsetHeight)}px`);              // 서비스 패널이 띠 바로 아래 붙도록
+    return mainHeight + 1;                                                  // 로고 줄 + 아래 선
+  }
+  const setCondensed = on => {
+    if (condensed === on) return;
+    condensed = on;
+    header.classList.toggle('is-condensed', on);
+    const bar = on && condenseMode() === 'bar';
+    header.querySelectorAll('.nav-brand, .nav-contact').forEach(el => { el.setAttribute('aria-hidden', String(!bar)); el.tabIndex = bar ? 0 : -1; });
+    const visible = on && mainRow ? condensedGeometry() : null;
+    if (!visible) { setVar('--sps-header-shift', '0px'); setVar('--sps-header-paint', '100%'); setVar('--sps-nav-dx', '0px'); setVar('--sps-nav-dy', '0px'); setVar('--sps-nav-bridge', '0px'); }
+    document.documentElement.style.setProperty('--sps-header-visible', visible ? `${visible}px` : 'var(--sps-header-height)');
+    if (typeof CustomEvent === 'function') window.dispatchEvent(new CustomEvent('sps-header-condense', { detail: { condensed: on, mode: condenseMode() } }));
+  };
+  // 접힘 방식 바꾸기(V4 화면 조정): html[data-sps-condense] 를 쓰고, 접혀 있으면 새 방식으로 다시 잰다.
+  function setCondenseMode(mode) {
+    const root = document.documentElement;
+    if (mode === 'bar') root.dataset.spsCondense = 'bar'; else delete root.dataset.spsCondense;
+    if (condensed) { condensed = false; setCondensed(true); }
+  }
+  // 창 크기나 테마(여백·높이)가 바뀌면 접힌 치수를 다시 잰다.
+  const remeasure = () => { if (condensed && mainRow) document.documentElement.style.setProperty('--sps-header-visible', `${condensedGeometry()}px`); };
+  window.addEventListener('resize', remeasure, { passive: true });
+  window.addEventListener('sps-theme-change', remeasure);
+  if (typeof ResizeObserver === 'function') new ResizeObserver(remeasure).observe(header, { box: 'border-box' });
+  const updateScroll = () => {
+    const y = scrollY;
+    header.classList.toggle('is-scrolled', y > 20);
+    const allowed = Boolean(condenseQuery?.matches) && !document.body?.classList?.contains?.('sps-menu-open');
+    const delta = y - lastY;
+    travel = Math.sign(delta) === Math.sign(travel) ? travel + delta : delta;
+    lastY = y;
+    if (!allowed || y < 80) setCondensed(false);
+    else if (travel <= -32) setCondensed(false);
+    else if (travel >= 32 && y > 160) setCondensed(true);
+  };
   window.addEventListener('scroll', updateScroll, { passive: true });
+  condenseQuery?.addEventListener?.('change', updateScroll);
   updateScroll();
 
   if (!isSubpage) {
@@ -129,7 +199,7 @@
       if (section) observer.observe(section);
     });
   }
-  window.SPSHeader = { home, about, close: () => {
+  window.SPSHeader = { home, about, condenseMode, setCondenseMode, refresh: remeasure, close: () => {
     header.querySelectorAll('sps-service-menu').forEach(item => item.close?.(true));
     setMenu(false);
   } };

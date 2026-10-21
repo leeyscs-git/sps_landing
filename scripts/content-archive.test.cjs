@@ -5,7 +5,7 @@ const vm=require('node:vm');
 const archive=require('../jll-remix-content-archive.js');
 const cases=require('../jll-remix-cases.js');
 
-function fixture({search='',scale=1,reduced=false,flight=null}={}){
+function fixture({search='',scale=1,reduced=false,flight=null,categories=['all','management','interior','other']}={}){
   const events={},motions=[],states=[],root={getAttribute:()=>flight};
   const reduce={matches:reduced,addEventListener(name,fn){this[name]=fn;}};
   function element(category,index=0){
@@ -18,7 +18,7 @@ function fixture({search='',scale=1,reduced=false,flight=null}={}){
     item.classList={contains:()=>false,toggle(name,on){item.active=on;}};
     return item;
   }
-  const buttons=['all','management','marketing','interior','other'].map(element);
+  const buttons=categories.map(element);
   const content=[element(),element(),element()];
   const indicator={style:{}},tabs={offsetWidth:500,scrollLeft:0,classList:{add(){}},
     getClientRects:()=>[{}],getBoundingClientRect:()=>({left:50*scale,width:500*scale}),
@@ -64,18 +64,19 @@ test('service filters retain URL state, update inquiry context and restore with 
   assert.match(h.empty.innerHTML,/부동산 자산관리 사례를 준비하고 있습니다./);assert.equal(h.inquiry.dataset.inquiryService,'management');
   assert.equal(h.buttons[1].active,true);assert.equal(h.indicator.style.transform,'translateX(120px)');
   h.buttons[2].listeners.click();
-  assert.equal(h.win.location.searchParams.get('category'),'marketing');
+  assert.equal(h.win.location.searchParams.get('category'),'interior');
   assert.equal(h.win.location.searchParams.get('layout'),'desktop');
   assert.equal(h.win.location.searchParams.get('embed'),'1');assert.equal(h.win.location.hash,'#archive');
-  assert.match(h.empty.innerHTML,/임대 마케팅 사례를 준비하고 있습니다./);
-  assert.equal(h.inquiry.dataset.inquiryService,'marketing');
+  assert.match(h.empty.innerHTML,/실내건축 사례를 준비하고 있습니다./);
+  assert.equal(h.inquiry.dataset.inquiryService,'interior');
   assert.equal(h.motions.length,3,'filtering does not repeat page entry');
   h.buttons[2].listeners.click();assert.equal(h.states.length,1,'same tab adds no history');
   h.buttons[0].listeners.click();assert.equal(h.win.location.searchParams.has('category'),false);
   assert.equal(h.inquiry.dataset.inquiryService,undefined);
-  h.win.location=new URL('http://localhost/jll-remix-cases.html?category=interior');h.events.popstate();
-  assert.equal(h.buttons[3].active,true);assert.match(h.empty.innerHTML,/실내건축 사례를 준비하고 있습니다./);
-  assert.equal(h.inquiry.dataset.inquiryService,'interior');
+  h.win.location=new URL('http://localhost/jll-remix-cases.html?category=other');h.events.popstate();
+  assert.equal(h.buttons[3].active,true);assert.match(h.empty.innerHTML,/기타 사례를 준비하고 있습니다./);
+  assert.equal(h.inquiry.dataset.inquiryService,'undecided');
+  assert.equal(cases.categoryFor('?category=marketing'),'all','임대 마케팅 tab was removed');
   assert.equal(cases.categoryFor('?category=unknown'),'all');
   assert.equal(cases.categoryFor('?category=__proto__'),'all');
 });
@@ -83,22 +84,24 @@ test('service filters retain URL state, update inquiry context and restore with 
 test('service samples use the shared card renderer and show only the selected category',()=>{
   const h=fixture();cases.start(h.win);
   const count=()=> (h.grid.innerHTML.match(/class="iv2-post"/g)||[]).length;
-  assert.equal(count(),4);assert.equal(h.empty.hidden,true);assert.equal(h.grid.hidden,false);
-  assert.equal((h.grid.innerHTML.match(/ · 샘플/g)||[]).length,4);
-  assert.equal((h.grid.innerHTML.match(/서비스 안내 보기/g)||[]).length,4);
+  const buildings=()=> (h.grid.innerHTML.match(/class="iv2-post cases-building"/g)||[]).length;
+  assert.equal(count(),2,'전체: only cases from categories that still have a tab');assert.equal(buildings(),5);assert.equal(h.empty.hidden,true);assert.equal(h.grid.hidden,false);
+  assert.equal((h.grid.innerHTML.match(/ · 샘플/g)||[]).length,7,'전체: two sample cases and five sample buildings');
+  assert.ok(h.grid.innerHTML.indexOf('cases-building')<h.grid.innerHTML.indexOf('sample-management-office'),'buildings come first');
+  assert.doesNotMatch(h.grid.innerHTML,/sample-marketing|임대 마케팅/,'임대 마케팅 cases are not shown');
+  assert.equal((h.grid.innerHTML.match(/서비스 안내 보기/g)||[]).length,2);
   assert.doesNotMatch(h.grid.innerHTML,/data-article=/,'sample cards do not navigate to unrelated journal articles');
-  h.buttons[1].listeners.click();assert.equal(count(),2);
+  h.buttons[1].listeners.click();assert.equal(count(),2);assert.equal(buildings(),5,'부동산 자산관리 holds the managed buildings');
+  assert.match(h.grid.innerHTML,/<p class="iv2-meta">부동산 자산관리 · 서울 동대문구 · 샘플<\/p>/);
   assert.match(h.grid.innerHTML,/sample-management-office/);assert.doesNotMatch(h.grid.innerHTML,/sample-marketing/);
-  h.buttons[2].listeners.click();assert.equal(count(),2);
-  assert.match(h.grid.innerHTML,/sample-marketing-office/);assert.doesNotMatch(h.grid.innerHTML,/sample-management/);
-  h.buttons[3].listeners.click();assert.equal(count(),0);assert.equal(h.grid.hidden,true);assert.equal(h.empty.hidden,false);
+  h.buttons[2].listeners.click();assert.equal(count(),0);assert.equal(buildings(),0);assert.equal(h.grid.hidden,true);assert.equal(h.empty.hidden,false);
   assert.match(h.empty.innerHTML,/<a class="iv2-empty-cta" href="jll-remix.html#services">서비스 안내 보기/);
   assert.doesNotMatch(h.empty.innerHTML,/<p\b|cases-status|작업 범위|지금은 서비스 안내/);
-  h.buttons[4].listeners.click();assert.equal(h.win.location.searchParams.get('category'),'other');
-  assert.equal(h.buttons[4].active,true);assert.equal(count(),0);assert.equal(h.empty.hidden,false);
+  h.buttons[3].listeners.click();assert.equal(h.win.location.searchParams.get('category'),'other');
+  assert.equal(h.buttons[3].active,true);assert.equal(count(),0);assert.equal(h.empty.hidden,false);
   assert.match(h.empty.innerHTML,/기타 사례를 준비하고 있습니다./);assert.equal(h.inquiry.dataset.inquiryService,'undecided');
   h.win.location=new URL('http://localhost/jll-remix-cases.html?category=management');h.events.popstate();
-  assert.equal(count(),2);assert.equal(h.empty.hidden,true);assert.equal(h.inquiry.dataset.inquiryService,'management');
+  assert.equal(count(),2);assert.equal(buildings(),5);assert.equal(h.empty.hidden,true);assert.equal(h.inquiry.dataset.inquiryService,'management');
 });
 
 test('sample assets are local and other-category direct links preserve layout and inquiry behavior',()=>{
@@ -109,9 +112,9 @@ test('sample assets are local and other-category direct links preserve layout an
     assert.match(item.alt,/샘플/);
   }
   const h=fixture({search:'?category=other&layout=desktop&embed=1#archive'});cases.start(h.win);
-  assert.equal(h.buttons[4].active,true);assert.equal(h.empty.hidden,false);
+  assert.equal(h.buttons[3].active,true);assert.equal(h.empty.hidden,false);
   assert.equal(h.inquiry.dataset.inquiryService,'undecided');
-  h.buttons[2].listeners.click();assert.equal(h.grid.hidden,false);
+  h.buttons[1].listeners.click();assert.equal(h.grid.hidden,false);
   assert.equal(h.win.location.searchParams.get('layout'),'desktop');assert.equal(h.win.location.searchParams.get('embed'),'1');
   assert.equal(h.win.location.hash,'#archive');
   const html=fs.readFileSync(require.resolve('../jll-remix-cases.html'),'utf8');
@@ -151,7 +154,7 @@ test('the runnable old cases page retains its own controller, styles and indepen
 
 test('narrow category rails reveal direct and history selections without vertical scrolling',()=>{
   for(const scale of [1,.5]){
-    const h=fixture({scale,search:'?category=other'});
+    const h=fixture({scale,search:'?category=other',categories:['all','management','marketing','interior','other']});
     h.tabs.offsetWidth=h.tabs.clientWidth=280;h.tabs.scrollWidth=560;
     h.tabs.getBoundingClientRect=()=>({left:20*scale,width:280*scale});
     h.buttons.forEach((button,index)=>button.getBoundingClientRect=()=>({left:(20+index*120-h.tabs.scrollLeft)*scale,width:80*scale}));
@@ -176,4 +179,16 @@ test('shared empty states support native links or buttons and escape variable co
   const escaped=archive.emptyState({title:'<script>bad()</script>',actionLabel:'A & B',href:'page.html?x="bad"'});
   assert.doesNotMatch(escaped,/<script>|href="page.html\?x="bad/);
   assert.match(escaped,/&lt;script&gt;/);assert.match(escaped,/A &amp; B/);assert.match(escaped,/&quot;bad&quot;/);
+});
+
+test('managed buildings live under 부동산 자산관리 (no separate 관리 실적 tab): buildings first, then the management stories',()=>{
+  const h=fixture({search:'?category=management'});cases.start(h.win);
+  assert.equal(h.buttons[1].active,true);
+  const html=h.grid.innerHTML;
+  assert.equal((html.match(/class="iv2-post cases-building"/g)||[]).length,5);
+  assert.ok(html.lastIndexOf('cases-building')<html.indexOf('data-case="sample-management-office"'),'buildings before stories');
+  assert.equal(h.inquiry.dataset.inquiryService,'management');
+  assert.equal(cases.categoryFor('?category=buildings'),'all','the retired 관리 실적 link falls back to 전체');
+  h.buttons[2].listeners.click();
+  assert.doesNotMatch(h.grid.innerHTML,/cases-building/,'other tabs carry no buildings');
 });
