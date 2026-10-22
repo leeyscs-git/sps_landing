@@ -5,7 +5,7 @@
   else model.mount();
 })(typeof window === 'undefined' ? this : window, function () {
   'use strict';
-  const services = { undecided:'상담 후 결정', management:'부동산 자산관리', marketing:'임대 마케팅', interior:'실내건축', documents:'등록·면허 자료 문의' };
+  const services = { undecided:'상담 후 결정', management:'부동산 자산관리', marketing:'임대 마케팅', interior:'인테리어', documents:'등록·면허 자료 문의' };
   const inquiryTypes = { consultation:'상담 문의', quote:'견적 문의' };
   const usages = { unknown:'상담 시 확인', office:'업무시설', retail:'상가·근린생활시설', residential:'주거시설', mixed:'복합용도', other:'기타' };
   const situations = {

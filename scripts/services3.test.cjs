@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const read=f=>fs.readFileSync(require.resolve('../'+f),'utf8').replace(/\r\n?/g,'\n');
 
-test('서비스 V3 carries the original page\'s alternating image/copy rows for the three services, wired to the detail dialog',()=>{
+test('서비스 V3 carries the original page\'s alternating image/copy rows for the three services, each linking to its 사업영역 page section',()=>{
   const html=read('jll-remix-main-v4.html');
   const section=(html.match(/<section class="hw-services3"[\s\S]*?<\/section>/)||[''])[0];
   assert.ok(section,'section present');
@@ -13,11 +13,12 @@ test('서비스 V3 carries the original page\'s alternating image/copy rows for 
   assert.doesNotMatch(section,/hw-services3-label/,'no "01 / PROPERTY MANAGEMENT" chips on the photos');
   assert.doesNotMatch(section,/일상의 운영부터 자산의 미래까지/,'the side description is left out');
   const names=[...section.matchAll(/<p class="hw-services3-eyebrow"[^>]*>([^<]+)<\/p>/g)].map(m=>m[1]);
-  assert.deepEqual(names,['부동산 자산관리','임대 마케팅','실내건축'],'시설관리 row removed');
-  const keys=[...section.matchAll(/data-detail="([a-z]+)"/g)].map(m=>m[1]);
-  assert.deepEqual(keys,['management','marketing','interior']);
-  const details=read('jll-remix.js');
-  keys.forEach(key=>assert.match(details,new RegExp('^  '+key+': \\{','m'),key+' has detail-dialog content'));
+  assert.deepEqual(names,['부동산 자산관리','임대 마케팅','인테리어'],'시설관리 row removed');
+  const keys=[...section.matchAll(/<a class="hw-services3-link"[^>]*href="jll-remix-services\.html#([a-z]+)"/g)].map(m=>m[1]);
+  assert.deepEqual(keys,['management','marketing','interior'],'row links go to the 사업영역 page sections (2026-10-22: no popup)');
+  assert.doesNotMatch(section,/data-detail=/,'no popup hook left in the rows');
+  const servicesPage=read('jll-remix-services.html');
+  keys.forEach(key=>assert.ok(servicesPage.includes('id="'+key+'"'),key+' is a section of the 사업영역 page'));
   assert.equal((section.match(/<article class="hw-services3-row"[^>]*>/g)||[]).length,3);
   assert.equal((section.match(/data-reveal/g)||[]).length,1+1+3*4,'intro, the shortcut list, three rows and three copy lines (eyebrow, title, link) per row reveal on scroll');
   assert.doesNotMatch(section,/hw-services3-tags|<p data-reveal style="--order:2">/,'descriptions and tags are left out: only the emphasis stays');
@@ -97,7 +98,7 @@ test('the intro is no longer a lone statement: a three-line service index sits a
   const items=[...section.matchAll(/<li style="--i:(\d)"><a href="#(hw-services3-[a-z]+)">([^<]+) <sps-arrow-up-right><\/sps-arrow-up-right><\/a><\/li>/g)];
   assert.deepEqual(items.map(m=>Number(m[1])),[0,1,2],'each entry carries its stagger index');
   const links=items.map(m=>[m[2],m[3]]);
-  assert.deepEqual(links,[['hw-services3-management','부동산 자산관리'],['hw-services3-marketing','임대 마케팅'],['hw-services3-interior','실내건축']]);
+  assert.deepEqual(links,[['hw-services3-management','부동산 자산관리'],['hw-services3-marketing','임대 마케팅'],['hw-services3-interior','인테리어']]);
   for(const [id] of links)assert.match(section,new RegExp('<article class="hw-services3-row" id="'+id+'" data-reveal>'),id+' exists');
   assert.match(section,/<ul class="hw-services3-index" aria-label="서비스 바로가기" data-reveal>/,'the list reveals on scroll');
   const css=fs.readFileSync(require.resolve('../jll-remix-services3.css'),'utf8');

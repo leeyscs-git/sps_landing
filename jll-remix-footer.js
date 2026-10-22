@@ -35,17 +35,18 @@
     const variant=doc.documentElement.dataset.serviceMenu;
     const prefix=['v2','v3','v4'].includes(variant)?'jll-remix-'+variant:'jll-remix';
     return {
-      home:header?.dataset.homeHref||prefix+'.html',
+      home:header?.dataset.homeHref||(prefix==='jll-remix'?'jll-remix-main-v4.html':prefix+'.html'),   // 헤더와 같은 홈: 메인 V4(비교용 시안만 자기 홈)
       about:header?.dataset.aboutHref||prefix+'-about.html',
       insights:header?.dataset.journalHref||'jll-remix-journal-v2.html',
       top:doc.getElementById('main')?'#main':'#overview'
     };
   }
   // V1 아래 줄: 로고 · 사업자 정보 · 저작권 / 패밀리사이트(위로 열림) · 맨 위로. V1 과 V3 가 같이 쓴다.
-  function bottomV1(paths,year,{top=true}={}){
+  // logo:false = 푸터 V4(로고가 머리로 올라간 판): 아래 줄은 사업자 정보부터
+  function bottomV1(paths,year,{top=true,logo=true}={}){
     return `      <div class="sps-footer-bottom">
         <div class="sps-footer-identity">
-          <a class="sps-footer-logo" href="${escape(paths.home)}" target="_top" aria-label="SPS 홈"><img src="assets/logo.svg" alt="SPS" width="120" height="40" loading="lazy"></a>
+          ${logo?`<a class="sps-footer-logo" href="${escape(paths.home)}" target="_top" aria-label="SPS 홈"><img src="assets/logo.svg" alt="SPS" width="120" height="40" loading="lazy"></a>`:''}
           <p class="sps-footer-business"><span>${escape(company.name)}</span><span>대표자 ${escape(company.representative)}</span><span>사업자등록번호 ${escape(company.registration)}</span></p>
           <p class="sps-footer-business"><span>${escape(company.address)}</span><span class="sps-footer-phone">대표전화 ${escape(contact.phone)}</span></p>
           <p class="sps-footer-business"><span>주택임대관리업등록번호 ${escape(company.rental)}</span></p>
@@ -65,9 +66,9 @@
     const link=(href,label)=>`<a href="${escape(href)}" target="_top">${label}</a>`;
     return `<nav class="sps-footer-nav" aria-label="하단 메뉴">
           <div class="sps-footer-group"><h3>사업영역</h3>
-            ${link('jll-remix.html?service=management#services','부동산 자산관리')}
-            ${link('jll-remix.html?service=marketing#services','임대 마케팅')}
-            ${link('jll-remix.html?service=interior#services','실내건축')}
+            ${link('jll-remix-services.html#management','부동산 자산관리')}
+            ${link('jll-remix-services.html#marketing','임대 마케팅')}
+            ${link('jll-remix-services.html#interior','인테리어')}
           </div>
           <div class="sps-footer-group"><h3>SPS 알아보기</h3>
             ${link(paths.about,'SPS 소개')}
@@ -81,14 +82,14 @@
           </div>
         </nav>`;
   }
-  // variant '2': 먹색 바탕의 푸터 V2(회사소개서 · 브로슈어 카드). '3': V1 바탕 + V2 배치 + V1 아래 줄. 호스트의 data-footer-variant 로 고른다.
+  // variant '2': 먹색 바탕의 푸터 V2(회사소개서 · 브로슈어 카드). '3': V1 바탕 + V2 배치 + V1 아래 줄. '4': V3 에서 로고를 머리(문장 자리)로 올리고 문장은 뺀 판. 호스트의 data-footer-variant 로 고른다.
   // consult: 상담·견적 문의 버튼 자리. 'contact' 기본(V1 문장 오른쪽 · V2/V3 연락처 아래) · 'statement' 문장 아래 · 'none' 없음. 호스트의 data-footer-consult 로 고른다.
   function markup(paths,year,{top=true,variant='1',consult='contact'}={}){
     if(variant==='2')return markupV2(paths,year,{top,consult});
-    if(variant==='3')return markupV3(paths,year,{top,consult});
+    if(variant==='3'||variant==='4')return markupV3(paths,year,{top,consult,logoHead:variant==='4'});
     return `<div class="sps-footer-inner">
       <div class="sps-footer-lead"${consult==='statement'?' data-consult="statement"':''}>
-        <h2 class="sps-footer-statement">공간을 이해합니다.<br>가능성을 연결합니다.</h2>
+        <h2 class="sps-footer-statement">당신의 자산,<br>그 다음을 함께 그립니다.</h2>
         ${consult==='none'?'':`<a class="sps-footer-consult" href="jll-remix-support.html#inquiry" data-inquiry aria-haspopup="dialog">상담·견적 문의 ${arrow}</a>`}
       </div>
       <div class="sps-footer-directory">
@@ -106,7 +107,7 @@
   const resources=Object.freeze([
     {key:'profile',eyebrow:'Company Profile',label:'회사소개서',desc:'회사 개요 및 등록·면허 자료',action:'보기',href:'jll-remix-about.html',
       soon:{title:'회사소개서를 준비하고 있습니다.',lines:['지금은 SPS 소개에서 회사 개요와 등록·면허 자료를 확인해보세요.'],action:'SPS 소개 살펴보기'}},
-    {key:'brochure',eyebrow:'Brochure',label:'브로슈어',desc:'서비스 안내',action:'보기',href:'jll-remix.html#services',
+    {key:'brochure',eyebrow:'Brochure',label:'브로슈어',desc:'서비스 안내',action:'보기',href:'jll-remix-services.html',
       soon:{title:'브로슈어를 준비하고 있습니다.',lines:['지금은 서비스 소개에서 세 가지 서비스를 살펴보세요.'],action:'서비스 살펴보기'}}
   ]);
   // '준비 중' 창 내용: 인사이트의 빈 상태(제목 · 설명 · 글 링크 iv2-empty-cta)와 같은 꼴, 가운데 정렬. 닫기는 테두리 없는 선 X 아이콘
@@ -118,6 +119,7 @@
       <a class="sps-footer-soon-cta" href="${escape(item.href)}" target="_top">${escape(item.soon.action)}${arrow}</a>`;
   }
   // 푸터 V2: 먹색 띠 · 회사 자료 카드 두 장 · 라벨 + 가로 링크 줄. 스타일은 jll-remix-footer.css 의 .sps-footer[data-variant="2"] 블록.
+  // 푸터 문장(2026-10-22): "당신의 자산, 그 다음을 함께 그립니다." — 메인 심볼 장면의 "공간을 이해합니다. 가능성을 연결합니다."와는 다른 문장
   // V2 조각: brand(로고 · 문장) · reach(대표전화 · 운영시간 · 문의) · resources(자료 카드) · nav(라벨 + 가로 링크 줄).
   // V2 는 머리 = brand | reach, 몸 = resources | nav. V3 는 머리 = 문장 | resources, 몸 = reach | V1 세로 메뉴(navV1).
   function v2Parts(paths){
@@ -139,9 +141,10 @@
           </a></li>`;
     const consultLink=`<a class="sps-footer-v2-consult" href="jll-remix-support.html#inquiry" data-inquiry aria-haspopup="dialog">상담·견적 문의 ${arrow}</a>`;
     return {
+      consultLink,
       brand:({logo=true,consult=false}={})=>`<div class="sps-footer-v2-brand">
           ${logo?`<a class="sps-footer-v2-logo" href="${escape(paths.home)}" target="_top" aria-label="SPS 홈"><img src="assets/logo-on-film.svg" alt="SPS" width="120" height="40" loading="lazy"></a>`:''}
-          <h2 class="sps-footer-v2-statement">공간을 이해합니다.<br>가능성을 연결합니다.</h2>${consult?`
+          <h2 class="sps-footer-v2-statement">당신의 자산,<br>그 다음을 함께 그립니다.</h2>${consult?`
           ${consultLink}`:''}
         </div>`,
       reach:({consult=true}={})=>`<div class="sps-footer-v2-reach">
@@ -153,7 +156,7 @@
           <ul class="sps-footer-v2-cards">${resources.map(item=>card(item,{compact})).join('')}</ul>
         </nav>`,
       nav:()=>`<nav class="sps-footer-v2-nav" aria-label="하단 메뉴">
-          ${row('사업영역',[link('jll-remix.html?service=management#services','부동산 자산관리'),link('jll-remix.html?service=marketing#services','임대 마케팅'),link('jll-remix.html?service=interior#services','실내건축')])}
+          ${row('사업영역',[link('jll-remix-services.html#management','부동산 자산관리'),link('jll-remix-services.html#marketing','임대 마케팅'),link('jll-remix-services.html#interior','인테리어')])}
           ${row('SPS 알아보기',[link(paths.about,'SPS 소개'),link('jll-remix-cases.html','사업실적'),link(paths.insights,'인사이트')])}
           ${row('고객지원',[link('jll-remix-support.html','고객지원 안내'),link('jll-remix-support.html#questions','자주 묻는 질문'),link('jll-remix-about.html#credentials','등록·면허 자료')])}
           ${row('패밀리사이트',family.map(site=>`<a href="${escape(site.href)}" target="_blank" rel="noopener">${escape(site.label)} ${arrow}<span class="sps-footer-v2-sr">(새 창)</span></a>`))}
@@ -183,18 +186,23 @@
     </div>`;
   }
   // 푸터 V3: V1 바탕(쿨 화이트 · 먹색 글 · 빨간 대표전화). 머리 = 문장 | 3단 자료 카드, 몸 = 대표전화 · 운영시간 · 문의 | V1 세로 메뉴(카드와 같은 폭), 맨 아래는 V1 아래 줄 그대로.
-  function markupV3(paths,year,{top=true,consult='contact'}={}){
+  // logoHead(푸터 V4, 2026-10-22 화면 조정에 추가): 머리 왼쪽에 문장 대신 먹색 로고(크게)를 두고, 아래 줄에서는 로고를 뺀다. 나머지는 V3 와 같다(같은 CSS).
+  function markupV3(paths,year,{top=true,consult='contact',logoHead=false}={}){
     const v2=v2Parts(paths);
+    const head=logoHead?`<div class="sps-footer-v2-brand">
+          <a class="sps-footer-v3-logo" href="${escape(paths.home)}" target="_top" aria-label="SPS 홈"><img src="assets/logo.svg" alt="SPS" width="168" height="56" loading="lazy"></a>${consult==='statement'?`
+          ${v2.consultLink}`:''}
+        </div>`:v2.brand({logo:false,consult:consult==='statement'});
     return `<div class="sps-footer-inner">
       <div class="sps-footer-v2-head">
-        ${v2.brand({logo:false,consult:consult==='statement'})}
+        ${head}
         ${v2.resources({compact:true})}
       </div>
       <div class="sps-footer-v2-body">
         ${v2.reach({consult:consult==='contact'})}
         ${navV1(paths)}
       </div>
-      ${bottomV1(paths,year,{top})}
+      ${bottomV1(paths,year,{top,logo:!logoHead})}
     </div>`;
   }
   // 스크롤 등장: 푸터의 띠(머리 · 몸 · 아래 줄)가 화면에 들어오면 위 구분선이 왼쪽부터 그어지고, 띠 안의 조각이 차례로 떠오른다.
@@ -250,9 +258,11 @@
       const notes=[...host.querySelectorAll('[data-footer-note]')];
       // 페이지에 떠 있는 '맨 위로' 버튼이 따로 있으면(V4: data-footer-no-top) 푸터의 '맨 위로'는 넣지 않는다
       // 기본은 메인 V4 의 기본과 같은 판: 푸터 V3 · 상담 버튼 없음(2026-10-21 전역 적용). 호스트가 1 · 2 / contact · statement 를 적으면 그 판을 그린다
-      const asked=host.getAttribute?.('data-footer-variant'),variant=asked==='1'||asked==='2'?asked:'3';
+      const asked=host.getAttribute?.('data-footer-variant'),variant=asked==='1'||asked==='2'||asked==='4'?asked:'3';
       const place=host.getAttribute?.('data-footer-consult'),consult=place==='contact'||place==='statement'?place:'none';
-      host.setAttribute('data-variant',variant);
+      // V4 는 V3 판(같은 CSS)에 로고 자리만 다르다: data-variant="3" 에 data-footer-logo="head" 를 더한다
+      host.setAttribute('data-variant',variant==='4'?'3':variant);
+      if(variant==='4')host.setAttribute('data-footer-logo','head');
       host.innerHTML=markup(paths,new Date().getFullYear(),{top:!host.hasAttribute('data-footer-no-top'),variant,consult});
       const inner=host.querySelector('.sps-footer-inner');
       notes.forEach(note=>inner.append(note));

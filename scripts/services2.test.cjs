@@ -11,11 +11,12 @@ test('the main page carries three photo cards in service-menu order, each openin
   assert.match(html,/href="#hw-services2"><span class="main-v4-nav-label">사업영역 V2<\/span>/);
   assert.match(html,/jll-remix-services2\.css\?v=/);assert.match(html,/jll-remix-services2\.js\?v=/);
   const names=[...section.matchAll(/<span class="hw-services2-name">([^<]+)<\/span>/g)].map(m=>m[1]);
-  assert.deepEqual(names,['부동산 자산관리','임대 마케팅','실내건축'],'시설관리 is folded into 자산관리 and left out');
-  const cards=[...section.matchAll(/<a class="hw-services2-card"[^>]*href="jll-remix-main-v4\.html\?service=([a-z]+)#hw-business" data-detail="\1"/g)].map(m=>m[1]);
-  assert.equal(cards.length,3);
-  const accepted=read('jll-remix.js').match(/\[('[a-z]+'(?:, '[a-z]+')*)\]\.includes\(requestedService\)/)[1].replace(/'/g,'').split(', ');
-  cards.forEach(key=>assert.ok(accepted.includes(key),key+' opens a service detail'));
+  assert.deepEqual(names,['부동산 자산관리','임대 마케팅','인테리어'],'시설관리 is folded into 자산관리 and left out');
+  const cards=[...section.matchAll(/<a class="hw-services2-card"[^>]*href="jll-remix-services\.html#([a-z]+)"/g)].map(m=>m[1]);
+  assert.equal(cards.length,3,'cards go to the 사업영역 page sections, not the detail popup (2026-10-22)');
+  assert.doesNotMatch(section,/data-detail=/,'no popup hook left on the cards');
+  const servicesPage=read('jll-remix-services.html');
+  cards.forEach(key=>assert.ok(servicesPage.includes('id="'+key+'"'),key+' is a section of the 사업영역 page'));
   assert.equal((section.match(/<img class="hw-services2-photo"[^>]*loading="lazy"/g)||[]).length,3,'every card has a lazy photo');
   assert.equal((section.match(/hw-services2-more/g)||[]).length,3,'every card carries the 자세히 보기 line');
   assert.match(section,/<div class="hw-services2-cards">/,'the card row sits outside .wrap');

@@ -36,11 +36,11 @@
       list: t >= 1.6
     };
   }
-  // travel · light · headingStay 는 제목이 옮겨가는 판(data-heading-travel)용: 사진이 커지는 동안 제목이 사진 위 문장 자리로 가며(1.0 도착) 흰색이 되고,
-  // 잠시 머물다 1.02~1.18에 사라지면 그 자리에 사진 위 문장(top, 1.15~)이 올라온다. 두 글이 겹치지 않게 차례로 넘긴다.
+  // travel · light 는 제목이 옮겨가는 판(data-heading-travel)용: 사진이 커지는 동안 제목이 사진 위 문장 자리로 가며(1.0 도착) 흰색이 되고,
+  // 가운데 정렬에서 왼쪽 정렬로 바뀐 채 그대로 남는다(사진 위 문장으로 바뀌지 않는다, 2026-10-22).
   function futureState(t) {
     return { expand: range(t, .2, 1.2), heading: 1 - range(t, .1, .65), top: range(t, 1.15, 1.6), bottom: range(t, 1.75, 2.35),
-      travel: range(t, .2, 1.0), light: range(t, .55, .95), headingStay: 1 - range(t, 1.02, 1.18) };
+      travel: range(t, .2, 1.0), light: range(t, .55, .95), kickerLight: range(t, 1.05, 1.2) };   // 킥커는 제목 위라 사진이 늦게 덮는다: 덮인 뒤에 흰색
   }
   function heroOffset(scroll, heroTop, headerHeight, overlayHeader = false) {
     return Math.max(0, (scroll + (overlayHeader ? heroTop : headerHeight) - heroTop) * .5);
@@ -186,20 +186,23 @@
     });
     measured.forEach((el, i) => { el.style.transform = savedTransforms[i]; });
     // 제목이 옮겨갈 거리: 제목(h2)의 글 상자 왼쪽 위가 사진 위 문장(h3)의 왼쪽 위에 닿도록. 변형을 걷어낸 상태에서 잰다.
-    let headingShift = { x: 0, y: 0 };
+    // 가운데 → 왼쪽 정렬: 킥커와 각 줄(h2 > span)이 제목 글 상자의 왼쪽 끝에 닿도록 옮길 거리(headingRows)
+    let headingShift = { x: 0, y: 0 }, headingRows = [];
     if (headingTravel && futureHeading && futureTop) {
-      const savedHeading = futureHeading.style.transform, savedTop = futureTop.style.transform;
-      futureHeading.style.transform = ''; futureTop.style.transform = '';
+      const rows = [...futureHeading.querySelectorAll('.hw-kicker, h2 > span')];
+      const savedHeading = futureHeading.style.transform, savedTop = futureTop.style.transform, savedRows = rows.map(el => el.style.transform);
+      futureHeading.style.transform = ''; futureTop.style.transform = ''; rows.forEach(el => { el.style.transform = ''; });
       const h2 = futureHeading.querySelector('h2'), h3 = futureTop.querySelector('h3');
       if (h2 && h3 && doc.createRange) {
         const text = doc.createRange(); text.selectNodeContents(h2);
         const from = text.getBoundingClientRect(), to = h3.getBoundingClientRect();
         headingShift = { x: to.left - from.left, y: to.top - h2.getBoundingClientRect().top };
+        headingRows = rows.map(el => { text.selectNodeContents(el); return { el, x: from.left - text.getBoundingClientRect().left }; });
       }
-      futureHeading.style.transform = savedHeading; futureTop.style.transform = savedTop;
+      futureHeading.style.transform = savedHeading; futureTop.style.transform = savedTop; rows.forEach((el, i) => { el.style.transform = savedRows[i]; });
     }
     metrics = {
-      headerH, height, scrollHeight, width, coordinates, headingShift,
+      headerH, height, scrollHeight, width, coordinates, headingShift, headingRows,
       heroTop: hero.getBoundingClientRect().top + scrollY,
       visionTop: (afterHero || future).getBoundingClientRect().top + scrollY,
       futureTop: future.getBoundingClientRect().top + scrollY,
@@ -270,11 +273,13 @@
       futurePicture.style.borderRadius = (8*(1-f.expand)) + 'px';
       futureImage.style.transform = 'translate(-50%,-50%) scale(' + mix(.6,1,f.expand) + ')';
       if (headingTravel) {
-        // 제목은 사라지지 않고 사진 위 문장 자리로 옮겨간다. 사진이 뒤를 덮으면 흰색이 되고, 문장이 올라올 때 같은 자리에서 자리를 내준다.
+        // 제목은 사라지지 않고 사진 위 문장 자리로 옮겨간다. 사진이 뒤를 덮으면 흰색이 되고, 줄들이 왼쪽 끝으로 모여 왼쪽 정렬이 된 채 남는다.
         const go = ease(f.travel), shift = metrics.headingShift;
-        futureHeading.style.opacity = f.headingStay;
+        futureHeading.style.opacity = 1;
         futureHeading.style.transform = 'translate(' + (shift.x*go).toFixed(1) + 'px,' + (shift.y*go).toFixed(1) + 'px)';
+        metrics.headingRows.forEach(row => { row.el.style.transform = 'translateX(' + (row.x*go).toFixed(1) + 'px)'; });
         futureHeading.style.setProperty('--hw-future-heading-light', f.light.toFixed(3));
+        futureHeading.style.setProperty('--hw-future-kicker-light', f.kickerLight.toFixed(3));
       } else {
         futureHeading.style.opacity = f.heading;
         futureHeading.style.transform = 'translateY(' + (-30*(1-f.heading)) + 'px)';

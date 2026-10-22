@@ -7,7 +7,7 @@ const root=path.resolve(__dirname,'..');
 const pages=fs.readdirSync(root).filter(file=>/^jll-remix.*\.html$/.test(file)&&fs.readFileSync(path.join(root,file),'utf8').includes('data-sps-header'));
 
 test('every current SPS page has one shared footer outside main, with its required scripts and style',()=>{
-  assert.equal(pages.length,17);
+  assert.equal(pages.length,19);
   for(const file of pages){
     const html=fs.readFileSync(path.join(root,file),'utf8');
     const footer=html.indexOf('<footer class="sps-footer"');
@@ -155,7 +155,7 @@ test('footer V2 (먹색 띠 · 자료 카드): same destinations and company fac
   assert.match(html,/<dl class="sps-footer-v2-row sps-footer-v2-hours"><dt class="sps-footer-v2-label">상담 운영시간<\/dt><dd>평일 09:00 – 18:00<\/dd><dd>점심 12:00 – 13:00<\/dd><dd>주말·공휴일 휴무<\/dd><\/dl>/);
   assert.match(html,/class="sps-footer-v2-consult" href="jll-remix-support.html#inquiry" data-inquiry aria-haspopup="dialog"/);
   assert.match(html,/<img src="assets\/logo-on-film.svg" alt="SPS"/);assert.ok(fs.existsSync(path.join(root,'assets/logo-on-film.svg')));
-  assert.deepEqual([...html.matchAll(/<a class="sps-footer-v2-card" data-resource="([^"]+)" href="([^"]+)" target="_top" data-soon aria-haspopup="dialog">/g)].map(m=>[m[1],m[2]]),[['profile','jll-remix-about.html'],['brochure','jll-remix.html#services']],'cards keep real pages as their link (new tab, no dialog) and open the 준비 중 window until the PDFs arrive');
+  assert.deepEqual([...html.matchAll(/<a class="sps-footer-v2-card" data-resource="([^"]+)" href="([^"]+)" target="_top" data-soon aria-haspopup="dialog">/g)].map(m=>[m[1],m[2]]),[['profile','jll-remix-about.html'],['brochure','jll-remix-services.html']],'cards keep real pages as their link (new tab, no dialog) and open the 준비 중 window until the PDFs arrive');
   assert.deepEqual(resources.map(r=>r.action),['보기','보기']);
   assert.equal((html.match(/<svg class="sps-footer-v2-card-icon"/g)||[]).length,2,'line icons, not illustrations');
   assert.doesNotMatch(html,/data-footer-family|<details/,'no dropdown in V2');
@@ -172,7 +172,7 @@ test('footer V2 (먹색 띠 · 자료 카드): same destinations and company fac
   assert.match(ds,/<div class="sps-footer" data-sps-footer data-footer-preview data-footer-variant="2" data-footer-consult="contact">/,'the design system previews V2 too, with its consult button');
   assert.match(ds,/<div class="sps-footer" data-sps-footer data-footer-preview data-footer-variant="1" data-footer-consult="contact">/,'V1 stays V1 in the preview although the shared default is now V3');
   const src=fs.readFileSync(path.join(root,'jll-remix-footer.js'),'utf8');
-  assert.match(src,/variant=asked==='1'\|\|asked==='2'\?asked:'3';/,'every page defaults to footer V3 (the V4 default)');
+  assert.match(src,/variant=asked==='1'\|\|asked==='2'\|\|asked==='4'\?asked:'3';/,'every page defaults to footer V3 (the V4 default); 4 is the logo-head tweak');
   assert.match(src,/consult=place==='contact'\|\|place==='statement'\?place:'none';/,'and to no consult button');
   const scale=fs.readFileSync(path.join(root,'jll-remix-main-v4-typescale.css'),'utf8');
   assert.match(scale,/\.sps-footer:is\(\[data-variant="2"\], \[data-variant="3"\]\) \.sps-footer-v2-statement \{ font-size: var\(--ts-h2\);/);
@@ -185,7 +185,7 @@ test('footer V3 = V1 ground + V2 parts + the V1 bottom row: statement | resource
   assert.equal(F.markup(paths,2026,{variant:'3'}),v3,'markup() hands variant 3 to markupV3');
   assert.match(v3,/<div class="sps-footer-inner">\s*<div class="sps-footer-v2-head">\s*<div class="sps-footer-v2-brand">[\s\S]*?<\/h2>\s*<\/div>\s*<nav class="sps-footer-v2-resources"[\s\S]*?<\/nav>\s*<\/div>\s*<div class="sps-footer-v2-body">\s*<div class="sps-footer-v2-reach">[\s\S]*?<\/div>\s*<nav class="sps-footer-nav" aria-label="하단 메뉴">[\s\S]*?<\/nav>\s*<\/div>\s*<div class="sps-footer-bottom">/,'head = statement | cards, body = contact | menu, then the V1 bottom row');
   assert.doesNotMatch(v3,/logo-on-film|sps-footer-v2-foot|>패밀리사이트<\/h3>/,'no white logo, no V2 foot, no family row (the V1 dropdown is in the bottom row)');
-  assert.match(v3,/<h2 class="sps-footer-v2-statement">공간을 이해합니다\.<br>가능성을 연결합니다\.<\/h2>/);
+  assert.match(v3,/<h2 class="sps-footer-v2-statement">당신의 자산,<br>그 다음을 함께 그립니다\.<\/h2>/,'the footer statement (2026-10-22)');
   assert.equal((v3.match(/href="tel:/g)||[]).length,1,'only the large number dials');
   assert.equal((v3.match(/class="sps-footer-v2-card"/g)||[]).length,2,'회사소개서 · 브로슈어 cards');
   assert.match(v3,/<a class="sps-footer-v2-card" data-resource="profile"[^>]*>\s*<span class="sps-footer-v2-card-head"><strong class="sps-footer-v2-card-title">회사소개서<\/strong><svg[^]*?<\/svg><\/span>\s*<span class="sps-footer-v2-card-desc">회사 개요 및 등록·면허 자료<\/span>\s*<span class="sps-footer-v2-card-action">보기 <sps-arrow-up-right><\/sps-arrow-up-right><\/span>\s*<\/a>/,'three tiers: title · icon / description / 보기');
@@ -194,7 +194,7 @@ test('footer V3 = V1 ground + V2 parts + the V1 bottom row: statement | resource
   const soon=F.soonMarkup(F.resources[0]);
   assert.match(soon,/^<button class="sps-footer-soon-close" type="button" data-soon-close aria-label="닫기"><svg [^>]*><path [^>]*\/><\/svg><\/button>\s*<p class="sps-footer-soon-kicker">준비 중<\/p>\s*<h3 id="sps-footer-soon-title" tabindex="-1" autofocus>회사소개서를 준비하고 있습니다\.<\/h3>\s*<p class="sps-footer-soon-text">지금은 SPS 소개에서 회사 개요와 등록·면허 자료를 확인해보세요\.<\/p>\s*<a class="sps-footer-soon-cta" href="jll-remix-about\.html" target="_top">SPS 소개 살펴보기<sps-arrow-up-right><\/sps-arrow-up-right><\/a>$/);
   assert.doesNotMatch(soon,/완성되면/,'no download promise line');
-  assert.match(F.soonMarkup(F.resources[1]),/브로슈어를 준비하고 있습니다\.[^]*지금은 서비스 소개에서 세 가지 서비스를 살펴보세요\.[^]*href="jll-remix\.html#services"/);
+  assert.match(F.soonMarkup(F.resources[1]),/브로슈어를 준비하고 있습니다\.[^]*지금은 서비스 소개에서 세 가지 서비스를 살펴보세요\.[^]*href="jll-remix-services\.html"/);
   const src=fs.readFileSync(path.join(root,'jll-remix-footer.js'),'utf8');
   assert.match(src,/closest\?\.\('\[data-soon\]'\);\s*if\(!card\|\|event\.defaultPrevented\|\|event\.button!==0\|\|event\.metaKey\|\|event\.ctrlKey\|\|event\.shiftKey\|\|event\.altKey\)return;/,'modified clicks keep the native link');
   assert.match(src,/dialog\.className='dialog sps-footer-soon';/,'reuses the shared dialog frame');
@@ -210,7 +210,7 @@ test('footer V3 = V1 ground + V2 parts + the V1 bottom row: statement | resource
   for(const variant of ['1','2','3']){
     const below=F.markup(paths,2026,{variant,consult:'statement'}),none=F.markup(paths,2026,{variant,consult:'none'});
     assert.equal((below.match(/data-inquiry/g)||[]).length,1,'one button when moved ('+variant+')');
-    assert.match(below,variant==='1'?/<div class="sps-footer-lead" data-consult="statement">\s*<h2[^]*?<\/h2>\s*<a class="sps-footer-consult"/:/<h2 class="sps-footer-v2-statement">[^]*?<\/h2>\s*<a class="sps-footer-v2-consult"/,'right under the statement ('+variant+')');
+    assert.match(below,variant==='1'?/<div class="sps-footer-lead" data-consult="statement">\s*<h2[^]*?<\/h2>\s*<a class="sps-footer-consult"/:/<h2 class="sps-footer-v2-statement"[^>]*>[^]*?<\/h2>\s*<a class="sps-footer-v2-consult"/,'right under the statement ('+variant+')');
     assert.doesNotMatch(none,/data-inquiry|footer-v2-consult|sps-footer-consult/,'no button ('+variant+')');
   }
   // V1 · V2 는 조각으로 나눴어도 그대로
@@ -237,13 +237,38 @@ test('footer V3 = V1 ground + V2 parts + the V1 bottom row: statement | resource
   const ds=fs.readFileSync(path.join(root,'jll-remix-design-system.html'),'utf8');assert.match(ds,/data-footer-preview data-footer-variant="3"/);
 });
 
-test('footer parts reveal on scroll: bands draw their top rule, items rise in order, the statement unveils; off for reduced motion and previews',()=>{
+test('footer parts reveal on scroll: bands draw their top rule, items (the statement too) rise in order; off for reduced motion and previews',()=>{
   const src=fs.readFileSync(path.join(root,'jll-remix-footer.js'),'utf8'),css=fs.readFileSync(path.join(root,'jll-remix-footer.css'),'utf8');
   assert.match(src,/if\(host\.hasAttribute\('data-footer-preview'\)\|\|typeof win\.IntersectionObserver!=='function'\|\|win\.matchMedia\?\.\('\(prefers-reduced-motion: reduce\)'\)\.matches\)return;/,'no motion without the observer, under reduced motion, or in previews');
   assert.match(src,/host\.setAttribute\('data-footer-motion',''\);/,'content stays visible unless motion is set up');
   assert.match(src,/host\.addEventListener\('focusin',\(\)=>bands\.forEach\(show\),\{once:true\}\);/,'keyboard users never land on hidden links');
   assert.match(src,/revealOnScroll\(win,host\);/);
   assert.match(css,/\.sps-footer\[data-footer-motion\] \[data-footer-item\] \{ opacity: 0; transform: translateY\(28px\);[^}]*transition-delay: calc\(\.12s \+ var\(--fi, 0\) \* \.07s\); \}/,'staggered rise');
+  assert.doesNotMatch(css,/\[data-footer-item\]:is\(\.sps-footer-statement, \.sps-footer-v2-statement\) \{ clip-path/,'the statement rises like everything else instead of unveiling top-down (2026-10-22: the odd direction stood out)');
   assert.match(css,/\.sps-footer\[data-footer-motion\] \[data-footer-rule\]::before \{[^}]*transform: scaleX\(0\); transform-origin: left center;/,'rules draw from the left');
   assert.match(css,/@media \(prefers-reduced-motion: reduce\) \{\s*\.sps-footer\[data-footer-motion\] \[data-footer-item\] \{ opacity: 1; transform: none; clip-path: none; transition: none; \}/);
+});
+
+test('V3 keeps the divider above the bottom row (logo · business info) with the tighter 24px + 24px gap',()=>{
+  const css=fs.readFileSync(require.resolve('../jll-remix-footer.css'),'utf8');
+  assert.match(css,/\.sps-footer\[data-variant="3"\] \.sps-footer-bottom \{ padding-top: 24px; \}/);
+  assert.doesNotMatch(css,/\.sps-footer\[data-variant="3"\] \.sps-footer-bottom \{[^}]*border-top: 0/,'the shared 1px rule (and its draw-in motion) is back');
+});
+
+test('footer V4 (tweak): the V3 layout with the ink logo in the statement spot, no statement, and no logo in the bottom row',()=>{
+  const F=require('../jll-remix-footer.js');
+  const paths={home:'jll-remix-main-v4.html',about:'jll-remix-about.html',insights:'jll-remix-journal-v2.html',top:'#main'};
+  const v4=F.markup(paths,2026,{variant:'4'});
+  assert.match(v4,/<div class="sps-footer-v2-head">\s*<div class="sps-footer-v2-brand">\s*<a class="sps-footer-v3-logo" href="jll-remix-main-v4\.html" target="_top" aria-label="SPS 홈"><img src="assets\/logo\.svg" alt="SPS" width="168" height="56" loading="lazy"><\/a>\s*<\/div>\s*<nav class="sps-footer-v2-resources"/,'logo first in the head, then the cards');
+  assert.doesNotMatch(v4,/sps-footer-v2-statement|그 다음을 함께 그립니다/,'no statement');
+  assert.doesNotMatch(v4,/sps-footer-logo"/,'the bottom row starts with the business details');
+  assert.match(v4,/<div class="sps-footer-identity">\s*<p class="sps-footer-business">/);
+  assert.equal(F.markup(paths,2026,{variant:'3'}),F.markupV3(paths,2026),'V3 is unchanged');
+  assert.match(F.markup(paths,2026,{variant:'4',consult:'statement'}),/sps-footer-v3-logo[\s\S]*?<\/a>\s*<a class="sps-footer-v2-consult"/,'the 문장 아래 consult button sits under the logo');
+  const src=fs.readFileSync(require.resolve('../jll-remix-footer.js'),'utf8');
+  assert.match(src,/host\.setAttribute\('data-variant',variant==='4'\?'3':variant\);\s*if\(variant==='4'\)host\.setAttribute\('data-footer-logo','head'\);/,'V4 reuses the V3 styles');
+  const css=fs.readFileSync(require.resolve('../jll-remix-footer.css'),'utf8');
+  assert.match(css,/\.sps-footer\[data-variant="3"\] \.sps-footer-v3-logo img \{ display: block; width: 168px;/);
+  const html=fs.readFileSync(require.resolve('../jll-remix-main-v4.html'),'utf8');
+  assert.match(html,/<input type="radio" name="main-v4-footer" value="4"><span>푸터 V4 /,'offered in the V4 tweaks');
 });

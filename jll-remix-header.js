@@ -9,10 +9,12 @@
   const isCases = header.dataset.page === 'cases';
   const isHanwha = header.dataset.page === 'hanwha';
   const isSamsung = header.dataset.page === 'samsung';
-  const isSubpage = isAbout || isJournal || isSupport || isCases || isHanwha || isSamsung;
+  const isServices = header.dataset.page === 'services';   // 2026-10-22: 사업영역 페이지(jll-remix-services.html)
+  const isSubpage = isAbout || isJournal || isSupport || isCases || isHanwha || isSamsung || isServices;
   const variant = document.documentElement.dataset.serviceMenu;
   const prefix = ['v2', 'v3', 'v4'].includes(variant) ? `jll-remix-${variant}` : 'jll-remix';
-  const home = header.dataset.homeHref || `${prefix}.html`;
+  // 홈 = 메인 V4(2026-10-22: 소개 · 사업실적 · 인사이트 · 고객지원도 V4 로 돌아간다). 비교용 v2/v3/v4 시안 페이지만 자기 홈을 쓴다
+  const home = header.dataset.homeHref || (prefix === 'jll-remix' ? 'jll-remix-main-v4.html' : `${prefix}.html`);
   const about = header.dataset.aboutHref || `${prefix}-about.html`;
   const sectionHref = id => `${isSubpage ? home : ''}#${id}`;
   const links = [

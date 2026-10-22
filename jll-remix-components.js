@@ -55,7 +55,9 @@
       const referencePictures = {
         management: '<path fill="var(--surface)" d="M47 15h53l19 19v65H47Z"/><path fill="var(--red)" d="M100 15v19h19Z"/><path d="M58 27h15m-15 9h34M65 61l18-14 18 14"/><path fill="var(--red)" d="m70 61 13-10 13 10v20H70Z"/><path d="M96 90h12M96 98h12"/><path fill="var(--surface)" d="M46 99h27l11 10-7 6-13-9H44m33 9h21l10-7h13v14H77l-18-12H44"/>',
         marketing: '<path fill="var(--surface)" d="m34 28 30-12 32 12 30-12v88l-30 12-32-12-30 12Z"/><path d="M64 16v88m32-76v88"/><path fill="var(--red)" d="m43 39 13-5v24l-13 5Zm30 41 14 5v21l-14-5Zm31-41 13-5v24l-13 5Z"/><path d="m43 74 13-5m-13 14 13-5m-13 14 8-3m29-45 13 5m-13 4 13 5m-13 4 13 5m17 7 13-5m-13 14 13-5m-13 14 8-3"/>',
-        interior: '<path fill="var(--surface)" d="M33 24h62l17 17v66H33Z"/><path d="M95 24v17h17M45 39h23v27H45Zm0 39h23v17H45m35-42v42h20M68 82h12"/><path fill="var(--red)" d="M86 16h38v17H86Z"/><path d="M124 24h8v20h-27v14"/><path fill="var(--surface)" d="M100 58h10v26h-10Z"/>'
+        interior: '<path fill="var(--surface)" d="M33 24h62l17 17v66H33Z"/><path d="M95 24v17h17M45 39h23v27H45Zm0 39h23v17H45m35-42v42h20M68 82h12"/><path fill="var(--red)" d="M86 16h38v17H86Z"/><path d="M124 24h8v20h-27v14"/><path fill="var(--surface)" d="M100 58h10v26h-10Z"/>',
+        // 사업실적의 비공개 관리 건물(Private Asset): 건물 입면이 그려진 서류(선만, 흰 면 없음) 한가운데 붉은 자물쇠(먹색 고리 · 열쇠 구멍)
+        private: '<path d="M62 57V43a18 18 0 0 1 36 0v14"/><path d="M52 57h56v44H52Z"/><path d="M80 72v14"/>'
       };
       if (this.dataset.style === 'reference' && referencePictures[this.dataset.service]) {
         this.innerHTML = `<svg viewBox="0 0 160 128" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="square" stroke-linejoin="miter" focusable="false" aria-hidden="true">${referencePictures[this.dataset.service]}</svg>`;
@@ -92,12 +94,17 @@
       const pictogramStyle = version === 'v4' ? 'reference' : 'classic';
       this.dataset.pictogram = pictogramStyle;
       this.dataset.variant = variant;
-      const home = ['v2', 'v3', 'v4'].includes(version) ? `jll-remix-${version}.html` : 'jll-remix.html';
+      // 사업영역 링크의 홈: 헤더가 정한 홈(data-home-href) → 비교용 시안 → 메인 V4. 비교용 v2/v3 판만 ?service= 팝업을 연다
+      const header = document.querySelector('[data-sps-header]');
+      const home = header?.dataset.homeHref || (['v2', 'v3', 'v4'].includes(version) ? `jll-remix-${version}.html` : 'jll-remix-main-v4.html');
+      // 기본(v1) 판: 2026-10-22 부터 팝업이 아니라 사업영역 페이지의 해당 섹션으로 간다. 사업영역 페이지 안에서는 트리거가 현재 메뉴(빨간 밑줄)
+      const servicesPage = header?.dataset.servicesHref || 'jll-remix-services.html';
+      const onServicesPage = header?.dataset.page === 'services';
       // V1 explores broader service categories; V2/V3 retain their comparison content.
       const services = variant === 'v1' ? [
         ['management', '부동산 자산관리', '임대관리 · 시설관리 · 회계정산대행'],
         ['marketing', '임대 마케팅', '임대조건 분석 · 임차인 유치'],
-        ['interior', '실내건축', '인테리어 · 리모델링 · 공간개선']
+        ['interior', '인테리어', '실내건축 · 리모델링 · 공간개선']
       ] : [
         ['rental', '임대관리', '임차인 응대 · 계약 일정 · 미납 대응'],
         ['facility', '시설관리', '시설 점검 · 보수 · 유지관리'],
@@ -114,8 +121,8 @@
         ? `<div class="sps-service-intro"><p class="sps-service-kicker">SERVICES</p><h2>어떤 서비스가 <br>필요하신가요?</h2><p class="sps-service-intro-note">건물의 상황에 맞는<br>서비스를 살펴보세요.</p></div><div class="sps-service-cards">${services.map(([key, label, description]) => `<a class="sps-service-card" href="${home}?service=${key}#services" data-detail="${key}" aria-label="${label}"><span class="sps-service-art" data-art="${key}"><sps-service-pictogram data-service="${key}"></sps-service-pictogram></span><span class="sps-service-card-copy"><span class="sps-service-name"><span class="sps-service-title">${label}</span><sps-arrow-up-right></sps-arrow-up-right></span><span class="sps-service-description">${description}</span></span></a>`).join('')}</div>`
         : variant === 'v2'
         ? services.map(([key, label]) => `<div class="sps-service-column"><a class="sps-service-heading" href="${home}?service=${key}#services" data-detail="${key}">${label}<sps-chevron class="sps-chevron--next"></sps-chevron></a><p class="sps-service-summary">${expanded[key][0]}</p><ul class="sps-service-topics">${expanded[key][1].map((topic, index) => `<li><a href="${home}?service=${key}&section=${index}#services" data-detail="${key}" data-detail-section="${index}">${topic}</a></li>`).join('')}</ul></div>`).join('')
-        : `<div class="sps-service-intro"><h2><span class="sps-service-question-line">어떤 서비스가</span> <br><span class="sps-service-question-line">필요하신가요?</span></h2></div><div class="sps-service-links">${services.map(([key, label, description]) => `<a class="sps-service-link" href="${home}?service=${key}#services" data-detail="${key}" aria-label="${label}"><span class="sps-service-link-copy"><span class="sps-service-name"><span class="sps-service-title">${label}</span><sps-arrow-up-right></sps-arrow-up-right></span><span class="sps-service-description">${description}</span></span><span class="sps-service-illustration"><sps-service-pictogram data-service="${key}" data-style="${pictogramStyle}"></sps-service-pictogram></span></a>`).join('')}</div>`;
-      this.innerHTML = `<button class="sps-service-trigger" type="button" data-header-section="services" aria-expanded="false" aria-controls="${id}">사업영역 <sps-chevron class="sps-chevron--nav"></sps-chevron></button>
+        : `<div class="sps-service-intro"><h2><span class="sps-service-question-line">어떤 서비스가</span> <br><span class="sps-service-question-line">필요하신가요?</span></h2></div><div class="sps-service-links">${services.map(([key, label, description]) => `<a class="sps-service-link" href="${servicesPage}#${key}" aria-label="${label}"><span class="sps-service-link-copy"><span class="sps-service-name"><span class="sps-service-title">${label}</span><sps-arrow-up-right></sps-arrow-up-right></span><span class="sps-service-description">${description}</span></span><span class="sps-service-illustration"><sps-service-pictogram data-service="${key}" data-style="${pictogramStyle}"></sps-service-pictogram></span></a>`).join('')}</div>`;
+      this.innerHTML = `<button class="sps-service-trigger${onServicesPage ? ' current' : ''}" type="button" data-header-section="services"${onServicesPage ? ' aria-current="page"' : ''} aria-expanded="false" aria-controls="${id}">사업영역 <sps-chevron class="sps-chevron--nav"></sps-chevron></button>
         <div class="sps-service-panel" id="${id}" hidden><div class="sps-service-content">
           ${content}
         </div></div>`;
@@ -125,6 +132,13 @@
       this.question = this.querySelector('.sps-service-intro h2');
       this.isOpen = false;
       this.trigger.addEventListener('click', event => {
+        // 2026-10-22: 데스크톱에서 마우스로 '사업영역' 자체를 누르면 사업영역 페이지로 간다(펼침은 마우스를 올릴 때 이미 열린다).
+        // 키보드(Enter · Space, detail 0)와 폰 메뉴(data-mobile)는 전처럼 펼친다 — 키보드는 ArrowDown 으로 항목에 들어가고, 폰은 항목이 섹션으로 간다.
+        if (event.detail > 0 && !this.hasAttribute('data-mobile') && variant === 'v1') {
+          if (onServicesPage) { window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); this.close(true); return; }
+          try { window.top.location.assign(servicesPage); } catch (_) { window.location.assign(servicesPage); }
+          return;
+        }
         // Pointer entry may already have opened it before the click arrives.
         const keepHoverOpen = event.detail > 0 && this.openedByHover;
         this.openedByHover = false;

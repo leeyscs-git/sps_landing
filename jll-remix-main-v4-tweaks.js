@@ -14,7 +14,7 @@
   const BAR_MIN=52,BAR_MAX=80,DEFAULT_BAR=58;  // '메뉴 줄만' 띠 높이(px)
   const SERVICES=['1','2','3'];             // 서비스 섹션: 원래 구성 · V2(사진 카드) · V3(사진 반 글 반). 하나만 보인다.
   const DEFAULT_SERVICES='3';
-  const FOOTERS=['1','2','3'];              // 푸터: 밝은 바탕(원래) · V2(먹색 바탕, 회사소개서·브로슈어 카드) · V3(V1 바탕 + V2 배치 + V1 아래 줄)
+  const FOOTERS=['1','2','3','4'];          // 푸터: 밝은 바탕(원래) · V2(먹색 바탕, 회사소개서·브로슈어 카드) · V3(V1 바탕 + V2 배치 + V1 아래 줄) · V4(V3 에서 로고를 문장 자리로)
   const DEFAULT_FOOTER='3';
   const CONSULTS=['contact','statement','none'];   // 푸터 상담 버튼: 기본 자리(V1 문장 오른쪽 · V2/V3 연락처 아래) · 문장 아래 · 없음. 모든 푸터에 적용
   const DEFAULT_CONSULT='none';

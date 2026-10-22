@@ -123,9 +123,9 @@ test('final photo fills the stage before the closing message appears',()=>{
   // 제목이 옮겨가는 판: 사진이 커지는 동안 옮겨가고(travel = expand), 그 사이 흰색이 되며, 사진 위 문장이 올라올 때 같은 자리에서 사라진다
   assert.equal(futureState(.2).travel,0);assert.equal(futureState(1).travel,1,'the title arrives before the photo finishes growing');assert.ok(futureState(1).expand<1);
   assert.equal(futureState(.5).light,0);assert.equal(futureState(.95).light,1);assert.ok(futureState(.75).light>0&&futureState(.75).light<1);
-  assert.equal(futureState(1).headingStay,1,'the title is still up when it arrives');
-  assert.ok(futureState(1.1).headingStay<1&&futureState(1.1).top===0,'it fades before the sentence starts');
-  assert.ok(futureState(1.18).headingStay===0&&futureState(1.18).top<.1,'and is gone as the sentence begins to rise');assert.equal(futureState(1.6).top,1);
+  assert.equal(futureState(1.05).kickerLight,0);assert.equal(futureState(1.2).kickerLight,1,'the kicker turns white only once the photo has covered it');
+  assert.equal(futureState(1).headingStay,undefined,'the travelling title no longer fades out: it stays where it lands (2026-10-22)');
+  assert.equal(futureState(1.1).top,0);assert.equal(futureState(1.6).top,1,'pages without heading travel keep the sentence timing');
   assert.equal(futureState(2.4).bottom,1);
 });
 

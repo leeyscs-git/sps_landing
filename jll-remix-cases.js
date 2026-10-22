@@ -6,9 +6,9 @@
   else api.start(root);
 })(typeof window==='undefined'?null:window,function(archive,samples,managed){
   'use strict';
-  // 탭: 전체 · 부동산 자산관리 · 실내건축 · 기타(임대 마케팅은 2026-10-21 뺐다). 관리 중인 건물은 부동산 자산관리 실적이라
+  // 탭: 전체 · 부동산 자산관리 · 인테리어 · 기타(임대 마케팅은 2026-10-21 뺐다). 관리 중인 건물은 부동산 자산관리 실적이라
   // '부동산 자산관리'와 '전체'에서 사례 카드 앞에 놓인다. 탭이 없는 분류의 사례는 이 페이지에 내지 않는다
-  const categories={all:'사업실적',management:'부동산 자산관리',interior:'실내건축',other:'기타'};
+  const categories={all:'사업실적',management:'부동산 자산관리',interior:'인테리어',other:'기타'};   // 2026-10-22: '실내건축' → '인테리어'
   const BUILDINGS_IN=['all','management'];
   function categoryFor(search){
     const requested=new URLSearchParams(search).get('category');
@@ -37,10 +37,10 @@
       if(renderedCategory!==category){
         empty.innerHTML=archive.emptyState({
           title:category==='all'?'공개할 사례를 준비하고 있습니다.':categories[category]+' 사례를 준비하고 있습니다.',
-          actionLabel:'서비스 안내 보기',href:'jll-remix.html#services'
+          actionLabel:'서비스 안내 보기',href:'jll-remix-services.html'
         });
         grid.innerHTML=(buildings.length?managed.cards(buildings,{label:categories.management}):'')+archive.cards(shown,{
-          hrefFor:()=> 'jll-remix.html#services',
+          hrefFor:()=> 'jll-remix-services.html',
           labelFor:item=>categories[item.category]+(item.sample?' · 샘플':''),
           readLabel:'서비스 안내 보기',linkAttribute:'data-case'
         });

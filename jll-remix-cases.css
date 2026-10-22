@@ -3,6 +3,12 @@
 .cases-building-card { display:flex; flex-direction:column; height:100%; }
 .cases-building-nophoto { display:grid; place-items:center; } /* 사진을 받기 전: 같은 비율의 회색 자리(--surface-cool) */
 .cases-building-nophoto span { font-size:13px; line-height:1.5; color:var(--muted); }
+/* 예시 사진(imageSample): 사진 왼쪽 아래 작은 꼬리표 */
+.cases-building-photo { position:relative; }
+.cases-building-photo-note { position:absolute; left:12px; bottom:12px; padding:2px 8px; border-radius:var(--radius-control); background:color-mix(in srgb,var(--ink) 55%,transparent); color:var(--surface); font-size:11px; line-height:1.6; pointer-events:none; }
+/* 소유주 요청으로 비공개인 건물(비공개 요청 자산): 같은 회색 자리 가운데 자물쇠 픽토그램(사업영역과 같은 레퍼런스 선)만 */
+.cases-building-seal { display:flex; flex-direction:column; align-items:center; }
+.cases-building-private sps-service-pictogram { width:72px; max-width:none; } /* 사진 자리 안에서 작게, 선만(빨강 없이) */
 .cases-building-facts { margin:20px 0 0; border-top:1px solid var(--line); }
 .cases-building-facts div { display:grid; grid-template-columns:72px minmax(0,1fr); gap:16px; padding-block:10px; border-bottom:1px solid var(--line); font-size:14px; line-height:1.6; }
 .cases-building-facts dt { color:var(--muted); }
@@ -11,4 +17,5 @@
   :where(html:not([data-sps-desktop])) .cases-v2 .iv2-filters { width:100%; justify-content:flex-start; gap:28px; overflow-x:auto; scrollbar-width:thin; padding-bottom:8px; }
   :where(html:not([data-sps-desktop])) .cases-v2 .iv2-filters button { white-space:nowrap; }
   :where(html:not([data-sps-desktop])) .cases-v2 .iv2-tab-indicator { bottom:8px; }
+  :where(html:not([data-sps-desktop])) .cases-building-private sps-service-pictogram { width:60px; }
 }

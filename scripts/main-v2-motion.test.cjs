@@ -128,3 +128,17 @@ test('on phones the film header paints its surface once the hero headline reache
   phone=false;scroll(70,362);assert.equal(film,true,'wider screens keep the hero-bottom rule');
   phone=true;desktop=true;scroll(70,362);assert.equal(film,true,'and so do phones showing the desktop site');
 });
+
+test('V4 (data-overlay-release) turns the film header white after a short scroll, while the hero is still under it',()=>{
+  const events={},queue=[];let film=null;
+  const header={querySelector:()=>null,getBoundingClientRect:()=>({bottom:137}),classList:{toggle(name,value){film=value;}}};
+  const hero={getBoundingClientRect:()=>({bottom:700})};
+  const win={scrollY:0,document:{body:{hasAttribute:name=>name==='data-overlay-header',dataset:{overlayHeader:'',overlayRelease:'20'}},querySelector:selector=>selector==='[data-sps-header]'?header:hero},
+    requestAnimationFrame:callback=>{queue.push(callback);return queue.length;},addEventListener:(name,callback)=>events[name]=callback};
+  overlayHeader(win);
+  const scroll=y=>{win.scrollY=y;events.scroll();while(queue.length)queue.shift()();};
+  assert.equal(film,true,'transparent at the very top');
+  scroll(20);assert.equal(film,true,'still transparent within the release distance');
+  scroll(21);assert.equal(film,false,'white as soon as the page has moved a little');
+  scroll(0);assert.equal(film,true,'and transparent again back at the top');
+});

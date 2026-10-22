@@ -1,0 +1,116 @@
+/* 사업영역 페이지(jll-remix-services.html): 메인 V4 의 사업영역 섹션(jll-remix-services3.css · 세 줄 문장 · 사진 반 글 반 행 · 바로가기 목록)이 한 페이지로 길어진 것.
+   행 · 단계 · 판 · 질문 · 마무리는 메인과 고객지원 페이지의 규칙을 그대로 쓰고, 이 파일은 접착제(스티키 목차 · 본문 2단 · 하위 업무 행 · 관리 건물 · 폰)만 맡는다.
+   색은 토큰만(--ink · --red · --muted · --line · --surface · --surface-cool · --surface-sage · --surface-blue · --peach). 영문 라벨은 두지 않는다. 2026-10-22 */
+.hw-services-page { --svc-nav-height: 48px; --section-title-size: var(--ts-h2, 36px); --section-title-mobile: 28px; }
+/* 히어로: 메인보다 낮게(화면의 58%) — 첫 화면에서 문장 아래로 01 행의 사진 윗부분이 보인다. h1 은 메인 h2 와 같은 값 */
+.hw-services-page .hw-services3-intro { min-height: max(400px, calc(var(--hw-height, 100svh) * .58)); padding-block: clamp(56px, 7vh, 96px); }
+.hw-services-page .hw-services3-intro h1 { margin: 0; font-size: clamp(36px, 3.4vw, var(--ts-display, 56px)); font-weight: var(--ts-w-display, 500); line-height: 1.38; letter-spacing: -.04em; }
+.hw-services-page .svc-intro-lead { margin: 0; max-width: 540px; font-size: var(--ts-body, 16px); line-height: 1.75; color: var(--muted); }
+/* 스티키 목차: 메인의 세로 바로가기 목록을 가로로 눕힌 것. 헤더(띠로 접히면 --sps-header-visible) 바로 아래 붙는다 */
+.svc-nav { position: sticky; top: var(--sps-header-visible, var(--sps-header-height, 137px)); z-index: 30; background: var(--surface); border-bottom: 1px solid var(--line); transition: top .35s var(--ease-editorial); }
+.svc-nav ul { display: flex; gap: 32px; height: var(--svc-nav-height); margin: 0; padding: 0; list-style: none; }
+.svc-nav a { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 100%; font-size: var(--ts-meta, 14px); font-weight: var(--ts-w-label, 500); color: var(--muted); text-decoration: none; white-space: nowrap; transition: color .2s; }
+.svc-nav a span { font-size: var(--ts-label, 12px); letter-spacing: .04em; }
+.svc-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: var(--sps-nav-indicator-size, 3px); background: var(--line); transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease-editorial), background-color .2s; } /* 헤더 메뉴 · 사업실적 탭과 같은 밑줄 문법 */
+.svc-nav a:is(:hover, :focus-visible)::after { transform: scaleX(1); }
+.svc-nav a[aria-current] { color: var(--ink); }
+.svc-nav a[aria-current]::after { background: var(--red); transform: scaleX(1); }
+.hw-services-page .svc-nav a:focus-visible { outline-offset: -2px; }
+/* 앵커 도착 위치: 전역 scroll-padding(헤더 높이 + 12px)에 목차 높이만 더한다(헤더 몫을 또 더하면 빈 띠가 생긴다). 페이지 안 이동은 스크립트가 헤더 접힘까지 계산한다 */
+.hw-services-page :is(.svc-section, .svc-process, .svc-faq, .svc-closing) { scroll-margin-top: calc(var(--svc-nav-height) + 4px); }
+.hw-services-page .svc-section h2:focus { outline: none; } /* 앵커 도착 뒤 프로그램 포커스: 빨간 테두리가 제목을 두르지 않게 */
+/* 서비스 섹션의 머리 행: 메인 행 그대로. 02 는 사진 오른쪽(메인의 nth-of-type(even) 을 속성으로), 행 바탕은 01 --surface-cool · 02 --surface-sage · 03 --surface-blue */
+.svc-section { padding-bottom: clamp(56px, 7vh, 96px); }
+.svc-section[data-flip] .hw-services3-image { order: 2; }
+.svc-section[data-flip] .hw-services3-copy { padding-inline: var(--rail) clamp(48px, 6vw, 112px); }
+.svc-section[data-tone="sage"] .hw-services3-row { background: var(--surface-sage); }
+.svc-section[data-tone="blue"] .hw-services3-row { background: var(--surface-blue); }
+.hw-services-page .hw-services3-copy h2 { margin: 0; font-size: var(--ts-h2, 36px); font-weight: var(--ts-w-title, 560); line-height: 1.32; letter-spacing: -.035em; } /* 메인 행의 h3 값 */
+.hw-services-page .hw-services3-link { border-bottom-color: transparent; } /* 사이트 전체에서 글 링크 밑줄을 뺀 것과 같게 */
+/* 본문 2단: 왼쪽(5/12, 스티키) 작은 제목 + 사실 표 + 이런 분께, 오른쪽(7/12) 하위 업무 행 */
+.svc-body { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(40px, 6vw, 96px); padding-block: clamp(56px, 7vh, 96px); }
+.svc-side { position: sticky; top: calc(var(--sps-header-visible, var(--sps-header-height, 137px)) + var(--svc-nav-height) + 24px); align-self: start; transition: top .35s var(--ease-editorial); }
+.svc-side .cases-building-facts { margin-top: 16px; }
+.hw-services-page .cases-building-facts dd { word-break: keep-all; overflow-wrap: anywhere; } /* 긴 등록명이 칸 밖으로 나가지 않게 */
+.svc-side-kicker { display: block; margin-top: 40px; }
+.svc-side .svc-list { margin-top: 16px; color: var(--muted); }
+/* 하위 업무 행: 가는 선 사이, 번호 · 이름 · 두 문장 · 하는 일 */
+.svc-items { border-bottom: 1px solid var(--line); }
+.svc-item { display: grid; grid-template-columns: 56px minmax(0, 1fr); padding-block: 28px; border-top: 1px solid var(--line); }
+.svc-item-number { padding-top: 6px; font-size: var(--ts-meta, 14px); font-weight: var(--ts-w-label, 500); color: var(--red); }
+.hw-services-page .svc-item h3 { margin: 0; font-size: var(--ts-h4, 23px); font-weight: var(--ts-w-title, 560); line-height: 1.4; letter-spacing: -.025em; color: var(--ink); }
+.hw-services-page .svc-item p { margin: 10px 0 0; max-width: 34em; font-size: var(--ts-body, 16px); line-height: 1.7; color: var(--muted); }
+.svc-item .svc-list { margin-top: 16px; }
+/* 눈금 목록: 항목 앞 짧은 선(--line) */
+.svc-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: var(--ts-meta, 14px); line-height: 1.65; color: var(--ink); }
+.svc-list li { position: relative; padding-left: 16px; }
+.svc-list li::before { content: ''; position: absolute; left: 0; top: .82em; width: 8px; height: 2px; background: var(--line); }
+.svc-note { margin: 16px 0 0; font-size: 13px; line-height: 1.7; color: var(--muted); }
+/* 받아보시는 것: 고객지원의 복숭아색 판(.support-prepare) 그대로, 안에는 눈금 목록 + 단서 한 줄 */
+.svc-prepare .svc-list { gap: 10px; font-size: var(--ts-body, 16px); }
+.svc-prepare .svc-note { margin-top: 20px; }
+/* 관리 중인 건물: 메인 사업실적 줄과 같은 카드(.hw-news-grid) */
+.svc-buildings { padding-top: clamp(56px, 7vh, 96px); }
+.svc-buildings-head { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 32px; }
+.svc-buildings-head .hw-services3-link { margin-top: 0; }
+.hw-services-page .hw-news-grid a { display: block; color: inherit; text-decoration: none; }
+.hw-services-page .hw-news-grid a > div { position: relative; }
+.hw-services-page .hw-news-grid .hw-news-nophoto { display: grid; place-items: center; background: var(--surface-cool); }
+.hw-services-page .hw-news-grid .hw-news-nophoto span { font-size: 13px; color: var(--muted); }
+.hw-services-page .hw-news-photo-note { position: absolute; left: 12px; bottom: 12px; padding: 2px 8px; border-radius: var(--radius-control); background: color-mix(in srgb, var(--ink) 55%, transparent); color: var(--surface); font-size: 11px; line-height: 1.6; pointer-events: none; } /* 예시 사진 꼬리표(메인과 같은 규칙) */
+.svc-private { display: grid; place-items: center; align-content: center; gap: 16px; aspect-ratio: 1.35; border-radius: var(--radius-media, 6px); background: var(--surface-cool); text-align: center; } /* 비공개 요청 자산: 사업실적 카드와 같은 자물쇠 */
+.svc-private sps-service-pictogram { width: 72px; max-width: none; }
+.hw-services-page .svc-private p { margin: 0; font-size: var(--ts-meta, 14px); font-weight: var(--ts-w-label, 500); line-height: 1.6; color: var(--ink); }
+.svc-private p span { display: block; font-size: 13px; font-weight: 400; color: var(--muted); }
+/* 꼬리: 나머지 두 영역으로. 아래 섹션은 ↘, 위 섹션은 ↗ */
+.svc-next { display: flex; flex-wrap: wrap; gap: 16px 40px; margin-top: clamp(40px, 5vh, 64px); padding-top: 24px; border-top: 1px solid var(--line); }
+.svc-next .hw-services3-link { margin-top: 0; }
+.svc-next sps-arrow-up-right.is-down { transform: rotate(90deg); }
+.svc-next .hw-services3-link:is(:hover, :focus-visible) sps-arrow-up-right.is-down { transform: rotate(90deg) translate(3px, -3px); }
+/* 진행 · 질문 · 마무리: 고객지원 페이지의 규칙에 라벨만 이 페이지 꼴(.hw-services3-kicker)로 */
+.svc-process { padding-block: clamp(72px, 9vh, 112px); border-top: 1px solid var(--line); }
+.hw-services-page .support-section-title .hw-services3-kicker { margin-bottom: 16px; }
+.hw-services-page .support-section-title h2 { font-weight: var(--ts-w-title, 560); letter-spacing: -.035em; }
+.svc-process .svc-note { margin-top: 32px; }
+.svc-faq-links { display: flex; flex-wrap: wrap; gap: 0 28px; margin-top: 24px; }
+.hw-services-page .svc-faq-links .text-link { margin: 0; }
+.hw-services-page .support-answers summary { font-weight: var(--ts-w-label, 500); }
+.svc-closing { padding-block: 64px 96px; }
+.svc-closing .hw-services3-kicker { display: block; margin-bottom: 24px; }
+.hw-services-page .svc-closing h2 { font-size: var(--ts-h3, 28px); font-weight: var(--ts-w-display, 500); line-height: 1.4; letter-spacing: -.03em; } /* 메인 고객지원 장면의 두 문장과 같은 값 */
+.svc-closing-actions { align-items: flex-start; }
+.svc-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.svc-chip { min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--surface-cool); color: var(--muted); font: inherit; font-size: var(--ts-meta, 14px); font-weight: var(--ts-w-label, 500); cursor: pointer; transition: color .2s, border-color .2s; }
+.svc-chip:is(:hover, :focus-visible), .svc-chip.is-current { color: var(--ink); border-color: var(--ink); } /* 방금 보던 영역이 표시된다 */
+/* 등장: 메인과 같은 data-reveal. 하위 업무 행은 아래에서 20px, 판 · 건물 · 진행 · 마무리는 28px */
+.hw-motion .svc-item[data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity .7s var(--hw-ease) calc(var(--order, 0) * 110ms), transform .7s var(--hw-ease) calc(var(--order, 0) * 110ms); }
+.hw-motion :is(.svc-prepare, .svc-buildings, .svc-process, .svc-closing)[data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--hw-ease), transform .8s var(--hw-ease); }
+.hw-motion .hw-services-page [data-reveal].is-revealed { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hw-motion .hw-services-page [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .svc-nav, .svc-side, .svc-nav a::after, .svc-chip { transition: none; }
+}
+/* 태블릿: 2단이 좁아지기 전에 한 열로 */
+@media (max-width: 1000px) {
+  :where(html:not([data-sps-desktop])) .svc-body { grid-template-columns: 1fr; row-gap: 40px; }
+  :where(html:not([data-sps-desktop])) .svc-side { position: static; }
+}
+@media (max-width: 850px) {
+  :where(html:not([data-sps-desktop])) .hw-services-page .hw-services3-intro h1 { font-size: 30px; line-height: 1.42; }
+  :where(html:not([data-sps-desktop])) .hw-services-page .hw-services3-copy h2 { font-size: 28px; }
+  :where(html:not([data-sps-desktop])) .svc-nav ul { gap: 24px; overflow-x: auto; scrollbar-width: none; } /* 폰: 가로로 넘기는 목차 */
+  :where(html:not([data-sps-desktop])) .svc-nav ul::-webkit-scrollbar { display: none; }
+  :where(html:not([data-sps-desktop])) .svc-buildings-head { flex-wrap: wrap; }
+  :where(html:not([data-sps-desktop])) .svc-buildings .hw-news-grid > :nth-child(n+4) { display: none; } /* 폰은 카드 셋만, 나머지는 '사업실적 전체 보기' */
+}
+@media (max-width: 600px) {
+  :where(html:not([data-sps-desktop])) .hw-services-page .hw-services3-intro { padding-block: 72px 48px; }
+  :where(html:not([data-sps-desktop])) .hw-services-page .svc-intro-lead { font-size: 15px; }
+  :where(html:not([data-sps-desktop])) .hw-services-page .svc-intro-lead br { display: none; }
+  :where(html:not([data-sps-desktop])) .svc-section[data-flip] .hw-services3-image { order: 0; } /* 쌓이면 사진이 항상 위 */
+  :where(html:not([data-sps-desktop])) .svc-section[data-flip] .hw-services3-copy { padding: 32px var(--rail) 40px; }
+  :where(html:not([data-sps-desktop])) .svc-item { grid-template-columns: 32px minmax(0, 1fr); padding-block: 24px; }
+  :where(html:not([data-sps-desktop])) .hw-services-page .svc-closing h2 { font-size: var(--ts-h4, 23px); }
+  :where(html:not([data-sps-desktop])) .svc-closing { padding-block: 48px 72px; }
+  :where(html:not([data-sps-desktop])) .hw-services-page .support-steps p br { display: none; }
+}

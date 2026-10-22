@@ -6,9 +6,14 @@
 .hw-motion .hw-main-v4 :is(.hw-vision-stage,.hw-future-stage) { height:var(--hw-stage-live); }
 .hw-motion .hw-main-v4 .hw-slogan { min-height:var(--hw-stage-live); }
 .hw-motion .hw-main-v4 .hw-future { height:calc(var(--hw-height) * 2.8 + var(--hw-stage-height)); }
-/* 고객지원 장면: 위 가운데의 글(고객지원 · 어떤 도움이 필요하신가요?)이 사진이 커지는 동안 사진 위 문장 자리로 옮겨가며 흰색이 되고, 그 자리에서 '우리 건물의 고민…'으로 바뀐다(한화 스크립트가 data-heading-travel 을 읽는다). */
+/* 고객지원 장면: 위 가운데의 글(고객지원 · 어떤 도움이 필요하신가요?)이 사진이 커지는 동안 사진 위 문장 자리로 옮겨가며 흰색이 되고, 가운데 정렬에서 왼쪽 정렬로 바뀐 채 그대로 남는다(한화 스크립트가 data-heading-travel 을 읽는다).
+   2026-10-22: '우리 건물의 고민…'으로 바뀌던 것을 없앴다. 그 문장(.hw-future-top)은 도착 자리를 재는 데만 쓰고 보이지 않는다. */
 .hw-main-v4 .hw-future[data-heading-travel] .hw-future-heading { color:color-mix(in srgb,var(--surface) calc(var(--hw-future-heading-light,0) * 100%),var(--ink)); will-change:transform,opacity; }
 .motion-ready .hw-main-v4 .hw-future[data-heading-travel] .hw-future-heading.is-revealed { transition:none; } /* 옮겨가는 동안은 스크롤을 그대로 따른다 */
+.hw-main-v4 .hw-future[data-heading-travel] .hw-future-heading h2 > span { display:inline-block; } /* 줄마다 왼쪽으로 옮겨 붙는다 */
+.hw-main-v4 .hw-future[data-heading-travel] .hw-future-heading .hw-kicker { color:color-mix(in srgb,var(--surface) calc(var(--hw-future-kicker-light,0) * 100%),var(--ink)); } /* 흰 바탕 위에서 먼저 하얘져 사라지지 않게, 사진이 덮은 뒤에 흰색 */
+.hw-main-v4 .hw-future[data-heading-travel] .hw-future-top { visibility:hidden; }
+.hw-motion .hw-main-v4 .hw-future-bottom { bottom:clamp(88px,11vmax,160px); } /* 사진 위 마무리 문장: 바닥에서 조금 더 띄운다(2026-10-22, 공용값 48~100px → 88~160px) */
 .hw-motion .hw-main-v4 .hw-future-picture img { height:var(--hw-stage-live); }
 /* A solid white surface sits behind an independent black layer that fades away. */
 .hw-main-v4 .hw-vision {
@@ -140,6 +145,12 @@
 .main-v4-tweaks-choice input { width:18px; height:18px; margin:0; accent-color:var(--red); }
 .main-v4-tweaks-choice small { display:block; color:var(--muted); font-size:12px; }
 .main-v4-tweaks-choice p { margin:6px 0 0; }
+/* 이전 메인 시안 링크(V1 · V2 · V3 · 비교): 라디오 줄과 같은 높이의 글 링크, 화살표는 오른쪽 */
+.main-v4-tweaks-links { margin-top:20px; padding-top:16px; border-top:1px solid var(--line); }
+.main-v4-tweaks-links a { display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:36px; color:var(--ink); text-decoration:none; }
+.main-v4-tweaks-links a:is(:hover,:focus-visible) { color:var(--red); }
+.main-v4-tweaks-links sps-arrow-up-right { flex-shrink:0; color:var(--muted); }
+.main-v4-tweaks-links a:is(:hover,:focus-visible) sps-arrow-up-right { color:var(--red); }
 .main-v4-tweaks-font { margin-bottom:20px; }
 .main-v4-tweaks-font > label { display:block; }
 .main-v4-tweaks-font select { display:block; width:100%; min-height:44px; margin-top:8px; padding:8px 10px; border:1px solid var(--line); border-radius:var(--radius-control); color:var(--ink); background:var(--surface); font:inherit; cursor:pointer; }
@@ -190,16 +201,15 @@
   :where(html:not([data-sps-desktop])) .main-v4-tweaks { top:calc(var(--sps-header-height,76px) + 12px); right:12px; }
   :where(html:not([data-sps-desktop])) .main-v4-tweaks-panel { max-height:calc(100dvh - var(--sps-header-height,76px) - 84px); overscroll-behavior:contain; }
   :where(html:not([data-sps-desktop])):not([data-tweaks="show"]) .main-v4-tweaks { display:none; } /* 화면 조정 '+'는 폰 방문자에게 보이지 않는다. 확인할 때는 ?tweaks 로 연다 */
-  /* 고객지원 장면: 사진이 조금 더 위 · 왼쪽에서 출발해 제목이 흰색이 되기 전에 덮고, 킥커는 흰 바탕 위에서 흰색이 되지 않고 사라진다 */
+  /* 고객지원 장면: 사진이 조금 더 위 · 왼쪽에서 출발해 제목이 흰색이 되기 전에 덮는다 */
   :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-future { --hw-future-picture-top:58; --hw-future-picture-left:40; }
-  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-future[data-heading-travel] .hw-future-heading { width:fit-content; margin-inline:auto; text-align:left; } /* 가운데 묶음 안에서 줄은 왼쪽 정렬: 사진 위 문장 자리에 두 줄이 같은 선으로 닿는다 */
-  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-future[data-heading-travel] .hw-future-heading .hw-kicker { opacity:calc(1 - var(--hw-future-heading-light,0)); }
 }
 @media(max-width:600px) {
   :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-hero-copy { gap:0; }
   :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-story-cta { display:none; }
   :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-future { --hw-future-picture-top:54; --hw-future-picture-left:44; } /* 430 폰에서도 제목 첫 글자 왼쪽 획이 사진 안에서 흰색이 되게 */
-  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-future-bottom p br { display:inline; } /* 줄바꿈을 그대로 두어 '확인하고,필요한'처럼 붙지 않게 */
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-future-bottom p br { display:inline; }
+  :where(html:not([data-sps-desktop])) .hw-motion .hw-main-v4 .hw-future-bottom { bottom:96px; } /* 폰도 조금 위로(공용 70px) */ /* 줄바꿈을 그대로 두어 '확인하고,필요한'처럼 붙지 않게 */
 }
 @media(max-width:360px) {
   :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-hero-copy h1 { font-size:min(var(--main-title-size,var(--display-title-size,72px)),var(--section-title-mobile,35px)); }
@@ -263,20 +273,47 @@
 /* 화면 조정 '페이지 메뉴 표시'를 끄면 오른쪽 페이지 메뉴를 감춘다 */
 html[data-page-nav="off"] .hw-main-v4 .main-v4-page-nav { display:none !important; }
 .hw-main-v4 .hw-news-grid .hw-news-nophoto { display:grid; place-items:center; background:var(--surface-cool); } /* 사업실적 줄: 사진을 받기 전의 건물 */
+/* 사업실적 · 인사이트 줄: 카드가 셋보다 많으면(data-more) 가로 줄. 데스크톱은 셋을 꽉 채우고 제목 줄의 화살표로 넘긴다(폰은 아래 규칙으로 다음 카드가 조금 보인다) */
+.hw-main-v4 .hw-news-grid[data-more] { grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:calc((100% - 72px) / 3); overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; scrollbar-width:none; cursor:grab; }
+.hw-main-v4 .hw-news-grid[data-more]::-webkit-scrollbar { display:none; }
+.hw-main-v4 .hw-news-grid[data-more] > a { scroll-snap-align:start; }
+.hw-main-v4 .hw-news-grid[data-more] [data-reveal] { transform:none; } /* 옆에서 들어오는 카드는 떠오르지 않고 서서히 나타나기만 */
+.hw-main-v4 .hw-news-grid[data-more].is-dragging { cursor:grabbing; scroll-snap-type:none; user-select:none; }
+/* 이전 · 다음 화살표: 사진 양옆(사진 높이 가운데, --hw-news-arrow-top)에 떠 있다. 줄에 마우스를 올리거나 키보드로 닿으면 나타나고, 끝에 닿은 쪽은 감춘다 */
+.hw-main-v4 .hw-news-rail { position:relative; }
+.hw-main-v4 .hw-news-arrow { position:absolute; top:var(--hw-news-arrow-top,40%); z-index:2; display:grid; place-items:center; width:48px; height:48px; padding:0; border:0; border-radius:50%; background:var(--surface); color:var(--ink); box-shadow:0 8px 24px #10252b1f; cursor:pointer; opacity:0; pointer-events:none; transform:translateY(-50%) scale(.92); transition:opacity .25s, transform .3s var(--ease-editorial), background .2s; }
+.hw-main-v4 .hw-news-arrow[data-dir="-1"] { left:16px; }
+.hw-main-v4 .hw-news-arrow[data-dir="1"] { right:16px; }
+.hw-main-v4 .hw-news-rail:is(:hover,:focus-within) .hw-news-arrow:not(:disabled) { opacity:1; pointer-events:auto; transform:translateY(-50%) scale(1); }
+.hw-main-v4 .hw-news-arrow:hover { background:var(--surface-cool); }
+.hw-main-v4 .hw-news-arrow:focus-visible { outline:2px solid var(--red); outline-offset:2px; }
+@media (hover:none) { .hw-main-v4 .hw-news-rail .hw-news-arrow:not(:disabled) { opacity:1; pointer-events:auto; transform:translateY(-50%); } } /* 마우스가 없는 넓은 화면(태블릿)은 늘 보인다 */
+/* 예시 사진 표시: 사진 왼쪽 아래 작은 꼬리표 */
+.hw-main-v4 .hw-news-grid a > div { position:relative; }
+.hw-main-v4 .hw-news-photo-note { position:absolute; left:12px; bottom:12px; padding:2px 8px; border-radius:var(--radius-control); background:color-mix(in srgb,var(--ink) 55%,transparent); color:var(--surface); font-size:11px; line-height:1.6; pointer-events:none; }
+.hw-main-v4 .hw-news-arrow sps-chevron { --chevron-color:var(--ink); }
+.hw-main-v4 .hw-news-arrow-prev { transform:rotate(90deg); }
+.hw-main-v4 .hw-news-arrow-next { transform:rotate(-90deg); }
+@media (max-width:850px) {
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-news-grid[data-more] { grid-auto-columns:min(78%,320px); cursor:auto; } /* 폰은 원래 가로 줄 크기(다음 카드가 조금 보인다) */
+  :where(html:not([data-sps-desktop])) .hw-main-v4 .hw-news-arrow { display:none; } /* 폰은 손가락으로 넘긴다 */
+}
 .hw-main-v4 .hw-news-grid .hw-news-nophoto span { font-size:13px; color:var(--muted); }
-html:not([data-link-rule="on"]) .hw-main-v4 :is(.hw-with-link, .hw-services3-link) { border-bottom-color: transparent; } /* 트윅 '링크 밑줄 표시'(기본 끔): 선 자리는 남겨 켜고 꺼도 글이 움직이지 않는다 */
+html:not([data-link-rule="on"]) .hw-main-v4 :is(.hw-story-cta, .hw-with-link, .hw-services3-link, .hw-future-bottom a) { border-bottom-color: transparent; } /* 트윅 '링크 밑줄 표시'(기본 끔): 선 자리는 남겨 켜고 꺼도 글이 움직이지 않는다 */
 html[data-with-section="off"] .hw-main-v4 :is(#hw-with, .main-v4-page-nav a[href="#hw-with"]) { display:none !important; } /* 트윅: 더 알아보기 감추기 */
 /* 화면 조정 '헤더 배경'. html[data-header-style] 이면 헤더가 히어로 위에 겹친다.
-   hero: 히어로 위에서는 투명(흰 글자·흰 로고), 내려가면 흰 바탕이 위에서 내려오듯 다시 칠해진다. clear: 내려가도 바탕을 칠하지 않는다.
-   히어로 위 여부(.is-over-film)는 공용 V2 스크립트(body[data-overlay-header])가 표시한다. */
+   hero: 맨 위에서만 투명(흰 글자·흰 로고), 조금(20px) 내리거나 메뉴를 펼치면 흰 바탕이 그 자리에서 서서히 칠해진다(위에서 내려오지 않는다). clear: 내려가도 바탕을 칠하지 않는다.
+   투명 여부(.is-over-film)는 공용 V2 스크립트(body[data-overlay-header] · data-overlay-release)가 표시한다. */
+@property --hw-header-fill { syntax:'<percentage>'; inherits:false; initial-value:100%; }
 html[data-header-style] .hw-main-v4 #main { margin-top:calc(-1 * var(--sps-header-height,137px)); }
 html[data-header-style] .hw-main-v4 .hw-hero { height:calc(var(--hw-height) + var(--sps-header-height,137px)); }
-html[data-header-style] .hw-main-v4 [data-sps-header] { transition:box-shadow .35s, transform .35s var(--ease-editorial), background-size .45s var(--ease-editorial); }
+html[data-header-style] .hw-main-v4 [data-sps-header] { background:linear-gradient(color-mix(in srgb,var(--surface) var(--hw-header-fill),transparent) calc(100% - 1px),color-mix(in srgb,var(--line) var(--hw-header-fill),transparent) 0) top / 100% var(--sps-header-paint,100%) no-repeat border-box; transition:box-shadow .35s, transform .35s var(--ease-editorial), background-size .35s var(--ease-editorial), --hw-header-fill .3s ease-out; }
 html[data-header-style="hero"] .hw-main-v4 [data-sps-header].is-over-film,
-html[data-header-style="clear"] .hw-main-v4:not(.sps-menu-open) [data-sps-header] { background-size:100% 0; box-shadow:none; }
+html[data-header-style="clear"] .hw-main-v4:not(.sps-menu-open) [data-sps-header] { --hw-header-fill:0%; box-shadow:none; }
 html[data-header-style="hero"] .hw-main-v4 [data-sps-header].is-over-film::after,
 html[data-header-style="clear"] .hw-main-v4:not(.sps-menu-open) [data-sps-header]::after { opacity:0; }
-html[data-header-style] .hw-main-v4 [data-sps-header].is-over-film::before { content:''; position:absolute; inset:0 0 -32px; z-index:-1; pointer-events:none; background:linear-gradient(180deg,color-mix(in srgb,var(--ink) 55%,transparent),color-mix(in srgb,var(--ink) 18%,transparent) 72%,transparent); }
+html[data-header-style] .hw-main-v4 [data-sps-header]::before { content:''; position:absolute; inset:0 0 -32px; z-index:-1; pointer-events:none; opacity:0; transition:opacity .3s ease-out; } /* 영상 위 글자를 받치는 어두운 띠도 흰 바탕과 엇갈려 서서히 */
+html[data-header-style] .hw-main-v4 [data-sps-header].is-over-film::before { opacity:1; background:linear-gradient(180deg,color-mix(in srgb,var(--ink) 55%,transparent),color-mix(in srgb,var(--ink) 18%,transparent) 72%,transparent); }
 html[data-header-style] .hw-main-v4 [data-sps-header].is-over-film .brand-logo { content:url('assets/logo-on-film.svg'); }
 html[data-header-style] .hw-main-v4 [data-sps-header] :is(.nav-links > a, .sps-service-trigger, .header-locale, .locale-field select, .nav-contact) { transition:color .3s, transform .35s var(--ease-editorial), background-color .2s; }
 html[data-header-style] .hw-main-v4 [data-sps-header].is-over-film :is(.nav-links > a, .nav-links > sps-service-menu, .sps-service-trigger) { color:var(--surface); text-shadow:0 1px 3px color-mix(in srgb,var(--ink) 55%,transparent); }

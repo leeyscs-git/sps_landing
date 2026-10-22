@@ -29,7 +29,7 @@ function fixture({saved=null,storageBlocked=false,search=''}={}){
   const radios=['fusion','rise','logo','symbol','symbol-rise','film'].map(value=>({...control(),value,checked:false}));
   const headerRadios=['row','bar'].map(value=>({...control(),value,checked:false}));
   const servicesRadios=['1','2','3'].map(value=>({...control(),value,checked:false}));
-  const footerRadios=['1','2','3'].map(value=>({...control(),value,checked:false}));
+  const footerRadios=['1','2','3','4'].map(value=>({...control(),value,checked:false}));
   const consultRadios=['contact','statement','none'].map(value=>({...control(),value,checked:false}));
   const cardsRadios=['grey','tint','blush','duo','ink','soft','white'].map(value=>({...control(),value,checked:false}));
   const groundRadios=['black','image','video-namsan','video-seoul','video-water'].map(value=>({...control(),value,checked:false}));
@@ -336,33 +336,35 @@ test('the 헤더 배경 choice (흰색 · 히어로에서 투명 · 항상 투�
   assert.match(html,/if\(hs==="hero"\|\|hs==="clear"\)document\.documentElement\.dataset\.headerStyle=hs;/,'the head script applies the saved style before first paint');
   assert.match(html,/hs="hero";try\{var sh=JSON\.parse\(localStorage\.getItem\("sps-main-v4-layout-tweaks-v1"\)\);if\(sh&&sh\.version>=20&&sh\.headerStyle\)hs=sh\.headerStyle;\}catch\(e\)\{\}/,'hero unless a version-20 choice says otherwise');
   assert.match(html,/name="main-v4-header-bg" value="hero" checked/);
-  assert.match(html,/if\(document\.documentElement\.dataset\.headerStyle\)document\.body\.setAttribute\("data-overlay-header",""\);/,'and marks the body so the shared overlay script tracks the hero');
+  assert.match(html,/if\(document\.documentElement\.dataset\.headerStyle\)\{document\.body\.setAttribute\("data-overlay-header",""\);document\.body\.dataset\.overlayRelease="20";\}/,'and marks the body so the shared overlay script tracks the hero, turning white after 20px of scroll');
   const css=require('node:fs').readFileSync(require.resolve('../jll-remix-main-v4.css'),'utf8');
   assert.match(css,/html\[data-header-style\] \.hw-main-v4 #main \{ margin-top:calc\(-1 \* var\(--sps-header-height,137px\)\); \}/,'the hero slides under the header');
-  assert.match(css,/html\[data-header-style="hero"\] \.hw-main-v4 \[data-sps-header\]\.is-over-film,\r?\nhtml\[data-header-style="clear"\] \.hw-main-v4:not\(\.sps-menu-open\) \[data-sps-header\] \{ background-size:100% 0;/,'transparent over the hero; always transparent in clear mode');
+  assert.match(css,/html\[data-header-style="hero"\] \.hw-main-v4 \[data-sps-header\]\.is-over-film,\r?\nhtml\[data-header-style="clear"\] \.hw-main-v4:not\(\.sps-menu-open\) \[data-sps-header\] \{ --hw-header-fill:0%;/,'transparent over the hero; always transparent in clear mode');
+  assert.match(css,/@property --hw-header-fill \{ syntax:'<percentage>'; inherits:false; initial-value:100%; \}/,'the white surface fades in place (a registered percentage can transition) instead of sliding down from the top');
+  assert.match(css,/transition:[^;}]*--hw-header-fill \.3s ease-out;/);
   assert.match(css,/\.is-over-film \.brand-logo \{ content:url\('assets\/logo-on-film\.svg'\); \}/,'white logo over the hero');
 });
 
 test('the footer choice (원래 · V2) persists and reloads; a ?footer= preview is shown but not saved; reset restores the original; the chooser marks the shared footer host',()=>{
   const h=fixture();
-  assert.deepEqual(h.footerRadios.map(r=>r.checked),[false,false,true],'V3 is the default');
+  assert.deepEqual(h.footerRadios.map(r=>r.checked),[false,false,true,false],'V3 is the default');
   h.pickFooter('2');
   assert.equal(h.stored().footer,'2');assert.equal(h.reloads(),1);
   const restored=fixture({saved:JSON.stringify(h.stored())});
-  assert.deepEqual(restored.footerRadios.map(r=>r.checked),[false,true,false]);
+  assert.deepEqual(restored.footerRadios.map(r=>r.checked),[false,true,false,false]);
   restored.pickFooter('2');assert.equal(restored.reloads(),0,'re-selecting the shown footer does nothing');
   restored.reset.events.click();
   assert.equal(restored.stored().footer,DEFAULT_FOOTER);assert.equal(restored.reloads(),1,'reset reloads once');
   const preview=fixture({search:'?footer=2'});
-  assert.deepEqual(preview.footerRadios.map(r=>r.checked),[false,true,false]);
+  assert.deepEqual(preview.footerRadios.map(r=>r.checked),[false,true,false,false]);
   assert.equal(preview.stored().footer,DEFAULT_FOOTER,'a preview is not saved');
   preview.pickFooter('1');
   assert.equal(preview.stored().footer,'1');assert.match(preview.replaced(),/jll-remix-main-v4\.html$/,'choosing clears the preview query');
   const html=require('node:fs').readFileSync(require.resolve('../jll-remix-main-v4.html'),'utf8');
   assert.match(html,/name="main-v4-footer" value="3" checked/);
-  assert.match(html,/var fv=\(s&&s\.footer\)\|\|null,qf=new URLSearchParams\(location\.search\)\.get\("footer"\);if\(qf==="1"\|\|qf==="2"\|\|qf==="3"\)fv=qf;if\(fv!=="1"&&fv!=="2"\)fv="3";/,'the inline chooser reads the saved choice or ?footer=, falling back to V3');
+  assert.match(html,/var fv=\(s&&s\.footer\)\|\|null,qf=new URLSearchParams\(location\.search\)\.get\("footer"\);if\(qf==="1"\|\|qf==="2"\|\|qf==="3"\|\|qf==="4"\)fv=qf;if\(fv!=="1"&&fv!=="2"&&fv!=="4"\)fv="3";/,'the inline chooser reads the saved choice or ?footer=, falling back to V3');
   assert.match(html,/if\(footerHost\)footerHost\.dataset\.footerVariant=fv;/,'and always marks the shared footer host (V1 too, since the shared default is V3) before the footer script mounts');
-  { const v1=fixture({search:'?footer=1'});assert.deepEqual(v1.footerRadios.map(r=>r.checked),[true,false,false],'V1 previews too');assert.match(html,/name="main-v4-footer" value="1"/); }
+  { const v1=fixture({search:'?footer=1'});assert.deepEqual(v1.footerRadios.map(r=>r.checked),[true,false,false,false],'V1 previews too');assert.match(html,/name="main-v4-footer" value="1"/); }
   assert.ok(html.indexOf('data-sps-footer')<html.indexOf('footerHost.dataset.footerVariant'),'the host is parsed before the chooser runs');
 });
 
@@ -448,7 +450,7 @@ test('the 링크 밑줄 표시 toggle (off by default) shows the text-link under
   assert.equal(restored.rootData.linkRule,undefined);assert.equal(restored.stored().linkRule,false);
   const fsx=require('node:fs');
   const css=fsx.readFileSync(require.resolve('../jll-remix-main-v4.css'),'utf8');
-  assert.match(css,/html:not\(\[data-link-rule="on"\]\) \.hw-main-v4 :is\(\.hw-with-link, \.hw-services3-link\) \{ border-bottom-color: transparent; \}/);
+  assert.match(css,/html:not\(\[data-link-rule="on"\]\) \.hw-main-v4 :is\(\.hw-story-cta, \.hw-with-link, \.hw-services3-link, \.hw-future-bottom a\) \{ border-bottom-color: transparent; \}/,'hero CTA, 더 알아보기, 사업영역 and the 고객지원 안내 보기 links share the toggle (off: no underline anywhere on the page)');
   const html=fsx.readFileSync(require.resolve('../jll-remix-main-v4.html'),'utf8');
   assert.match(html,/<input id="main-v4-link-rule" type="checkbox">/);
   assert.match(html,/if\(s&&s\.linkRule===true\)document\.documentElement\.dataset\.linkRule="on";/,'shown from the first paint when saved on');
@@ -460,4 +462,13 @@ test('phones hide the tweak button from visitors; ?tweaks shows it for review wi
   assert.equal(fixture().rootData.tweaks,undefined,'visitors get no flag');
   const review=fixture({search:'?tweaks'});
   assert.equal(review.rootData.tweaks,'show');assert.equal(review.panel.hidden,false);assert.deepEqual(review.stored(),DEFAULTS);
+});
+
+test('the tweaks panel links to the earlier main drafts (V1 · V2 · V3 · A/B/C compare) so they stay reachable after the header stopped listing them',()=>{
+  const html=require('node:fs').readFileSync(require.resolve('../jll-remix-main-v4.html'),'utf8');
+  const block=(html.match(/<fieldset class="main-v4-tweaks-choice main-v4-tweaks-links">[\s\S]*?<\/fieldset>/)||[''])[0];
+  assert.ok(block,'a links fieldset sits in the panel');
+  assert.deepEqual([...block.matchAll(/<a href="([^"]+)" target="_top">/g)].map(m=>m[1]),['jll-remix.html','jll-remix-main-v2.html','jll-remix-v3.html','jll-remix-main-compare.html']);
+  for(const f of ['jll-remix.html','jll-remix-main-v2.html','jll-remix-v3.html','jll-remix-main-compare.html'])assert.ok(require('node:fs').existsSync(require.resolve('../'+f)),f+' exists');
+  assert.ok(html.indexOf('id="main-v4-tweaks-reset"')<html.indexOf('main-v4-tweaks-links'),'after the reset button, as a separate group');
 });

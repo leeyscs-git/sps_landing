@@ -87,7 +87,7 @@ html[data-iv2-route-flight="out"] #journal-index { opacity:0; }
 }
 .insights-v2 .journal-article-head h1 { font-weight:600; }
 /* A single, slightly wider reading column remains centered without a contents rail. */
-.insights-v2 .journal-reading { display:block; max-width:840px; margin-inline:auto; }
+.insights-v2 .journal-reading { display:block; max-width:680px; margin-inline:auto; } /* 본문 폭: 온라인 신문처럼 한 줄 40자 안팎(2026-10-22, 840 → 680px) */
 .insights-v2 .journal-reading-body { min-width:0; text-align:left; }
 .insights-v2 .journal-reading-body > p,
 .insights-v2 .journal-reading-body section > p { text-align:justify; text-align-last:left; word-break:normal; overflow-wrap:break-word; }
