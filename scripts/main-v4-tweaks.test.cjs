@@ -464,11 +464,12 @@ test('phones hide the tweak button from visitors; ?tweaks shows it for review wi
   assert.equal(review.rootData.tweaks,'show');assert.equal(review.panel.hidden,false);assert.deepEqual(review.stored(),DEFAULTS);
 });
 
-test('the tweaks panel links to the earlier main drafts (V1 · V2 · V3 · A/B/C compare) so they stay reachable after the header stopped listing them',()=>{
+test('the tweaks panel links to the frozen V4 comparison and earlier main drafts',()=>{
   const html=require('node:fs').readFileSync(require.resolve('../jll-remix-main-v4.html'),'utf8');
   const block=(html.match(/<fieldset class="main-v4-tweaks-choice main-v4-tweaks-links">[\s\S]*?<\/fieldset>/)||[''])[0];
   assert.ok(block,'a links fieldset sits in the panel');
-  assert.deepEqual([...block.matchAll(/<a href="([^"]+)" target="_top">/g)].map(m=>m[1]),['jll-remix.html','jll-remix-main-v2.html','jll-remix-v3.html','jll-remix-main-compare.html']);
-  for(const f of ['jll-remix.html','jll-remix-main-v2.html','jll-remix-v3.html','jll-remix-main-compare.html'])assert.ok(require('node:fs').existsSync(require.resolve('../'+f)),f+' exists');
+  const destinations=['compare-main-v4-refinement.html','jll-remix.html','jll-remix-main-v2.html','jll-remix-v3.html','jll-remix-main-compare.html'];
+  assert.deepEqual([...block.matchAll(/<a href="([^"]+)" target="_top">/g)].map(m=>m[1]),destinations);
+  for(const f of destinations)assert.ok(require('node:fs').existsSync(require.resolve('../'+f)),f+' exists');
   assert.ok(html.indexOf('id="main-v4-tweaks-reset"')<html.indexOf('main-v4-tweaks-links'),'after the reset button, as a separate group');
 });

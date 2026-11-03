@@ -1,0 +1,2 @@
+# Keep frozen snapshots byte-for-byte so manifest hashes survive checkout.
+* -text

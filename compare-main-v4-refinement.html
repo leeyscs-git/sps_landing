@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>SPS — 메인 V4 개선 전후 비교</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="compare-main-v4-refinement.css?v=1">
+  <script src="compare-main-v4-refinement.js?v=1" defer></script>
+</head>
+<body>
+  <header class="review-header">
+    <a class="brand" href="jll-remix-main-v4.html"><img src="assets/logo.svg" width="100" height="36" alt="SPS 홈"></a>
+    <div><p class="eyebrow">DESIGN REVIEW · 2026.10.26</p><h1>메인 V4, 전후 비교</h1><p class="intro">같은 기능과 콘텐츠로 글자 크기, 여백, 모션을 비교하세요. 개선 전 화면은 별도로 보관했습니다.</p></div>
+    <a class="open-current" href="jll-remix-main-v4.html" target="_blank" rel="noopener">현재 화면 열기 ↗</a>
+  </header>
+  <div class="toolbar" aria-label="비교 화면 설정">
+    <div class="segmented" role="group" aria-label="비교 방식">
+      <button type="button" data-view="both" aria-pressed="true">나란히</button>
+      <button type="button" data-view="before" aria-pressed="false">개선 전</button>
+      <button type="button" data-view="after" aria-pressed="false">개선 후</button>
+    </div>
+    <div class="segmented" role="group" aria-label="화면 크기">
+      <button type="button" data-device="desktop" aria-pressed="true">데스크톱</button>
+      <button type="button" data-device="mobile" aria-pressed="false">모바일</button>
+    </div>
+    <label class="section-label">섹션
+      <select id="section-select">
+        <option value="hero">첫 화면</option><option value="vision">비전</option><option value="services">사업영역</option><option value="cases">사업실적</option><option value="insights">인사이트</option><option value="support">고객지원</option><option value="more">더 알아보기</option><option value="footer">푸터</option>
+      </select>
+    </label>
+    <label class="sync-label"><input type="checkbox" id="sync-scroll" checked> 스크롤 함께</label>
+    <button type="button" class="replay" id="replay">처음부터 다시 보기 ↺</button>
+  </div>
+  <p class="view-note" id="view-note" aria-live="polite">두 화면을 같은 데스크톱 너비로 표시합니다.</p>
+  <main class="comparison" data-view="both" data-device="desktop">
+    <section class="panel" data-version="before" aria-labelledby="before-title">
+      <div class="panel-heading"><div><span class="badge">전</span><h2 id="before-title">개선 전 <small>보관본</small></h2></div><a data-open="before" target="_blank" rel="noopener" href="design/archive/main-v4-20261026/jll-remix-main-v4.html">새 탭 ↗</a></div>
+      <div class="preview"><iframe title="2026년 10월 26일 개선 전 V4" data-frame="before" allow="autoplay" src="about:blank"></iframe></div>
+      <p class="caption">당시 화면과 동작을 그대로 보관한 버전</p>
+    </section>
+    <section class="panel" data-version="after" aria-labelledby="after-title">
+      <div class="panel-heading"><div><span class="badge">후</span><h2 id="after-title">개선 후 <small>현재 화면</small></h2></div><a data-open="after" target="_blank" rel="noopener" href="jll-remix-main-v4.html">새 탭 ↗</a></div>
+      <div class="preview"><iframe title="글자 크기 여백 모션을 다듬은 현재 V4" data-frame="after" allow="autoplay" src="about:blank"></iframe></div>
+      <p class="caption">선명한 제목 · 일정한 여백 · 짧고 부드러운 등장</p>
+    </section>
+  </main>
+  <noscript>비교 기능을 사용하려면 자바스크립트를 켜 주세요. 위의 새 탭 링크로 각 화면을 열 수도 있습니다.</noscript>
+</body>
+</html>

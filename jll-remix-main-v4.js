@@ -26,6 +26,8 @@
     });
     const buttons=[...bar.querySelectorAll('[data-slide]')];
     const reduced=win.matchMedia('(prefers-reduced-motion: reduce)');
+    // Match the refined CSS entrance. Archived pages retain their original timing.
+    const refined=doc.documentElement?.hasAttribute?.('data-v4-refinement');
     // 폰 · 데이터 절약 · 움직임 줄임은 다음 영상을 바로 받지 않는다: 폰은 컷 3초 전에 받고(늦으면 ready()의 1.5초 유예가 받친다), 움직임 줄임은 미리 받지 않는다
     const lean=()=>reduced.matches||win.navigator?.connection?.saveData===true||(Boolean(win.matchMedia('(max-width: 850px), (max-width: 1000px) and (max-height: 500px) and (pointer: coarse)')?.matches)&&!doc.documentElement?.hasAttribute?.('data-sps-desktop'));
     let warmTimer=0;
@@ -125,7 +127,7 @@
         cta.innerHTML=escape(story.cta||'자세히 보기')+' <sps-arrow-up-right></sps-arrow-up-right>';cta.setAttribute('href',resolveLink(STORY_LINKS[index]||'#'));
         // 스토리가 바뀌면 제목 줄이 올라온 뒤 CTA가 다시 떠오른다(첫 등장은 CSS가 바 → 제목 → CTA 순서로 맡는다)
         ctaMotion?.cancel();ctaMotion=null;
-        if(outgoing&&!reduced.matches&&typeof cta.animate==='function')ctaMotion=cta.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:900,delay:1500,easing:'cubic-bezier(.23,1,.32,1)',fill:'backwards'});
+        if(outgoing&&!reduced.matches&&typeof cta.animate==='function')ctaMotion=cta.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:refined?620:900,delay:refined?460:1500,easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'});
       }
       buttons.forEach(button=>{
         const selected=Number(button.dataset.slide)===index;

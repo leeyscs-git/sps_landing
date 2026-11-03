@@ -1,0 +1,190 @@
+{
+  "date": "2026-10-26",
+  "commit": "a4f1fe9",
+  "entry": "jll-remix-main-v4.html",
+  "originalHTMLSHA256": "5a084b2913a85938a414e41646494a4e37cdf89b1e6a652cddd4dac310b69d6a",
+  "files": [
+    {
+      "file": "jll-remix-viewport.js",
+      "sourceSHA256": "e4fe1bd83957dd13aac0e23eb480f7603a49a984a546cf1e6a8d1312ec575178",
+      "archiveSHA256": "e4fe1bd83957dd13aac0e23eb480f7603a49a984a546cf1e6a8d1312ec575178"
+    },
+    {
+      "file": "jll-remix.css",
+      "sourceSHA256": "20996f97e17c4eb114a8dd5f599ed290d5475cab76da4569324f19a518cbb5e9",
+      "archiveSHA256": "9e48e412a70fb6a414ae0190b1829ab481a489cba5cdd29bd8dc2c35977d4f12"
+    },
+    {
+      "file": "jll-remix-theme.css",
+      "sourceSHA256": "1b08c6c1f35bd32f6c624b8a8dca6b86f8864a5ba305bc2cb79cff11b44381a6",
+      "archiveSHA256": "1b08c6c1f35bd32f6c624b8a8dca6b86f8864a5ba305bc2cb79cff11b44381a6"
+    },
+    {
+      "file": "jll-remix-header.css",
+      "sourceSHA256": "d1ff0cf88089cde6d1b1640a4bebb90208011a1d3ed075f49e6f0eb037d8fca6",
+      "archiveSHA256": "4805078a4ab258af7f956480bb0ae6d68a70b8805e8a39abc43642c488c88502"
+    },
+    {
+      "file": "jll-remix-components.css",
+      "sourceSHA256": "ad785d285890d19e0225717a0ae2bdb235826a816f08d847f837e8cccfc3d9c3",
+      "archiveSHA256": "ad785d285890d19e0225717a0ae2bdb235826a816f08d847f837e8cccfc3d9c3"
+    },
+    {
+      "file": "jll-remix-contact.css",
+      "sourceSHA256": "7f6bef8cdd196ace2755001a8b6857f6c111a0258803f81d4dc898be503b1507",
+      "archiveSHA256": "7f6bef8cdd196ace2755001a8b6857f6c111a0258803f81d4dc898be503b1507"
+    },
+    {
+      "file": "jll-remix-hanwha.css",
+      "sourceSHA256": "7fd1030d6636b853a1664d0f7d1c74f1b881611fab2b34c6b7c873f0c68b3684",
+      "archiveSHA256": "7fd1030d6636b853a1664d0f7d1c74f1b881611fab2b34c6b7c873f0c68b3684"
+    },
+    {
+      "file": "jll-remix-header.js",
+      "sourceSHA256": "07b7d53819514db4329ab73fac1db7ef52fb6ffa5fb5586e627ba817ef2604bd",
+      "archiveSHA256": "07b7d53819514db4329ab73fac1db7ef52fb6ffa5fb5586e627ba817ef2604bd"
+    },
+    {
+      "file": "jll-remix-theme-schema.js",
+      "sourceSHA256": "30c28928968681de88a82683530491c36a7c84700d231b49919d02d923595257",
+      "archiveSHA256": "30c28928968681de88a82683530491c36a7c84700d231b49919d02d923595257"
+    },
+    {
+      "file": "jll-remix-theme.js",
+      "sourceSHA256": "775a8c646e7488c314bd5eb71bda49996a016a43a9348eca4d6e913ca9cd580c",
+      "archiveSHA256": "9f379ef4ccdb848ae09dff56f432afdc8029da80e8951d18865cf831c1315fa9"
+    },
+    {
+      "file": "jll-remix-components.js",
+      "sourceSHA256": "c8b4daa662666193f94c0e5c470378788ae82b079aae5599adc91ae210d7f948",
+      "archiveSHA256": "c8b4daa662666193f94c0e5c470378788ae82b079aae5599adc91ae210d7f948"
+    },
+    {
+      "file": "jll-remix-footer.js",
+      "sourceSHA256": "7c05e7d265f0250a5ede2b85a59ec5bf72a8a295ac0b56687f8caf655191a9db",
+      "archiveSHA256": "7c05e7d265f0250a5ede2b85a59ec5bf72a8a295ac0b56687f8caf655191a9db"
+    },
+    {
+      "file": "jll-remix-contact.js",
+      "sourceSHA256": "fbd1f556c2447b885e1bcf661755b9d09cdbcc26c7f89a4658264ee09c1aed5e",
+      "archiveSHA256": "fbd1f556c2447b885e1bcf661755b9d09cdbcc26c7f89a4658264ee09c1aed5e"
+    },
+    {
+      "file": "jll-remix-main-v4.css",
+      "sourceSHA256": "8df0dc996955d53a6e4731615df25ede73fabe3eff83c305a07296a0b57b0fca",
+      "archiveSHA256": "71d0ae5c59660832a41a0c722df85a4c838a7c142a76a45d776811b4dd19232b"
+    },
+    {
+      "file": "jll-remix-vision-fusion.css",
+      "sourceSHA256": "b1d01136a30a99dcdb599c54b4d83a8a22091af00122f0218e56cfb7ce77cb15",
+      "archiveSHA256": "b60e9e089633f5a34d91b289c133b556847a6f997ec65537ade5e2af2ce30863"
+    },
+    {
+      "file": "jll-remix-services2.css",
+      "sourceSHA256": "b77882442fdc15691b712cd0be8cc6a8744ea36b35b799d16debc88b2277a645",
+      "archiveSHA256": "b77882442fdc15691b712cd0be8cc6a8744ea36b35b799d16debc88b2277a645"
+    },
+    {
+      "file": "jll-remix-services3.css",
+      "sourceSHA256": "e9c3a5aea1246906f9d0240dac5c8b5c30289e71a0575cec0f72d950be4b92a6",
+      "archiveSHA256": "e9c3a5aea1246906f9d0240dac5c8b5c30289e71a0575cec0f72d950be4b92a6"
+    },
+    {
+      "file": "jll-remix-main-v4-typescale.css",
+      "sourceSHA256": "4baa5ea65635b492ab43f8661ab25595d60779c3037d64ce609cfb7a052f1556",
+      "archiveSHA256": "4baa5ea65635b492ab43f8661ab25595d60779c3037d64ce609cfb7a052f1556"
+    },
+    {
+      "file": "jll-remix.js",
+      "sourceSHA256": "b34ae802d4c3a2c6c6fda4a324e4063c0ecb71c2bb8771ef85c57f9424f06670",
+      "archiveSHA256": "b34ae802d4c3a2c6c6fda4a324e4063c0ecb71c2bb8771ef85c57f9424f06670"
+    },
+    {
+      "file": "jll-remix-main-v2.js",
+      "sourceSHA256": "615de82ce42c5b6ffc056dd295aa848da91d1ed8ec3df5e787237155a3bdd505",
+      "archiveSHA256": "615de82ce42c5b6ffc056dd295aa848da91d1ed8ec3df5e787237155a3bdd505"
+    },
+    {
+      "file": "jll-remix-cases-data.js",
+      "sourceSHA256": "8e8123aea3bed09d3d30f9b7186eab9d5e9d7602b1ea9176a9c37ae5e2627be3",
+      "archiveSHA256": "8e8123aea3bed09d3d30f9b7186eab9d5e9d7602b1ea9176a9c37ae5e2627be3"
+    },
+    {
+      "file": "jll-remix-buildings.js",
+      "sourceSHA256": "87bed44fc03a5f8bb9f36cc2640d8f1542f34e8350194f50c54026e39444b037",
+      "archiveSHA256": "87bed44fc03a5f8bb9f36cc2640d8f1542f34e8350194f50c54026e39444b037"
+    },
+    {
+      "file": "jll-remix-journal-data.js",
+      "sourceSHA256": "e3bbeb8fe654a04a81e92fb7e0c6d2e936eb5fa4488bb379a19cc53b53344fff",
+      "archiveSHA256": "e3bbeb8fe654a04a81e92fb7e0c6d2e936eb5fa4488bb379a19cc53b53344fff"
+    },
+    {
+      "file": "jll-remix-main-v4-news.js",
+      "sourceSHA256": "88d31bcd0617c1f72fdacaea2b647bf04ca246624a1e4e11606484d4772aafe3",
+      "archiveSHA256": "88d31bcd0617c1f72fdacaea2b647bf04ca246624a1e4e11606484d4772aafe3"
+    },
+    {
+      "file": "assets/vendor/lenis/lenis.min.js",
+      "sourceSHA256": "a9025b17531d09d1500b3a910c219479e11708855b7970544856025ce763aa1a",
+      "archiveSHA256": "a9025b17531d09d1500b3a910c219479e11708855b7970544856025ce763aa1a"
+    },
+    {
+      "file": "jll-remix-hanwha.js",
+      "sourceSHA256": "0f7d04c4835c9c8b1822188b6b1e99eca2657c936ddd4e4a9816032281b1a25f",
+      "archiveSHA256": "18fffce9131340c0213eeb62082dad8dedc2e28de52af1e880d63c31ce0a3548"
+    },
+    {
+      "file": "jll-remix-main-v4.js",
+      "sourceSHA256": "a03bf6f212d4fe91f946d1eff6f0d0142598d701b04347b7783dfae4d8b932d2",
+      "archiveSHA256": "a03bf6f212d4fe91f946d1eff6f0d0142598d701b04347b7783dfae4d8b932d2"
+    },
+    {
+      "file": "jll-remix-vision-fusion.js",
+      "sourceSHA256": "cc1763e85f04156e41fe4c110073511b26f51a36cf19bced33408a770991564f",
+      "archiveSHA256": "cc1763e85f04156e41fe4c110073511b26f51a36cf19bced33408a770991564f"
+    },
+    {
+      "file": "jll-remix-main-v4-symbol.js",
+      "sourceSHA256": "8e75d3916acec328d81ecbd262bac91658acfbf49a5bb686bc45ea227d7067bc",
+      "archiveSHA256": "8e75d3916acec328d81ecbd262bac91658acfbf49a5bb686bc45ea227d7067bc"
+    },
+    {
+      "file": "jll-remix-services2.js",
+      "sourceSHA256": "5ed8b55facaccc7c3f7292d5d024d28d89cc5094dd5cec481696cee6e267f67d",
+      "archiveSHA256": "5ed8b55facaccc7c3f7292d5d024d28d89cc5094dd5cec481696cee6e267f67d"
+    },
+    {
+      "file": "jll-remix-services3.js",
+      "sourceSHA256": "a89aa3bf21a6bed5ed5849f29e050b2ada465b4c9a14754bd659fd52c84a8151",
+      "archiveSHA256": "a89aa3bf21a6bed5ed5849f29e050b2ada465b4c9a14754bd659fd52c84a8151"
+    },
+    {
+      "file": "jll-remix-main-navigation.js",
+      "sourceSHA256": "ad1d28a52d8056f7951638ca4de9b619971748e946f80ccd223ad2f98055ca4a",
+      "archiveSHA256": "ad1d28a52d8056f7951638ca4de9b619971748e946f80ccd223ad2f98055ca4a"
+    },
+    {
+      "file": "jll-remix-main-v4-top.js",
+      "sourceSHA256": "26ba04e934990e03e03433fd880b4b0675c3ba0ebfcce8da50dfa5daff2ca425",
+      "archiveSHA256": "26ba04e934990e03e03433fd880b4b0675c3ba0ebfcce8da50dfa5daff2ca425"
+    },
+    {
+      "file": "jll-remix-main-v4-tweaks.js",
+      "sourceSHA256": "38a4132bf2cbf2a31082c0f4b2162983a8a5461c0129600588cce50e3b63ae44",
+      "archiveSHA256": "38a4132bf2cbf2a31082c0f4b2162983a8a5461c0129600588cce50e3b63ae44"
+    },
+    {
+      "file": "jll-remix-footer.css",
+      "sourceSHA256": "19ca04dba273a78ff9df9485814279c9a86e93ca45bf6f3f8a34872fcec961ed",
+      "archiveSHA256": "19ca04dba273a78ff9df9485814279c9a86e93ca45bf6f3f8a34872fcec961ed"
+    },
+    {
+      "file": "jll-remix-tokens.css",
+      "sourceSHA256": "5b4a476e75571c8e70f0e685842f9932b0b4242bbddcaabe70a09c1e3d0df0eb",
+      "archiveSHA256": "5b4a476e75571c8e70f0e685842f9932b0b4242bbddcaabe70a09c1e3d0df0eb"
+    }
+  ],
+  "archiveHTMLSHA256": "b6dfce4c0d5f08628fb1b150c70af8706b56f8034c3928feec01c3af0ea77624",
+  "themeSHA256": "2cf73fe52626f0090b7e93ebad40fa138d81be332ad0a147a32fe03cd7d14554"
+}

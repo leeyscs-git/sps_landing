@@ -102,10 +102,12 @@
     function measure(){
       // offsetHeight uses the page's logical pixels, including desktop-canvas zoom.
       const barInset=parseFloat(win.getComputedStyle(bar).bottom)||0;
-      const upper=Math.max(0,Math.floor(hero.offsetHeight-bar.offsetHeight-barInset-copy.offsetHeight-56));
-      // 기본(auto)은 '바 위': 문구가 하단 바 위 48px에 앉는다(32px 기준선 + 16). 나머지는 미리보기 규칙.
-      const centered=(hero.offsetHeight-bar.offsetHeight-barInset-copy.offsetHeight)/2-32;
-      const modes={bottom:16,center:centered,middle:(hero.offsetHeight-copy.offsetHeight)/2-(bar.offsetHeight+barInset+32),top:upper-72};
+      const clearance=parseFloat(win.getComputedStyle(hero).getPropertyValue?.('--v4-title-clearance'))||32;
+      const upper=Math.max(0,Math.floor(hero.offsetHeight-bar.offsetHeight-barInset-copy.offsetHeight-clearance-24));
+      // Use the presentation's actual clearance so title previews and slider limits
+      // stay aligned after typography, spacing or responsive changes.
+      const centered=(hero.offsetHeight-bar.offsetHeight-barInset-copy.offsetHeight)/2-clearance;
+      const modes={bottom:16,center:centered,middle:(hero.offsetHeight-copy.offsetHeight)/2-(bar.offsetHeight+barInset+clearance),top:upper-72};
       const wanted=titlePreview===null?(requestedOffset==='auto'?modes.bottom:requestedOffset):(typeof titlePreview==='number'?titlePreview:modes[titlePreview]);
       const offset=Math.round(Math.max(-20,Math.min(upper,wanted)));
       slider.max=String(upper);slider.value=String(offset);

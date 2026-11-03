@@ -116,7 +116,7 @@
   // 아래로 스크롤(데스크톱)하면 헤더를 접는다. 두 방식:
   //  row(기본): 윗여백과 메뉴 줄을 접고 로고 줄(로고 · 메뉴 · 문의하기 버튼)만 남긴다. 메뉴 항목은 메뉴 줄 가운데에서 로고 줄 가운데로 곧게 올라온다.
   //  bar(이전 방식, V4 화면 조정에서 선택 · html[data-sps-condense="bar"]): 로고 줄을 접고 메뉴 줄만 띠로 남긴다. 작은 로고와 문의하기 글자 링크가 띠 양끝에 들어온다.
-  // 위로 스크롤하거나 맨 위 근처면 전체 헤더로 돌아온다.
+  // 한 번 접히면 스크롤 방향과 관계없이 유지하고, 페이지 맨 위에서만 전체 헤더로 돌아온다.
   const mainRow = header.querySelector('.header-main');
   const navRow = header.querySelector('.nav');
   const navLinks = header.querySelector('.nav-links');
@@ -124,7 +124,7 @@
   const px = value => (Number.isFinite(value) ? value : 0);
   const setVar = (name, value) => header.style?.setProperty?.(name, value);
   const condenseMode = () => (document.documentElement?.dataset?.spsCondense === 'bar' ? 'bar' : 'row');
-  let lastY = scrollY, travel = 0, condensed = false;   // travel: 같은 방향으로 누적된 이동량
+  let condensed = false;
   // 접힌 상태의 치수. 창 크기나 방식이 바뀌면 다시 잰다. 돌려주는 값은 화면에 남는 높이.
   function condensedGeometry() {
     if (condenseMode() === 'bar') {
@@ -175,14 +175,11 @@
     header.classList.toggle('is-scrolled', y > 20);
     const phoneHeader = Boolean(mobileLayout?.matches) && !document.documentElement?.hasAttribute?.('data-sps-desktop');   // 눕힌 폰도 폰 헤더라 접지 않는다
     const allowed = Boolean(condenseQuery?.matches) && !phoneHeader && !document.body?.classList?.contains?.('sps-menu-open');
-    const delta = y - lastY;
-    travel = Math.sign(delta) === Math.sign(travel) ? travel + delta : delta;
-    lastY = y;
-    if (!allowed || y < 80) setCondensed(false);
-    else if (travel <= -32) setCondensed(false);
-    else if (travel >= 32 && y > 160) setCondensed(true);
+    if (!allowed || y <= 0) setCondensed(false);
+    else if (y > 160) setCondensed(true);
   };
   window.addEventListener('scroll', updateScroll, { passive: true });
+  window.addEventListener('pageshow', updateScroll);
   condenseQuery?.addEventListener?.('change', updateScroll);
   mobileLayout?.addEventListener?.('change', updateScroll);
   updateScroll();

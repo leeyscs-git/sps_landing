@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 // 접힘 헤더: 로고 줄(.header-main)만 남기고 메뉴 항목이 그 줄로 올라오는 치수와 스크롤 규칙을 확인한다.
-function fixture({ topSpace = 0, desktop = true, mode = null, landscapePhone = false, forced = false } = {}) {
+function fixture({ topSpace = 0, desktop = true, mode = null, landscapePhone = false, forced = false, initialY = 0 } = {}) {
   const headerVars = {}, rootVars = {}, events = new Map(), headerEvents = new Map(), dispatched = [];
   const stub = () => ({ addEventListener() {}, setAttribute() {}, focus() {}, classList: { toggle() {}, contains: () => false } });
   const mainRow = { offsetTop: topSpace, offsetHeight: 87 };
@@ -42,7 +42,7 @@ function fixture({ topSpace = 0, desktop = true, mode = null, landscapePhone = f
   class CustomEvent { constructor(type, init) { this.type = type; this.detail = init?.detail; } }
   class ResizeObserver { observe() {} }
   const context = {
-    document: doc, window: win, ResizeObserver, CustomEvent, URL, scrollY: 0, matchMedia,
+    document: doc, window: win, ResizeObserver, CustomEvent, URL, scrollY: initialY, matchMedia,
     getComputedStyle: () => ({ getPropertyValue: name => (name === '--sps-brand-nav-gap' ? '48px' : '') }),
     location: new URL('http://localhost:3000/jll-remix-journal-v2.html'),
   };
@@ -84,11 +84,16 @@ test('a page with top space above the logo is pushed up by that space only, and 
   assert.equal(h.rootVars['--sps-header-visible'], '88px');
 });
 
-test('scrolling back up, or returning near the top, restores the full header and clears every offset', () => {
+test('upward scrolling keeps the header condensed until the very top, where every offset is cleared', () => {
   const h = fixture();
   h.scrollTo(400);
-  h.scrollTo(360);
-  assert.equal(h.condensed(), false, '40px upward travel reopens the header');
+  for (const y of [360, 200, 300, 80, 60, 20, 1, 0.25]) {
+    h.scrollTo(y);
+    assert.equal(h.condensed(), true, `the header stays condensed at ${y}px regardless of direction`);
+  }
+  assert.deepEqual(h.dispatched.map(e => e.detail.condensed), [true], 'no extra transitions during scrolling');
+  h.scrollTo(0);
+  assert.equal(h.condensed(), false, 'only reaching the very top reopens the header');
   assert.equal(h.rootVars['--sps-header-visible'], 'var(--sps-header-height)');
   assert.equal(h.headerVars['--sps-header-shift'], '0px');
   assert.equal(h.headerVars['--sps-header-paint'], '100%');
@@ -97,9 +102,20 @@ test('scrolling back up, or returning near the top, restores the full header and
   assert.equal(h.headerVars['--sps-nav-bridge'], '0px');
   h.scrollTo(900);
   assert.equal(h.condensed(), true);
-  h.scrollTo(60);
-  assert.equal(h.condensed(), false, 'near the top the header is always open');
+  h.scrollTo(-10);
+  assert.equal(h.condensed(), false, 'overscrolling above the top also leaves the header open');
   assert.deepEqual(h.dispatched.map(e => e.detail.condensed), [true, false, true, false]);
+});
+
+test('a page loaded at a restored scroll position starts condensed without needing directional travel', () => {
+  const h = fixture({ initialY: 500, mode: 'bar' });
+  assert.equal(h.condensed(), true);
+  h.emit('pageshow');
+  h.scrollTo(450);
+  assert.equal(h.condensed(), true);
+  assert.equal(h.dispatched.length, 1, 'pageshow and upward scroll do not repeat the transition');
+  h.scrollTo(0);
+  assert.equal(h.condensed(), false);
 });
 
 test('resizing or a theme edit while condensed re-measures the offsets without re-dispatching the condense event', () => {
@@ -152,6 +168,8 @@ test('the bar style (이전 방식) keeps a 58px bar with the menu row centred i
   assert.equal(h.rootVars['--sps-header-visible'], '59px');
   assert.equal(typeof h.api().refresh, 'function', 'the tweaks panel can ask for a re-measure after changing the bar height');
   h.scrollTo(360);
+  assert.equal(h.condensed(), true, 'bar mode also stays condensed during upward scrolling');
+  h.scrollTo(0);
   assert.equal(h.condensed(), false);
   assert.deepEqual(h.barOnly.map(el => el.tabIndex), [-1, -1], 'hidden again when the header opens');
 });

@@ -1,0 +1,107 @@
+/* Editable H values. Each fallback preserves the original responsive value. */
+body:not(.ds-page){font-size:var(--body-size,16px)}
+.brand-logo{width:var(--logo-width,120px)}
+.header-contact{min-height:var(--contact-height,44px);padding-inline:var(--contact-padding,19px);gap:var(--contact-gap,24px);font-size:var(--contact-font-size,13px)}
+.button{min-height:var(--button-height,49px)}
+.header-main{height:var(--header-height,87px)}
+.hero h1{font-size:var(--hero-title-size,59px)}
+.editorial-copy h2{font-size:var(--section-title-size,43px)}
+.editorial-copy{padding-block:var(--editorial-padding,64px)}
+.insight-card h3{font-size:var(--card-title-size,24px)}
+.insight-grid{gap:var(--card-gap,28px)}
+.insight-image{height:var(--insight-image-height,232px)}
+.wrap{width:calc(100% - var(--layout-gutter)*2)}
+.story-tab{font-size:var(--story-font-size,12px);padding-block:var(--story-padding,12px)}
+.story-tab.active{background:var(--story-active-bg,var(--surface-cool))}
+.field select{min-height:var(--field-height,50px);font-size:var(--field-font-size,14px)}
+.faq summary{min-height:var(--faq-height,75px);font-size:var(--faq-font-size,14px)}
+.dialog{width:min(var(--dialog-width,640px),calc(100% - 32px));padding:var(--dialog-padding,52px)}
+.motion-ready [data-reveal]{transition-duration:var(--reveal-duration,800ms)}
+.motion-ready [data-reveal]:not(.is-revealed){transform:translate3d(0,var(--reveal-distance,28px),0)}
+.motion-ready .editorial-image[data-reveal]:not(.is-revealed){transform:none}
+@media(min-width:1600px){.hero h1{font-size:var(--hero-title-size,69px)}.editorial-copy h2{font-size:var(--section-title-size,49px)}.editorial-copy{padding-block:var(--editorial-padding,75px)}}
+@media(max-width:1100px){
+  :where(html:not([data-sps-desktop])) .wrap{width:calc(100% - var(--layout-gutter)*2)}
+  :where(html:not([data-sps-desktop])) .hero h1{font-size:var(--hero-title-size,54px)}
+  :where(html:not([data-sps-desktop])) .editorial-copy h2{font-size:var(--section-title-size,37px)}
+  :where(html:not([data-sps-desktop])) .editorial-copy{padding-block:var(--editorial-padding,46px)}
+  :where(html:not([data-sps-desktop])) .insight-card h3{font-size:var(--card-title-size,21px)}
+  :where(html:not([data-sps-desktop])) .insight-image{height:var(--insight-image-height,200px)}
+  :where(html:not([data-sps-desktop])) .story-tab{font-size:var(--story-font-size,11px)}
+}
+@media(max-width:850px){
+  :where(html:not([data-sps-desktop])) .wrap{width:calc(100% - var(--layout-gutter)*2)}
+  :where(html:not([data-sps-desktop])) .header-main{height:var(--header-height,77px)}
+  :where(html:not([data-sps-desktop])) .hero h1{font-size:var(--hero-title-size,51px)}
+  :where(html:not([data-sps-desktop])) .editorial-copy h2{font-size:var(--section-title-size,31px)}
+  :where(html:not([data-sps-desktop])) .editorial-copy{padding-block:var(--editorial-padding,37px)}
+  :where(html:not([data-sps-desktop])) .insight-card h3{font-size:var(--card-title-size,19px)}
+  :where(html:not([data-sps-desktop])) .insight-image{height:var(--insight-image-height,170px)}
+  :where(html:not([data-sps-desktop])) .insight-grid{gap:var(--card-gap,19px)}
+  :where(html:not([data-sps-desktop])) .story-tab{font-size:var(--story-font-size,10px);padding-block:var(--story-padding,10px)}
+  :where(html:not([data-sps-desktop])) .faq summary{font-size:var(--faq-font-size,12px)}
+}
+@media(max-width:700px){
+  :where(html:not([data-sps-desktop])) .brand-logo{width:var(--logo-width-mobile,105px)}
+}
+@media(max-width:600px){
+  :where(html:not([data-sps-desktop])) .wrap{width:calc(100% - var(--layout-gutter)*2)}
+  :where(html:not([data-sps-desktop])) .header-main{height:var(--header-height-mobile,75px)}
+  :where(html:not([data-sps-desktop])) .nav-links{top:calc(var(--header-height-mobile,75px) - 1px)}
+  :where(html:not([data-sps-desktop])) .hero h1{font-size:var(--hero-title-mobile,39px)}
+  :where(html:not([data-sps-desktop])) .editorial-copy h2{font-size:var(--section-title-mobile,35px)}
+  :where(html:not([data-sps-desktop])) .editorial-copy{padding-top:var(--editorial-padding,38px);padding-bottom:var(--editorial-padding,37px)}
+  :where(html:not([data-sps-desktop])) .insight-card h3{font-size:var(--card-title-size,24px)}
+  :where(html:not([data-sps-desktop])) .insight-image{height:var(--insight-image-mobile,235px)}
+  :where(html:not([data-sps-desktop])) .insight-grid{gap:var(--card-gap,30px)}
+  :where(html:not([data-sps-desktop])) .header-contact{gap:var(--contact-gap,12px);padding-inline:var(--contact-padding,12px)}
+  :where(html:not([data-sps-desktop])) .story-tab{font-size:var(--story-font-size,10px);padding-block:var(--story-padding,9px)}
+  :where(html:not([data-sps-desktop])) .faq summary{min-height:var(--faq-height,78px);font-size:var(--faq-font-size,14px)}
+  :where(html:not([data-sps-desktop])) .dialog{padding:47px 25px 30px}
+  :where(html:not([data-sps-desktop])) .motion-ready [data-reveal]{transition-duration:var(--reveal-duration,650ms)}
+  :where(html:not([data-sps-desktop])) .motion-ready [data-reveal]:not(.is-revealed){transform:translate3d(0,var(--reveal-distance,18px),0)}
+  :where(html:not([data-sps-desktop])) .motion-ready .editorial-image[data-reveal]:not(.is-revealed){transform:none}
+}
+@media(max-width:360px){
+  :where(html:not([data-sps-desktop])) .hero h1{font-size:var(--hero-title-mobile,34px)}
+}
+/* The document uses the same editable values; its editor chrome stays stable. */
+.ds-page .ds-type-hero{font-size:var(--hero-title-size,59px)}
+.ds-page .ds-type-section{font-size:var(--section-title-size,43px)}
+.ds-page .ds-type-card{font-size:var(--card-title-size,24px)}
+.ds-page .ds-type-body{font-size:var(--body-size,16px)}
+.ds-page .ds-type-board[data-size=mobile] .ds-type-hero{font-size:var(--hero-title-mobile,39px)}
+.ds-page .ds-type-board[data-size=mobile] .ds-type-section{font-size:var(--section-title-mobile,35px)}
+.ds-page .ds-header-stage .header-main{height:var(--header-height,87px)}
+.ds-page .ds-header-stage .header-contact,.ds-page .ds-state-matrix .header-contact{min-height:var(--contact-height,44px);font-size:var(--contact-font-size,13px);padding-inline:var(--contact-padding,19px);gap:var(--contact-gap,24px)}
+.ds-page .ds-story-tabs .story-tab{font-size:var(--story-font-size,12px);padding-block:var(--story-padding,12px)}
+.ds-page .ds-editorial-demo .editorial-copy{padding-block:var(--editorial-padding,64px)}
+.ds-page .ds-editorial-demo .editorial-copy h2{font-size:var(--section-title-size,43px)}
+.ds-page .ds-card-grid{gap:var(--card-gap,28px)}
+.ds-page .ds-card-grid .insight-image{height:var(--insight-image-height,232px)}
+.ds-page .ds-card-grid .insight-card h3{font-size:var(--card-title-size,24px)}
+.ds-page .ds-faq-demo summary{min-height:var(--faq-height,75px);font-size:var(--faq-font-size,14px)}
+.ds-page .ds-modal-sheet{max-width:var(--dialog-width,640px);padding:var(--dialog-padding,52px)}
+.ds-page .ds-logo-sizes>div:first-child img{width:var(--logo-width,120px)}
+.ds-page .ds-logo-sizes>div:last-child img{width:var(--logo-width-mobile,105px)}
+
+
+@media(max-width:600px){
+  :where(html:not([data-sps-desktop])) .ds-page .ds-header-stage .header-main{height:var(--header-height-mobile,75px)}
+  :where(html:not([data-sps-desktop])) .ds-page .ds-editorial-demo .editorial-copy h2{font-size:var(--section-title-mobile,35px)}
+  :where(html:not([data-sps-desktop])) .ds-page .ds-header-stage .header-contact{padding-inline:var(--contact-padding,12px);gap:var(--contact-gap,10px)}
+  :where(html:not([data-sps-desktop])) .ds-page .ds-header-stage .brand-logo{width:var(--logo-width-mobile,92px)}
+}
+@media(max-width:520px){
+  :where(html:not([data-sps-desktop])) .ds-page .ds-card-grid .insight-image{height:var(--insight-image-mobile,235px)}
+  :where(html:not([data-sps-desktop])) .ds-page .ds-card-grid .insight-card h3{font-size:var(--card-title-size,24px)}
+  :where(html:not([data-sps-desktop])) .ds-page .ds-modal-sheet{padding:30px 22px}
+  :where(html:not([data-sps-desktop])) .ds-page .ds-editorial-demo .editorial-copy h2{font-size:var(--section-title-mobile,35px)}
+}
+@media(prefers-reduced-motion:reduce){.motion-ready [data-reveal],.motion-ready [data-reveal]:not(.is-revealed){transform:none;transition:none}}
+
+/* Full-width photography keeps its scale; the outer text edge follows .wrap. */
+@media(min-width:601px){
+ body:not(.ds-page) .editorial-row:not(.reverse) .editorial-copy{padding-right:max(var(--layout-gutter),calc(100% - var(--content-max)/2))}
+ body:not(.ds-page) .editorial-row.reverse .editorial-copy{padding-left:max(var(--layout-gutter),calc(100% - var(--content-max)/2))}
+}

@@ -404,3 +404,111 @@ html[data-footer-cards="soft"] .sps-footer[data-variant="3"] .sps-footer-v2-card
 }
 /* 푸터 문장: 오른쪽 자료 카드(200px) 옆에서 세로 가운데(2026-10-22) */
 .sps-footer[data-variant="3"] .sps-footer-v2-brand { align-self: center; }
+
+/* Approved shared footer · 2026-11-03. Compact white cards, grouped contact
+   details and more room below. Business identity / family menu stay unchanged. */
+/* Keep the original white cards, with a more compact content rhythm. */
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-statement {
+  line-height: 1.35;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-card {
+  padding: 18px 20px;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-card-title {
+  font-size: var(--ts-lead,19px);
+  line-height: 1.35;
+  letter-spacing: -.01em;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-card-desc {
+  margin-top: 6px;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-card-icon {
+  width: 20px;
+  height: 20px;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-card-action {
+  padding-top: 16px;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-body {
+  padding-bottom: 56px;
+}
+/* Contact details read as a single group on the same left edge. */
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-call {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 100%;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-call .sps-footer-v2-label {
+  min-height: 0;
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--ts-meta,14px);
+  line-height: 1.65;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-call .sps-footer-v2-call-number {
+  color: var(--red);
+  font-size: var(--ts-h2,36px);
+  font-weight: var(--ts-w-title,560);
+  line-height: 1.25;
+  letter-spacing: -.01em;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-call:is(:hover,:focus-visible) .sps-footer-v2-call-number {
+  text-decoration: none;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-hours {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 10px;
+  row-gap: 2px;
+  margin-top: 16px;
+  padding: 0;
+  font-size: var(--ts-meta,14px);
+  line-height: 1.65;
+  letter-spacing: 0;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-hours dt {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-hours dd {
+  margin: 0;
+  font-size: inherit;
+  color: var(--muted);
+  white-space: normal;
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-hours dd:first-of-type {
+  flex-basis: 100%;
+  color: var(--ink);
+}
+html .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-hours dd:last-of-type::before {
+  content: '·';
+  margin-right: 10px;
+}
+@media (max-width:1100px) {
+  html:not([data-sps-desktop]) .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-card {
+    min-height: 80px;
+    padding: 14px 16px;
+    grid-template-columns: 20px minmax(0,1fr) auto;
+  }
+  html:not([data-sps-desktop]) .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-card-action { padding-top: 0; }
+  html:not([data-sps-desktop]) .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-card-desc { margin-top: 4px; }
+}
+@media (max-width:850px) {
+  html:not([data-sps-desktop]) .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-body { padding-bottom: 40px; }
+}
+
+@media (max-width:600px) {
+  html:not([data-sps-desktop]) .sps-footer[data-sps-footer][data-variant="3"] .sps-footer-v2-call .sps-footer-v2-call-number { font-size: var(--ts-h2,28px); }
+}
